@@ -1,2 +1,2 @@
 # IUSTZ-RankingCore-
-Repository of making backend of the game
+Repository for making backend of the game
