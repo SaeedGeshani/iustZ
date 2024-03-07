@@ -3,22 +3,71 @@
 #include<vector>
 using namespace std;
 
+class Enemy{
+private:
+    int HP;
+    int Stamina;
 
-class Items{
-protected:
-    int Price;
-    string Name;
 
 public:
-    int getPrice()
+    Enemy() = default;
+    Enemy(int hp , int stamina)
     {
-        return Price;
+        HP = hp;
+        Stamina = stamina;
+    }
+    void setHP(int hp)
+    {
+        HP = hp;
+    }
+    int getHP()
+    {
+        return HP;
+    }
+    void setStamina(int ST)
+    {
+        Stamina = ST;
+    }
+    int getStamina()
+    {
+        return Stamina;
     }
 
-    string getName()
-    {
-        return Name;
-    }
+};
+
+class Item{
+	protected:
+		string Name;
+		int Price;	
+	public:
+        Item() = default;
+        Item(string name , int price)
+        {
+            Name = name;
+            Price = price;
+        }
+
+		string getName(){
+			return Name;
+		}
+		int getPrice(){
+			return Price;
+		}
+		void setName(string name){
+			Name = name;
+		}
+		void setPrice(int price){
+			Price = price;
+		}
+		bool operator==(Item other){
+			if(other.getName()== Name && other.getPrice() == Price){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		
 };
 
 class MainCharacter{
@@ -26,75 +75,436 @@ protected:
     string Name;
     int Level;
     int XP;
-    int Health;
+    int HP;
     int Stamina;
     int Gold;
-    vector<Items*>Inventory;
+    vector<Item*>Inventory;
+    vector<UsableItems*> UseAbleItems;
+    vector<Weapon*> weapons;
+    UsableItems* usableITem = new WheyProtein();
+    HotWeapon* Gun = new AK_47(); 
+    
 
 public:
+    MainCharacter() = default;
+    MainCharacter(string name , int level , int xp , int stamina , int gold)
+    {
+        Name = name;
+        Level = level;
+        XP = xp;
+        Stamina = stamina;
+        Gold = gold;
+        UseAbleItems.push_back(usableITem);
+       
+
+    }
+    
+    int getHP()
+    {
+        return HP;
+    }
+    void setHP(int hp)
+    {
+        HP = hp;
+    }
+    void setStamina(int stamina)
+    {
+        Stamina = stamina;
+    }
+    int getStamina()
+    {
+        return Stamina;
+    }
     int getGold()
     {
         return Gold;
     }
 
-    void addInventory(Items* item)
+    vector<UsableItems*> getUsableItems()
+    {
+        return UseAbleItems;
+    }
+    vector<Weapon*> getWeapons()
+    {
+        return weapons;
+    }
+    
+    void addUsableItem(UsableItems* useableitem)
+    {
+        UseAbleItems.push_back(useableitem);
+    }
+    void addWeapon(Weapon* weapon)
+    {
+        weapons.push_back(weapon);
+    }
+    void addInventory(Item* item)
     {
         Inventory.push_back(item);
     }
     
 };
 
-class constItem : public Items{};
-class ThrowableItems : public Items{};
-class UseableItems : public Items{};
-class HotWeapon : public Items{};
-class ColdWeapon : public Items{};
-class Grenade : public ThrowableItems , public HotWeapon{};
-class AK_47 : public HotWeapon , public constItem{};
-class wheyProtein : public UseableItems{};
-class Egg : public UseableItems{};
-class Katana : public ColdWeapon , public constItem{};
+class Weapon: public Item{
+	protected:
+        MainCharacter* User;
+		int damagePerAttack;
+		int neededStamina;
+	public:
+        Weapon(int DMage , int NDstamina , MainCharacter* user)
+        {
+            damagePerAttack = DMage;
+            neededStamina = NDstamina;
+            User = user;
+        }
+		void setDamagePerAttack(int dpa){
+			damagePerAttack = dpa;
+		}
+		int getDamagePerAttack(){
+			return damagePerAttack;
+		}
+		void setNeededS(int ns){
+			neededStamina = ns;
+		}
+		int getNeededS(){
+			return neededStamina;
+		}
+		virtual void weaponAttack(Enemy currentEnemy){
+
+
+        };
+};
+class PermanentWeapon : public Weapon{};
+class ThrowableItem: public Weapon{};
+class UsableItems: public Item{
+	protected:
+		int addedHP;
+		int AddedStamina;
+        MainCharacter* User;
+	public:
+		void setAddedHP(int ahp){
+			addedHP = ahp;
+		}
+		int getAddedHP(){
+			return addedHP;
+			
+		}
+		void setAddedStamina(int ast){
+			AddedStamina = ast;
+		}
+		int getAddedStamina(){
+			return AddedStamina;
+		}
+		virtual void HPandStincreaser() = 0;
+
+		};
+class HotWeapon: public Weapon{};
+class ColdWeapon: public Weapon{};
+class AK_47 : public HotWeapon , public PermanentWeapon{
+
+public:
+    AK_47(int damagePA , int ndestamina , MainCharacter* user )
+    {
+        PermanentWeapon::damagePerAttack = damagePA;
+        PermanentWeapon::neededStamina = ndestamina;
+        PermanentWeapon:: User = user;
+    }
+};
+class WheyProtein: public UsableItems{
+    
+	public :
+		void HPandStincreaser() override{
+			User->setHP(User->getHP()+addedHP);
+			User->setStamina(User->getStamina()+AddedStamina);
+			for(int i=0;i<User->getUsableItems().size();i++){
+					if(dynamic_cast<WheyProtein*>(User->getUsableItems()[i]) != NULL){
+						User->getUsableItems().erase(User->getUsableItems().begin()+ i);
+						break;
+					}
+				}
+		}
+};
+class Egg : public UsableItems{
+    private:
+    MainCharacter User;
+	public :
+		void HPandStincreaser() override{
+			User.setHP(User.getHP()+addedHP);
+			User.setStamina(User.getStamina()+AddedStamina);
+			for(int i=0;i<User.getUsableItems().size();i++){
+					if(dynamic_cast<WheyProtein*>(User.getUsableItems()[i]) != NULL){
+						User.getUsableItems().erase(User.getUsableItems().begin()+ i);
+						break;
+					}
+				}
+		}
+};
+class Katana : public ColdWeapon,PermanentWeapon{
+    private:
+    MainCharacter User;
+    
+	public:
+		void weaponAttack(Enemy currentEnemy) override
+        {
+			if(User.getStamina() >= ColdWeapon::neededStamina){
+				currentEnemy.setHP(currentEnemy.getHP()-ColdWeapon::damagePerAttack);
+				currentEnemy.setStamina(currentEnemy.getStamina()- ColdWeapon::damagePerAttack/4);
+				User.setStamina(User.getStamina()- ColdWeapon::neededStamina);
+			}
+			else{
+				cout<<"this weapon requires more Stamina!"<<endl;
+			}
+
+		}
+};
+class Shuriken: public ColdWeapon, ThrowableItem{
+    private:
+    MainCharacter User;
+	public:
+		void weaponAttack(Enemy currentEnemy) override{
+			if(User.getStamina()>= ColdWeapon::neededStamina){
+				currentEnemy.setHP(currentEnemy.getHP()-ColdWeapon::damagePerAttack);
+				currentEnemy.setStamina(currentEnemy.getStamina()-ColdWeapon::damagePerAttack/4);
+				for(int i=0;i<User.getWeapons().size();i++){
+					if(dynamic_cast<Shuriken*>(User.getWeapons()[i]) != NULL){
+						User.getWeapons().erase(User.getWeapons().begin()+ i);
+						break;
+					}
+				}
+				User.setStamina(User.getStamina()- ColdWeapon::neededStamina);
+			}
+			else{
+				cout<<"this weapon requires more Stamina!"<<endl;
+			}
+
+		}
+};
+class Batarang: public ColdWeapon, ThrowableItem{
+    private:
+    MainCharacter User;
+	public:
+		void weaponAttack(Enemy currentEnemy) override{
+			if(User.getStamina()>=ColdWeapon::neededStamina){
+				currentEnemy.setHP(currentEnemy.getHP()-ColdWeapon::damagePerAttack);
+				currentEnemy.setStamina(currentEnemy.getStamina()-ColdWeapon::damagePerAttack/4);
+				for(int i=0;i<User.getWeapons().size();i++){
+					if(dynamic_cast<Batarang*>(User.getWeapons()[i]) != NULL){
+						User.getWeapons().erase(User.getWeapons().begin()+ i);
+						break;
+					}
+				}
+				User.setStamina(User.getStamina()- ColdWeapon::neededStamina);
+			}
+			else{
+				cout<<"this weapon requires more Stamina!"<<endl;
+			}
+
+		}
+};
+class Trident : public ColdWeapon,PermanentWeapon{
+    private:
+    MainCharacter User;
+	public:
+		void weaponAttack(Enemy currentEnemy) override{
+			if(User.getStamina()>=ColdWeapon::neededStamina){
+				currentEnemy.setHP(currentEnemy.getHP()-ColdWeapon::damagePerAttack);
+				currentEnemy.setStamina(currentEnemy.getStamina()-ColdWeapon::damagePerAttack/4);
+				User.setStamina(User.getStamina()- ColdWeapon::neededStamina);
+			}
+			else{
+				cout<<"this weapon requires more Stamina!"<<endl;
+			}
+
+		}
+};
+class Spear: public ColdWeapon, ThrowableItem{
+	private:
+    MainCharacter User;
+    public:
+
+		void weaponAttack(Enemy currentEnemy) override{
+			if(User.getStamina()>=ColdWeapon::neededStamina){
+				currentEnemy.setHP(currentEnemy.getHP()-ColdWeapon::damagePerAttack);
+				currentEnemy.setStamina(currentEnemy.getStamina()-ColdWeapon::damagePerAttack/4);
+				for(int i=0;i<User.getWeapons().size();i++){
+					if(dynamic_cast<Spear*>(User.getWeapons()[i]) != NULL){
+						User.getWeapons().erase(User.getWeapons().begin()+ i);
+						break;
+					}
+				}
+				User.setStamina(User.getStamina()- ColdWeapon::neededStamina);
+			}
+			else{
+				cout<<"this weapon requires more Stamina!"<<endl;
+			}
+
+		}
+};
+class FlameThrower: public HotWeapon, PermanentWeapon{
+	private:
+    MainCharacter User;
+    public:
+		void weaponAttack(Enemy currentEnemy) override{
+			if(User.getStamina()>=HotWeapon::neededStamina){
+				currentEnemy.setHP(currentEnemy.getHP()-HotWeapon::damagePerAttack);
+				currentEnemy.setStamina(currentEnemy.getStamina()-HotWeapon::damagePerAttack/4);
+				User.setStamina(User.getStamina()- HotWeapon::neededStamina);
+			}
+			else{
+				cout<<"this weapon requires more Stamina!"<<endl;
+			}
+
+		}
+};
+class Blaster: public HotWeapon, PermanentWeapon{
+	private:
+    MainCharacter User;
+    public:
+		void weaponAttack(Enemy currentEnemy) override{
+			if(User.getStamina()>=HotWeapon::neededStamina){
+				currentEnemy.setHP(currentEnemy.getHP()-HotWeapon::damagePerAttack);
+				currentEnemy.setStamina(currentEnemy.getStamina()-HotWeapon::damagePerAttack/4);
+				User.setStamina(User.getStamina()- HotWeapon::neededStamina);
+			}
+			else{
+				cout<<"this weapon requires more Stamina!"<<endl;
+			}
+
+		}
+};
+class LightSaber: public HotWeapon, PermanentWeapon{
+	private:
+    MainCharacter User;
+    public:
+		void weaponAttack(Enemy currentEnemy) override{
+			if(User.getStamina()>=HotWeapon::neededStamina){
+				currentEnemy.setHP(currentEnemy.getHP()-HotWeapon::damagePerAttack);
+				currentEnemy.setStamina(currentEnemy.getStamina()-HotWeapon::damagePerAttack/4);
+				User.setStamina(User.getStamina()- HotWeapon::neededStamina);
+			}
+			else{
+				cout<<"this weapon requires more Stamina!"<<endl;
+			}
+
+		}
+};
+class ElderWand: public ColdWeapon, PermanentWeapon{
+	private:
+    MainCharacter User;
+    public:
+		void weaponAttack(Enemy currentEnemy) override{
+			if(User.getStamina()>=ColdWeapon::neededStamina){
+				currentEnemy.setHP(currentEnemy.getHP()-ColdWeapon::damagePerAttack);
+				currentEnemy.setStamina(currentEnemy.getStamina()-ColdWeapon::damagePerAttack/4);
+				User.setStamina(User.getStamina()- ColdWeapon::neededStamina);
+			}
+			else{
+				cout<<"this weapon requires more Stamina!"<<endl;
+			}
+
+		}
+};
+class Grenade: public HotWeapon, ThrowableItem{
+	private:
+    MainCharacter User;
+    public:
+		void weaponAttack(Enemy currentEnemy) override{
+			if(User.getStamina()>=HotWeapon::neededStamina){
+				currentEnemy.setHP(currentEnemy.getHP()-HotWeapon::damagePerAttack);
+				currentEnemy.setStamina(currentEnemy.getStamina()-HotWeapon::damagePerAttack/4);
+				for(int i=0;i<User.getWeapons().size();i++){
+					if(dynamic_cast<Grenade*>(User.getWeapons()[i]) != NULL){
+						User.getWeapons().erase(User.getWeapons().begin()+ i);
+						break;
+					}
+				}
+				User.setStamina(User.getStamina()- HotWeapon::neededStamina);
+			}
+			else{
+				cout<<"this weapon requires more Stamina!"<<endl;
+			}
+
+		}
+};
+class CapsShield: public ColdWeapon, ThrowableItem{
+	private:
+    MainCharacter User;
+    public:
+		void weaponAttack(Enemy currentEnemy) override{
+			if(User.getStamina()>=ColdWeapon::neededStamina){
+				currentEnemy.setHP(currentEnemy.getHP()-ColdWeapon::damagePerAttack);
+				currentEnemy.setStamina(currentEnemy.getStamina()-ColdWeapon::damagePerAttack/4);
+				for(int i=0;i<User.getWeapons().size();i++){
+					if(dynamic_cast<CapsShield*>(User.getWeapons()[i]) != NULL){
+						User.getWeapons().erase(User.getWeapons().begin()+ i);
+						break;
+					}
+				}
+				User.setStamina(User.getStamina()- ColdWeapon::neededStamina);
+			}
+			else{
+				cout<<"this weapon requires more Stamina!"<<endl;
+			}
+
+		}
+};
+class Mjolnir: public ColdWeapon, PermanentWeapon{
+	private:
+    MainCharacter User;
+
+    public:
+		void weaponAttack(Enemy currentEnemy) override{
+			if(User.getStamina()>=ColdWeapon::neededStamina){
+				currentEnemy.setHP(currentEnemy.getHP()-ColdWeapon::damagePerAttack);
+				currentEnemy.setStamina(currentEnemy.getStamina()-ColdWeapon::damagePerAttack/4);
+				User.setStamina(User.getStamina()- ColdWeapon::neededStamina);
+			}
+			else{
+				cout<<"this weapon requires more Stamina!"<<endl;
+			}
+
+		}
+};
 
 class Shop{
 private:
     string Name;
     int Level;
-    vector<vector<Items*>> items;
-    vector<ThrowableItems*> ptrThrowableItems;
-    vector<UseableItems*> ptrUseableItems; 
+    vector<vector<Item*>> items;
+    vector<ThrowableItem*> ptrThrowableItems;
+    vector<UsableItems*> ptrUseableItems; 
     vector<HotWeapon*> ptrHotWeapon;
     vector<ColdWeapon*> ptrColdWeapon;
-    vector<constItem*> ptrConstItem;
+    vector<PermanentWeapon*> ptrPermanent;
     MainCharacter consumer;
     
 
 public:
     Shop(string name , int level)
     {
-        Grenade grenade;
-        AK_47 ak_47;
-        wheyProtein wheyprotein;
+        Grenade* grenade;
+        AK_47* ak_47;
+        WheyProtein wheyprotein;
         Egg egg;
-        Katana katana;
+        Katana* katana;
         Name = name;
         Level = level;
         
-        ptrThrowableItems.push_back(&grenade);
-        ptrHotWeapon.push_back(&grenade);
-        ptrHotWeapon.push_back(&ak_47);
-        ptrConstItem.push_back(&ak_47);
+        ptrThrowableItems.push_back((ThrowableItem*)grenade);
+        ptrHotWeapon.push_back(grenade);
+        ptrHotWeapon.push_back(ak_47);
+        ptrPermanent.push_back(ak_47);
         ptrUseableItems.push_back(&wheyprotein);
         ptrUseableItems.push_back(&egg);
-        ptrColdWeapon.push_back(&katana);
-        ptrConstItem.push_back(&katana);
+        ptrColdWeapon.push_back(katana);
+        ptrPermanent.push_back((PermanentWeapon*)katana);
         
     }
 
-    void operator+=(ThrowableItems* ThroOBJ)
+    void operator+=(ThrowableItem* ThroOBJ)
     {
         ptrThrowableItems.push_back(ThroOBJ);
     }
-    void operator+=(UseableItems* UseOBJ)
+    void operator+=(UsableItems* UseOBJ)
     {
         ptrUseableItems.push_back(UseOBJ);
     }
@@ -107,11 +517,11 @@ public:
         ptrColdWeapon.push_back(ColdOBJ);
     }
 
-    vector<ThrowableItems*> getThrowableItems()
+    vector<ThrowableItem*> getThrowableItems()
     {
         return ptrThrowableItems;
     }
-    vector<UseableItems*> getUseableItems()
+    vector<UsableItems*> getUseableItems()
     {
         return ptrUseableItems;
     }
@@ -149,3 +559,9 @@ public:
 
 
 
+int main()
+{
+
+
+
+}
