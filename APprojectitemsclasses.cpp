@@ -44,7 +44,7 @@ class Weapon: public Item{
 		int getNeededS(){
 			return neededStamina;
 		}
-		virtual void weaponAttack(Enemy currentEnemy) =0;
+		virtual void weaponAttack(Enemy currentEnemy) = 0;
 };
 class UsableItems: public Item{
 	protected:
