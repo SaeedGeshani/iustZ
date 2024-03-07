@@ -38,12 +38,15 @@ class Weapon: public Item{
 		int getDamagePerAttack(){
 			return damagePerAttack;
 		}
+<<<<<<< Updated upstream
 		void setNeededS(int ns){
 			neededStamina = ns;
 		}
 		int getNeededS(){
 			return neededStamina;
 		}
+=======
+>>>>>>> Stashed changes
 		virtual void weaponAttack(Enemy currentEnemy) = 0;
 };
 class UsableItems: public Item{
