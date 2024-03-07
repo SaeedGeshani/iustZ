@@ -2,23 +2,23 @@
 using namespace std;
 class Item{
 	protected:
-		string name;
-		int price;	
+		string Name;
+		int Price;	
 	public:
 		string getName(){
-			return name;
+			return Name;
 		}
 		int getPrice(){
-			return price;
+			return Price;
 		}
-		void setName(string Name){
-			name = Name;
+		void setName(string name){
+			Name = name;
 		}
-		void setPrice(int Price){
-			price =Price;
+		void setPrice(int price){
+			Price = price;
 		}
 		bool operator==(Item other){
-			if(other.getName()== name && other.getPrice()==price){
+			if(other.getName()== Name && other.getPrice() == Price){
 				return true;
 			}
 			else{
@@ -27,6 +27,7 @@ class Item{
 		}
 		
 };
+
 class Weapon: public Item{
 	protected:
 		int damagePerAttack;
@@ -38,21 +39,18 @@ class Weapon: public Item{
 		int getDamagePerAttack(){
 			return damagePerAttack;
 		}
-<<<<<<< Updated upstream
 		void setNeededS(int ns){
 			neededStamina = ns;
 		}
 		int getNeededS(){
 			return neededStamina;
 		}
-=======
->>>>>>> Stashed changes
 		virtual void weaponAttack(Enemy currentEnemy) = 0;
 };
 class UsableItems: public Item{
 	protected:
 		int addedHP;
-		int addedStamina;
+		int AddedStamina;
 	public:
 		void setAddedHP(int ahp){
 			addedHP = ahp;
@@ -62,7 +60,7 @@ class UsableItems: public Item{
 			
 		}
 		void setAddedStamina(int ast){
-			addedStamina = ast;
+			AddedStamina = ast;
 		}
 		int getAddedStamina(){
 			return AddedStamina;
@@ -74,7 +72,7 @@ class WheyProtein: public UsableItems{
 	public :
 		void HPandStincreaser() override{
 			mainCharacter.setHP(mainCharacter.getHP()+addedHP);
-			mainCharacter.setStamina(mainCharacter.getStamina()+addedStamina);
+			mainCharacter.setStamina(mainCharacter.getStamina()+AddedStamina);
 			for(int i=0;i<mainCharacter.getUsableItems().size();i++){
 					if(dynamic_cast<WheyProtein*>(mainCharacter.getUsableItems()[i]) != NULL){
 						mainCharacter.getUsableItems().erase(mainCharacter.getUsableItems().begin()+ i);
@@ -87,7 +85,7 @@ class Egg : public UsableItems{
 	public :
 		void HPandStincreaser() override{
 			mainCharacter.setHP(mainCharacter.getHP()+addedHP);
-			mainCharacter.setStamina(mainCharacter.getStamina()+addedStamina);
+			mainCharacter.setStamina(mainCharacter.getStamina()+AddedStamina);
 			for(int i=0;i<mainCharacter.getUsableItems().size();i++){
 					if(dynamic_cast<WheyProtein*>(mainCharacter.getUsableItems()[i]) != NULL){
 						mainCharacter.getUsableItems().erase(mainCharacter.getUsableItems().begin()+ i);
