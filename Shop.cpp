@@ -23,6 +23,11 @@ public:
 
 class MainCharacter{
 protected:
+    string Name;
+    int Level;
+    int XP;
+    int Health;
+    int Stamina;
     int Gold;
     vector<Items*>Inventory;
 
