@@ -2,6 +2,12 @@
 #include<iostream>
 #include<vector>
 using namespace std;
+class Weapon;
+class MainCharacter;
+class HotWeapon;
+class ColdWeapon;
+class UseableItem;
+class PermenantItem;
 
 class Enemy{
 private:
@@ -81,8 +87,7 @@ protected:
     vector<Item*>Inventory;
     vector<UsableItems*> UseAbleItems;
     vector<Weapon*> weapons;
-    UsableItems* usableITem = new WheyProtein();
-    HotWeapon* Gun = new AK_47(); 
+    
     
 
 public:
@@ -94,9 +99,7 @@ public:
         XP = xp;
         Stamina = stamina;
         Gold = gold;
-        UseAbleItems.push_back(usableITem);
        
-
     }
     
     int getHP()
@@ -119,6 +122,14 @@ public:
     {
         return Gold;
     }
+	void setLevel(int level)
+	{
+		Level = level;
+	}
+	int getLevel()
+	{
+		return Level;
+	}
 
     vector<UsableItems*> getUsableItems()
     {
@@ -146,16 +157,12 @@ public:
 
 class Weapon: public Item{
 	protected:
-        MainCharacter* User;
+        
 		int damagePerAttack;
 		int neededStamina;
+		
 	public:
-        Weapon(int DMage , int NDstamina , MainCharacter* user)
-        {
-            damagePerAttack = DMage;
-            neededStamina = NDstamina;
-            User = user;
-        }
+        
 		void setDamagePerAttack(int dpa){
 			damagePerAttack = dpa;
 		}
@@ -168,11 +175,9 @@ class Weapon: public Item{
 		int getNeededS(){
 			return neededStamina;
 		}
-		virtual void weaponAttack(Enemy currentEnemy){
-
-
-        };
+		virtual void weaponAttack(Enemy currentEnemy){};
 };
+
 class PermanentWeapon : public Weapon{};
 class ThrowableItem: public Weapon{};
 class UsableItems: public Item{
@@ -199,16 +204,7 @@ class UsableItems: public Item{
 		};
 class HotWeapon: public Weapon{};
 class ColdWeapon: public Weapon{};
-class AK_47 : public HotWeapon , public PermanentWeapon{
-
-public:
-    AK_47(int damagePA , int ndestamina , MainCharacter* user )
-    {
-        PermanentWeapon::damagePerAttack = damagePA;
-        PermanentWeapon::neededStamina = ndestamina;
-        PermanentWeapon:: User = user;
-    }
-};
+class AK_47 : public HotWeapon , public PermanentWeapon{};
 class WheyProtein: public UsableItems{
     
 	public :
@@ -468,37 +464,22 @@ class Mjolnir: public ColdWeapon, PermanentWeapon{
 class Shop{
 private:
     string Name;
-    int Level;
     vector<vector<Item*>> items;
     vector<ThrowableItem*> ptrThrowableItems;
     vector<UsableItems*> ptrUseableItems; 
     vector<HotWeapon*> ptrHotWeapon;
     vector<ColdWeapon*> ptrColdWeapon;
     vector<PermanentWeapon*> ptrPermanent;
-    MainCharacter consumer;
+    MainCharacter* consumer;
+	int Level = consumer->getLevel();
     
 
 public:
-    Shop(string name , int level)
-    {
-        Grenade* grenade;
-        AK_47* ak_47;
-        WheyProtein wheyprotein;
-        Egg egg;
-        Katana* katana;
-        Name = name;
-        Level = level;
+    
         
-        ptrThrowableItems.push_back((ThrowableItem*)grenade);
-        ptrHotWeapon.push_back(grenade);
-        ptrHotWeapon.push_back(ak_47);
-        ptrPermanent.push_back(ak_47);
-        ptrUseableItems.push_back(&wheyprotein);
-        ptrUseableItems.push_back(&egg);
-        ptrColdWeapon.push_back(katana);
-        ptrPermanent.push_back((PermanentWeapon*)katana);
+
         
-    }
+    
 
     void operator+=(ThrowableItem* ThroOBJ)
     {
@@ -543,9 +524,9 @@ public:
             {
                 if(items[i][j]->getName() == NameOfItem)
                 {
-                    if(consumer.getGold() >= items[i][j]->getPrice())
+                    if(consumer->getGold() >= items[i][j]->getPrice())
                     {
-                        consumer.addInventory(items[i][j]);
+                        consumer->addInventory(items[i][j]);
                         break;
                     }
                 }
