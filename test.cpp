@@ -62,8 +62,19 @@ protected:
     int damagePerAttack;
     int neededStaminaPerAttack;
     int Level;
+    int Price;
+    string Type;
+    string Name;
 public:
     //Setter & Getter
+    void setPrice(int price)
+    {
+        Price = price;
+    }
+    int getPrice()
+    {
+        return Price;
+    }
     void setDamagePerAttack(int damageperattack)
     {
         damagePerAttack = damageperattack;
@@ -80,11 +91,29 @@ public:
     {
         return neededStaminaPerAttack;
     }
+    void setName(string name)
+    {
+        Name = name;
+    }
+    string getName()
+    {
+        return Name;
+    }
+    void setType(string type)
+    {
+        Type = type;
+    }
+    string getType()
+    {
+        return Type;
+    }
     //============================
     //Constructor=================
     Weapon() = default;
-    Weapon(int damageperattack , int neededstaminaperattack , int level)
+    Weapon(int damageperattack , int neededstaminaperattack , int level , string type , string name)
     {
+        Type = type;
+        Name = name;
         damagePerAttack = damageperattack;
         neededStaminaPerAttack = neededstaminaperattack;
         Level = level;
@@ -97,8 +126,35 @@ private:
     int Energy;
     int HealingPower;
     int Level;
+    int Price;
+    string className;
+    string Name;
 public:
     //Setter & Getters---------
+    void setName(string name)
+    {
+        Name = name;
+    }
+    string getName()
+    {
+        return Name;
+    }
+    void setType(string classname)
+    {
+        className = classname;
+    }
+    string getType()
+    {
+        return className;
+    }
+    void setPrice(int price)
+    {
+        Price = price;
+    }
+    int getPrice()
+    {
+        return Price;
+    }
     void setEnergy(int energy)
     {
         Energy = energy;
@@ -118,8 +174,10 @@ public:
     //------------------------
     //Constructors============
     UseableItems() = default;
-    UseableItems(int energy , int healingpower , int level)
-    {
+    UseableItems(int energy , int healingpower , int level , string classname , string name)
+    {  
+        className = classname;
+        Name = name;
         Energy = energy;
         HealingPower = healingpower;
         Level = level;
@@ -133,11 +191,20 @@ protected:
     int XP;
     string Gender;
     int Stamina;
+    int Gold;
     vector<UseableItems*> useAbleItems;
     vector<Weapon*>weapons;
 
 public:
     //Setter & Getters ================
+    void setGold(int gold)
+    {
+        Gold = gold;
+    }
+    int getGold()
+    {
+        return Gold;
+    }
     void setName(string name)
     {
         Name = name;
@@ -205,8 +272,9 @@ public:
     }
     //Constructors=========================
     MainCharacter() = default;
-    MainCharacter(string name , int level , int hp , int xp , int stamina , string gender)
+    MainCharacter(string name , int level , int hp , int xp , int stamina , string gender , int gold)
     {
+        Gold = gold;
         Name = name;
         Level = level;
         HP = hp;
@@ -215,6 +283,57 @@ public:
         Gender = gender;
     }
     //=====================================
+};
+class Shop{
+private:
+    int Level;
+    string Name;
+    vector<UseableItems*> useableitems;
+    vector<Weapon*> weapons;
+
+public:
+    Shop() = default;
+    Shop(string name , int level)
+    {
+        Name = name;
+        Level = level;
+    }
+    //Setter & Getters=================
+    void setName(string name)
+    {
+        Name = name;
+    }
+    string getName()
+    {
+        return Name;
+    }
+    void setLevel(int level)
+    {
+        Level = level;
+    }
+    int getLevel()
+    {
+        return Level;
+    }
+    vector<UseableItems*> getUseableItem()
+    {
+        return useableitems;
+    }
+    vector<Weapon*> getWeapon()
+    {
+        return weapons;
+    }
+    //Add Items========================
+    void addWeapon(Weapon* weapon)
+    {
+        weapons.push_back(weapon);
+    }
+    void addUseableItems(UseableItems* useableitem)
+    {
+        useableitems.push_back(useableitem);
+    }
+
+
 };
 
 void Attack(MainCharacter* Player , Enemy* zombie , Weapon* gun)
@@ -230,19 +349,66 @@ void Attack(MainCharacter* Player , Enemy* zombie , Weapon* gun)
     }
 
 }
-
 void RecieveAttack(Enemy* zombie , MainCharacter* Playar)
 {
     Playar->setHP(Playar->getHP() - zombie->getDamagePerAttack());
 
 }
+void showItemsOfShop(Shop Market)
+{
+    cout << "Weapons: " << endl << "==================================" << endl;
+    for(int i = 0 ; i < Market.getWeapon().size() ; i++)
+    {
+        cout << i+1 << "_ " << Market.getWeapon()[i]->getName() << endl;
+    }
+    cout << endl << "=================================";
+    cout << "UseableItems: " << endl;
+    for(int i = 0 ; i < Market.getUseableItem().size() ; i++)
+    {
+        cout << i + Market.getWeapon().size()+1 << "_ " << Market.getUseableItem()[i]->getType() << endl;
+    }
+    cout << "===================================" << endl;
+}
+void buyitemFromShop(Shop Market , int numberOfProduct , string classNameOfProduct , MainCharacter Player)
+{
+    if(numberOfProduct > Market.getUseableItem().size() || numberOfProduct <= 0)
+    {
+        cout << "Invalid input" << endl;
+    }
+    else{
+
+        if(numberOfProduct <= Market.getWeapon().size())
+        {
+            if(Player.getGold() >= Market.getWeapon()[numberOfProduct - 1]->getPrice())
+            {
+                Player.addWeapon(Market.getWeapon()[numberOfProduct-1]);
+            }
+            else{
+
+                cout << "your currency is not enough" << endl;
+            }
+        }
+        else{
+
+            if(Player.getGold() >= Market.getUseableItem()[numberOfProduct - 1 - Market.getWeapon().size()]->getPrice())
+            {
+                Player.addUseableItems(Market.getUseableItem()[numberOfProduct -1 - Market.getWeapon().size()]);
+            }
+            else{
+
+                cout <<"your currency is not enough" << endl;
+            }
+        }
+    }
+}
+
 
 int main()
 {
-    MainCharacter Saeed{"Saeed" , 4 , 45 , 40 , 100 , "male"};
-    Weapon katana{10 , 5 , 1};
+    MainCharacter Saeed{"Saeed" , 4 , 45 , 40 , 100 , "male" , 4000};
+    Weapon katana{10 , 5 , 1 , "katana" , "Hkatana"};
     Enemy Zombie{"Big" , 40 , 40 , 5};
-    UseableItems wheyProtein{20 , 30 , 4};
+    UseableItems wheyProtein{20 , 30 , 4 , "WheyProtein" , "gg"};
 
     Attack(&Saeed , &Zombie , &katana);
     RecieveAttack(&Zombie , &Saeed);
