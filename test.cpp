@@ -4,18 +4,23 @@
 using namespace std;
 
 
+
 class Enemy{
 private:
+    string Name;
     int HP;
+    int DamagePerAttack;
     int Stamina;
 
-
 public:
-    Enemy() = default;
-    Enemy(int hp , int stamina)
+    //Setter & Getters ==========================
+    void setName(string name)
     {
-        HP = hp;
-        Stamina = stamina;
+        Name = name;
+    }
+    string getName()
+    {
+        return Name;
     }
     void setHP(int hp)
     {
@@ -25,216 +30,13 @@ public:
     {
         return HP;
     }
-    void setStamina(int ST)
+    void setDamagePerAttack(int damageperattack)
     {
-        Stamina = ST;
+        DamagePerAttack = damageperattack;
     }
-    int getStamina()
+    int getDamagePerAttack()
     {
-        return Stamina;
-    }
-
-};
-class Item{
-	protected:
-		string Name;
-		int Price = 10;
-        int Level = 1;	
-	public:
-        Item() = default;
-        Item(string name , int price)
-        {
-            Name = name;
-            Price = price;
-        }
-
-		string getName(){
-			return Name;
-		}
-		int getPrice(){
-			return Price;
-		}
-		void setName(string name){
-			Name = name;
-		}
-		void setPrice(int price){
-			Price = price;
-		}
-        void setLevel(int level)
-        {
-            Level = level;
-        }
-        int getLevel()
-        {
-            return Level;
-        }
-
-		bool operator==(Item other){
-			if(other.getName()== Name && other.getPrice() == Price){
-				return true;
-			}
-			else{
-				return false;
-			}
-		}
-		
-};
-class Weapon: public Item{
-	protected:
-        
-		int damagePerAttack = Level *40;
-		int neededStamina = Level * 20;
-		
-	public:
-        
-		void setDamagePerAttack(int dpa){
-			damagePerAttack = dpa;
-		}
-		int getDamagePerAttack(){
-			return damagePerAttack;
-		}
-		void setNeededS(int ns){
-			neededStamina = ns;
-		}
-		int getNeededS(){
-			return neededStamina;
-		}
-		virtual void weaponAttack(MainCharacter*User , Enemy* currentEnemy){};
-};
-class ColdWeapon: public Weapon{};
-class PermanentWeapon : public Weapon{};
-class Shop{
-private:
-    string Name;
-    vector<vector<Item*>> items;
-    vector<ThrowableItem*> ptrThrowableItems;
-    vector<UsableItems*> ptrUseableItems; 
-    vector<HotWeapon*> ptrHotWeapon;
-    vector<ColdWeapon*> ptrColdWeapon;
-    vector<PermanentWeapon*> ptrPermanent;
-    
-public:
-    
-    
-    Shop(string name)
-    {
-        Name = name;
-    }
-    
-
-    void operator+=(ThrowableItem* ThroOBJ)
-    {
-        ptrThrowableItems.push_back(ThroOBJ);
-    }
-    void operator+=(UsableItems* UseOBJ)
-    {
-        ptrUseableItems.push_back(UseOBJ);
-    }
-    void operator+=(HotWeapon* HotOBJ)
-    {
-        ptrHotWeapon.push_back(HotOBJ);
-    }
-    void operator+=(ColdWeapon* ColdOBJ)
-    {
-        ptrColdWeapon.push_back(ColdOBJ);
-    }
-
-    vector<ThrowableItem*> getThrowableItems()
-    {
-        return ptrThrowableItems;
-    }
-    vector<UsableItems*> getUseableItems()
-    {
-        return ptrUseableItems;
-    }
-    vector<HotWeapon*> getHotItems()
-    {
-        return ptrHotWeapon;
-    }
-    vector<ColdWeapon*> getColdItems()
-    {
-        return ptrColdWeapon;
-    }
-
-
-    void buyItem(MainCharacter* consumer , string NameOfItem)
-    {
-        for(int i = 0 ; i < items.size() ; i++)
-        {
-            for(int j = 0 ; j < items[i].size() ; j++)
-            {
-                if(items[i][j]->getName() == NameOfItem)
-                {
-                    if(consumer->getGold() >= items[i][j]->getPrice())
-                    {
-                        consumer->addInventory(items[i][j]);
-                        break;
-                    }
-                }
-            }
-        }
-
-        cout << "These is more than your currency" << endl;
-    }
-    
-};
-class HotWeapon: public Weapon{};
-class UsableItems: public Item{
-	protected:
-		int addedHP;
-		int AddedStamina;
-        MainCharacter* User;
-	public:
-		void setAddedHP(int ahp){
-			addedHP = ahp;
-		}
-		int getAddedHP(){
-			return addedHP;
-			
-		}
-		void setAddedStamina(int ast){
-			AddedStamina = ast;
-		}
-		int getAddedStamina(){
-			return AddedStamina;
-		}
-		virtual void HPandStincreaser() = 0;
-
-};
-class ThrowableItem: public Weapon{};
-class MainCharacter{
-protected:
-    string Name;
-    int Level;
-    int XP;
-    int HP;
-    int Stamina;
-    int Gold;
-    vector<Item*>Inventory;
-    vector<UsableItems*> UseAbleItems;
-    vector<Weapon*> weapons;
-    
-    
-
-public:
-    MainCharacter() = default;
-    MainCharacter(string name , int level , int xp , int hp ,int stamina , int gold)
-    {
-        Name = name;
-        Level = level;
-        XP = xp;
-        Stamina = stamina;
-        Gold = gold;
-        HP = hp;
-    }
-    
-    int getHP()
-    {
-        return HP;
-    }
-    void setHP(int hp)
-    {
-        HP = hp;
+        return DamagePerAttack;
     }
     void setStamina(int stamina)
     {
@@ -244,81 +46,209 @@ public:
     {
         return Stamina;
     }
-    int getGold()
+    //=========================================
+    //Constructor==============================
+    Enemy() = default;
+    Enemy(string name , int hp , int stamina , int damageperattack)
     {
-        return Gold;
+        Name = name;
+        HP = hp;
+        Stamina = stamina;
+        DamagePerAttack = damageperattack;
     }
-	void setLevel(int level)
-	{
-		Level = level;
-	}
-	int getLevel()
-	{
-		return Level;
-	}
-
-    vector<UsableItems*> getUsableItems()
+};
+class Weapon{
+protected:
+    int damagePerAttack;
+    int neededStaminaPerAttack;
+    int Level;
+public:
+    //Setter & Getter
+    void setDamagePerAttack(int damageperattack)
     {
-        return UseAbleItems;
+        damagePerAttack = damageperattack;
+    }
+    int getDamagePerAttack()
+    {
+        return damagePerAttack;
+    }
+    void setNeededStaminaPerAttack(int neededstaminaperattack)
+    {
+        neededStaminaPerAttack = neededstaminaperattack;
+    }
+    int getNeededStaminaPerAttack()
+    {
+        return neededStaminaPerAttack;
+    }
+    //============================
+    //Constructor=================
+    Weapon() = default;
+    Weapon(int damageperattack , int neededstaminaperattack , int level)
+    {
+        damagePerAttack = damageperattack;
+        neededStaminaPerAttack = neededstaminaperattack;
+        Level = level;
+    }
+
+};
+class UseableItems{
+
+private:
+    int Energy;
+    int HealingPower;
+    int Level;
+public:
+    //Setter & Getters---------
+    void setEnergy(int energy)
+    {
+        Energy = energy;
+    }
+    int getEnergy()
+    {
+        return Energy;
+    }
+    void setHealingPower(int healingpower)
+    {
+        HealingPower = healingpower;
+    }
+    int getHealingPower()
+    {
+        return HealingPower;
+    }
+    //------------------------
+    //Constructors============
+    UseableItems() = default;
+    UseableItems(int energy , int healingpower , int level)
+    {
+        Energy = energy;
+        HealingPower = healingpower;
+        Level = level;
+    }
+};
+class MainCharacter{
+protected:
+    string Name;
+    int Level;
+    int HP;
+    int XP;
+    string Gender;
+    int Stamina;
+    vector<UseableItems*> useAbleItems;
+    vector<Weapon*>weapons;
+
+public:
+    //Setter & Getters ================
+    void setName(string name)
+    {
+        Name = name;
+    }
+    string getName()
+    {
+        return Name;
+    }
+    void setLevel(int level)
+    {
+        Level = level;
+    }
+    int getLevel()
+    {
+        return Level;
+    }
+    void setHP(int hp)
+    {
+        HP = hp;
+    }
+    int getHP()
+    {
+        return HP;
+    }
+    void setXP(int xp)
+    {
+        XP = xp;
+    }
+    int getXP()
+    {
+        return XP;
+    }
+    void setGender(string gender)
+    {
+        Gender = gender;
+    }
+    string getGender()
+    {
+        return Gender;
+    }
+    void setStamina(int stamina)
+    {
+        Stamina = stamina;
+    }
+    int getStamina()
+    {
+        return Stamina;
+    }
+    //=====================================
+    void addWeapon(Weapon * weapon)
+    {
+        weapons.push_back(weapon);
     }
     vector<Weapon*> getWeapons()
     {
         return weapons;
     }
-    
-    void addUsableItem(UsableItems* useableitem)
+    void addUseableItems(UseableItems* useableitem)
     {
-        UseAbleItems.push_back(useableitem);
+        useAbleItems.push_back(useableitem);
     }
-    void addWeapon(Weapon* weapon)
+    vector<UseableItems*> getUseableItems()
     {
-        weapons.push_back(weapon);
+        return useAbleItems;
     }
-    void addInventory(Item* item)
+    //Constructors=========================
+    MainCharacter() = default;
+    MainCharacter(string name , int level , int hp , int xp , int stamina , string gender)
     {
-        Inventory.push_back(item);
+        Name = name;
+        Level = level;
+        HP = hp;
+        XP = xp;
+        Stamina = stamina;
+        Gender = gender;
     }
-    
-};
-class Katana : public ColdWeapon,PermanentWeapon{
-    private:
- 
-	public:
-        Katana(string name)
-        {
-            ColdWeapon::Name = name;
-        }
-		void weaponAttack(MainCharacter* User , Enemy* currentEnemy) override
-        {
-			if(User->getStamina() >= ColdWeapon::neededStamina){
-				currentEnemy->setHP(currentEnemy->getHP()-ColdWeapon::damagePerAttack);
-				currentEnemy->setStamina(currentEnemy->getStamina()- ColdWeapon::damagePerAttack/4);
-				User->setStamina(User->getStamina()- ColdWeapon::neededStamina);
-			}
-			else{
-				cout<<"this weapon requires more Stamina!"<<endl;
-			}
-
-		}
+    //=====================================
 };
 
+void Attack(MainCharacter* Player , Enemy* zombie , Weapon* gun)
+{
+    if(Player->getStamina() >= gun->getNeededStaminaPerAttack())
+    {
+        zombie->setHP(zombie->getHP() - gun->getDamagePerAttack());
+        Player->setStamina(Player->getStamina() - gun->getNeededStaminaPerAttack());
+    }
+    else{
 
+        cout << "your stamina is less than gun's needed stamina and you will die soon :)";
+    }
 
+}
+
+void RecieveAttack(Enemy* zombie , MainCharacter* Playar)
+{
+    Playar->setHP(Playar->getHP() - zombie->getDamagePerAttack());
+
+}
 
 int main()
 {
-    MainCharacter Saeed = MainCharacter("Saeed" , 4 , 40 , 100 , 100 , 5000);
-    Shop Hypermarket = Shop("Mashti ro kakolat taf mafe");
-    Katana katana("Samorayi");
-    Hypermarket += &katana;
-    Hypermarket.buyItem(&Saeed , "Samorayi");
+    MainCharacter Saeed{"Saeed" , 4 , 45 , 40 , 100 , "male"};
+    Weapon katana{10 , 5 , 1};
+    Enemy Zombie{"Big" , 40 , 40 , 5};
+    UseableItems wheyProtein{20 , 30 , 4};
 
-    vector<Weapon*> show;
-    show[0] = Saeed.getWeapons()[0];
+    Attack(&Saeed , &Zombie , &katana);
+    RecieveAttack(&Zombie , &Saeed);
 
-    for(int i = 0 ; i < show.size() ; i++)
-    {
-        cout << show[i] << "   ";
-    }
+
+    cout << Saeed.getHP() << endl << Zombie.getHP() << endl << Saeed.getStamina();
+
     return 0;
 }
