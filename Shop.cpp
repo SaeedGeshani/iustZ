@@ -1,7 +1,16 @@
 #include<string>
 #include<iostream>
 #include<vector>
+#include<windows.h>
+#include<iomanip>
+#include<algorithm>
 using namespace std;
+
+class MainCharacter;
+class Enemy;
+class Weapon;
+class UseableItems;
+class Shop;
 
 class MainCharacter{
 protected:
@@ -217,7 +226,72 @@ public:
         neededStaminaPerAttack = neededstaminaperattack;
         Level = level;
     }
+    //====================================================================
+    //Attack Function ====================================================
+    virtual void Attack(MainCharacter* Player , Enemy* zombie)
+    {
+        if(Player->getStamina() >= neededStaminaPerAttack)
+        {
+            zombie->setHP(zombie->getHP() - damagePerAttack);
+            Player->setStamina(Player->getStamina() - neededStaminaPerAttack);
+        }
+        else{
 
+            cout << "your stamina is less than gun's needed stamina and you will die soon :)";
+        }
+
+    }
+
+};
+class ThrowableWeapon : public Weapon{
+public:
+    //Constructors==================================
+    ThrowableWeapon() = default;
+    ThrowableWeapon(int damageperattack , int neededstaminaperattack , int level , string type , string name)
+    {
+        damagePerAttack = damageperattack;
+        neededStaminaPerAttack = neededstaminaperattack;
+        Level = level;
+        Type = type;
+        Name = name;
+    }
+    //==============================================
+    //Attack function===============================
+    virtual void Attack(MainCharacter* Player , Enemy* zombie) override
+    {
+        if(Player->getStamina() >= neededStaminaPerAttack)
+        {
+            zombie->setHP(zombie->getHP() - damagePerAttack);
+            Player->setStamina(Player->getStamina() - neededStaminaPerAttack);
+
+            for(int i = 0 ; i < Player->getWeapons().size() ; i++)
+            {
+                if(Player->getWeapons()[i] == this)
+                {
+                    Player->getWeapons().erase(Player->getWeapons().begin() + i);
+                    break;
+                }
+            }
+        }
+        else{
+
+            cout << "your stamina is less than gun's needed stamina and you will die soon :)";
+        }
+    }
+};
+class PermenantWeapon : public Weapon{
+
+public:
+    //Constructors==================================
+    PermenantWeapon() = default;
+    PermenantWeapon(int damageperattack , int neededstaminaperattack , int level , string type , string name)
+    {
+        damagePerAttack = damageperattack;
+        neededStaminaPerAttack = neededstaminaperattack;
+        Level = level;
+        Type = type;
+        Name = name;
+    }    
 };
 class UseableItems{
 
@@ -334,6 +408,7 @@ public:
 
 };
 
+
 void showItemsOfShop(Shop Market)
 {
     cout << "Weapons: " << endl << "==================================" << endl;
@@ -410,11 +485,12 @@ void reciveInfoOfPlayer(MainCharacter* player)
 	cout << "Enter name of the Warior :" << endl;
 	getline(cin , name);
 
+	
 	cout << "Enter gender of the Warior:(male - female) "  << endl;
 	getline(cin , gender);
 	while(gender != "male" || gender != "female")
 	{
-		cout << "in"
+		cout << "Invalid Input try again: " << endl;
 		getline(cin , gender);
 	}
 
@@ -424,6 +500,7 @@ void reciveInfoOfPlayer(MainCharacter* player)
 	cout << "==Now you should pick up a powerful permenant weeapon wich will be with you till the end of the war :==" << endl;
 	cout << "plese pick up one weapon: " << endl;
 	cout << "1.Katana" << endl << "2.Ak_47" << endl << "3.Knife" << endl;
+	
 	cout << "Katana(High needestamina and High damageAerAttack)" << endl;
 	cout << "Ak_47(Low needed stamina and Low damagePerAttack)" << endl;
 	cout << "Knife(Balanced)" << endl;
@@ -436,9 +513,28 @@ void reciveInfoOfPlayer(MainCharacter* player)
 int main()
 {
 
-	MainCharacter player;
+	MainCharacter player{"Saeed" , 10 , 100 , 100 , 100 , "male" , 10000};
+    ThrowableWeapon batrang{10 , 5 , 1 , "ThrowableItem" , "bating"};
 	Shop market;
-	Enemy zombie;
+	Enemy zombie{"name" , 50 , 45 , 10};
+    player.addWeapon(&batrang);
+    player.addWeapon(&batrang);
+    
+ 
+    cout << zombie.getHP() << endl;
+    for(int i = 0 ; i < player.getWeapons().size() ; i++)
+    {
+        cout << i << "." << player.getWeapons()[i]->getName() << endl;
+    }
+
+
+    batrang.Attack(&player , &zombie);
+
+    cout << zombie.getHP() << endl;
+    for(int i = 0 ; i < player.getWeapons().size() ; i++)
+    {
+        cout << i << "." << player.getWeapons()[i]->getName() << endl;
+    }
 
 
 	return 0;
