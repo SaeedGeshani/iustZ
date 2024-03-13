@@ -113,6 +113,9 @@ public:
     }
     //=====================================
 };
+class EnemyModel{};
+class EnemyView{};
+class EnemyController{};
 class Enemy{
 private:
     string Name;
