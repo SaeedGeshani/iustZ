@@ -8,11 +8,19 @@
 using namespace std;
 
 class MainCharacter;
-class Enemy;
 class Weapon;
 class UseableItems;
 class Shop;
+class EnemyModel;
+class EnemyView;
+class EnemyController;
+class Enemy;
+class EnemyFactory;
 
+
+class Enemy{
+
+};
 class MainCharacter{
 protected:
     string Name;
@@ -114,18 +122,41 @@ public:
     }
     //=====================================
 };
-class EnemyModel{};
-class EnemyView{};
-class EnemyController{};
-class Enemy{
+class EnemyModel{
 private:
     string Name;
     int HP;
     int DamagePerAttack;
     int Stamina;
-
+    int Level;
+    int neededStaminaPerAttack; 
 public:
+    //Friend classes ==========================
+    friend class EnemyView;
+    friend class EnemyController;
     //Setter & Getters ==========================
+    void setNeededStaminaPerAttack(int neededstperattack)
+    {
+        if(neededstperattack < 0)
+        {
+            cout << "The enemy can't attack on player." << endl;
+        }
+        else{
+            neededStaminaPerAttack = neededstperattack;
+        }
+    }
+    int getNeededStaminaPerAttack()
+    {
+        return neededStaminaPerAttack;
+    }
+    void setLevel(int level)
+    {
+        Level = level;
+    }
+    int getLevel()
+    {
+        return Level;
+    }
     void setName(string name)
     {
         Name = name;
@@ -160,15 +191,80 @@ public:
     }
     //=========================================
     //Constructor==============================
-    Enemy() = default;
-    Enemy(string name , int hp , int stamina , int damageperattack)
+    EnemyModel() = default;
+    EnemyModel(string name , int hp , int stamina , int damageperattack , int level)
     {
         Name = name;
         HP = hp;
         Stamina = stamina;
         DamagePerAttack = damageperattack;
+        Level = level;
     }
 };
+class EnemyView{
+protected:
+    EnemyModel* Enemymodel;
+public: 
+    //Setter and Getters=========================
+    void setEnemyModel(EnemyModel* enemymodel)
+    {
+        Enemymodel = enemymodel;
+    }
+    EnemyModel* getEnemyModel()
+    {
+        return Enemymodel;
+    }
+    //Constructors===============================
+    EnemyView() = default;
+    EnemyView(EnemyModel* enemymodel)
+    {
+        Enemymodel = enemymodel;
+    }
+    //Friend classes and Functions===============
+    friend class EnemyModel;
+    friend class EnemyController;
+    //Functions==================================
+    virtual void ShowEnemyInfo()
+    {
+        cout << "Here is status of enemy : " << endl;
+        cout << "Enemy's Name: " << Enemymodel->getName() << endl;
+        cout << "Enemy's HP : " << Enemymodel->getHP() << endl;
+        cout << "Enemy's Stamina: " << Enemymodel->getStamina() << endl;
+    }
+};
+class EnemyController{
+protected:
+    EnemyModel* Enemymodel;
+public:
+    //Constructor======================
+    EnemyController() = default;
+    EnemyController(EnemyModel* enemymodel)
+    {
+        Enemymodel = enemymodel;
+    }
+    //Setter and Getters===============
+    void setEnemyModel(EnemyModel* enemymodel)
+    {
+        Enemymodel = enemymodel;
+    }
+    EnemyModel* getEnemyModel()
+    {
+        return Enemymodel;
+    }
+    //Functions=========================
+    void Attack(MainCharacter* player)
+    {
+        if((Enemymodel->getStamina() - Enemymodel->getNeededStaminaPerAttack()) > 0)
+        {
+        player->setHP(player->getHP() - Enemymodel->getDamagePerAttack());
+        Enemymodel->setStamina(Enemymodel->getStamina() - Enemymodel->getNeededStaminaPerAttack());
+        }
+        else{
+            cout << "Enemy Doesn't have enough Energy to attack" << endl;
+        }
+    }
+};
+
 class Weapon{
 protected:
     int damagePerAttack;
@@ -232,7 +328,7 @@ public:
     }
     //====================================================================
     //Attack Function ====================================================
-    virtual void Attack(MainCharacter* Player , Enemy* zombie)
+    virtual void Attack(MainCharacter* Player , EnemyModel* zombie)
     {
         if(Player->getStamina() >= neededStaminaPerAttack)
         {
@@ -261,7 +357,7 @@ public:
     }
     //==============================================
     //Attack function===============================
-    virtual void Attack(MainCharacter* Player , Enemy* zombie) override
+    virtual void Attack(MainCharacter* Player , EnemyModel* zombie) override
     {
         if(Player->getStamina() >= neededStaminaPerAttack)
         {
@@ -461,12 +557,12 @@ void buyitemFromShop(Shop Market , int numberOfProduct , string classNameOfProdu
         }
     }
 }
-void RecieveAttack(Enemy* zombie , MainCharacter* Playar)
+void RecieveAttack(EnemyModel* zombie , MainCharacter* Playar)
 {
     Playar->setHP(Playar->getHP() - zombie->getDamagePerAttack());
 
 }
-void Attack(MainCharacter* Player , Enemy* zombie , Weapon* gun)
+void Attack(MainCharacter* Player , EnemyModel* zombie , Weapon* gun)
 {
     if(Player->getStamina() >= gun->getNeededStaminaPerAttack())
     {
@@ -605,7 +701,7 @@ int main()
 	MainCharacter player{"Saeed" , 10 , 100 , 100 , 100 , "male" , 10000};
     ThrowableWeapon batrang{10 , 5 , 1 , "ThrowableItem" , "bating"};
 	Shop market;
-	Enemy zombie{"name" , 50 , 45 , 10};
+	EnemyModel zombie{"name" , 50 , 45 , 10 , 10};
     player.addWeapon(&batrang);
     player.addWeapon(&batrang);
     
