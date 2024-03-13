@@ -5,6 +5,7 @@
 #include<iomanip>
 #include<algorithm>
 #include<cmath>
+#include<ctime>
 using namespace std;
 
 class MainCharacter;
