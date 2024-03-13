@@ -4,6 +4,7 @@
 #include<windows.h>
 #include<iomanip>
 #include<algorithm>
+#include<cmath>
 using namespace std;
 
 class MainCharacter;
@@ -15,10 +16,130 @@ class EnemyView;
 class EnemyController;
 class Enemy;
 class EnemyFactory;
+class Zombie;
+class ZombieModel;
+class ZombieView;
+class ZombieController;
 
+int CalculateHPForZombie(int);
+int CalculateSTforZombie(int);
+int CalculateDMPAforZombie(int);
 
+class ZombieController : public EnemyController{
+protected:
+
+public:
+    ZombieController(EnemyModel* zombieModel)
+    :EnemyController(zombieModel)
+    {
+
+    }
+};
+class ZombieView : public EnemyView{
+protected:
+
+public:
+    ZombieView(EnemyModel* enemymodel)
+    :EnemyView(enemymodel)
+    {
+    
+    }
+};
+class ZombieModel : public EnemyModel{
+protected:
+
+public:
+    ZombieModel() = default;
+    ZombieModel(string name , int hp , int stamina , int damageperattack , int level)
+    :EnemyModel(name , hp , stamina , damageperattack , level)
+    {
+    }
+};
 class Enemy{
+protected:
+    EnemyModel* Enemymodel;
+    EnemyView* Enemyview;
+    EnemyController* Enemycontroller;
+public:
+    //Getter and Setter=====================
+    void setEnemyModel(EnemyModel* enemymodel)
+    {
+        Enemymodel = enemymodel;
+    }
+    EnemyModel* getEnemyModel()
+    {
+        return Enemymodel;
+    }
+    void setEnemyView(EnemyView* enemyview)
+    {
+        Enemyview = enemyview;
+    }
+    EnemyView* getEnemyView()
+    {
+        return Enemyview;
+    }
+    void setEnemyController(EnemyController* enemycontroller)
+    {
+        Enemycontroller = enemycontroller;
+    }
+    EnemyController* getEnemyController()
+    {
+        return Enemycontroller;
+    }
+    //Constructor==============================
+    Enemy() = default;
+    Enemy(EnemyModel* enemymodel , EnemyView* enemyview , EnemyController* enemycontroller)
+    {
+        Enemymodel = enemymodel;
+        Enemyview = enemyview;
+        Enemycontroller = enemycontroller;
+    }
 
+};
+class Zombie : public Enemy{
+protected:
+
+public:
+    //Constructor===================
+    Zombie() = default;
+    Zombie(ZombieModel* enemymodel , ZombieView* enemyview , ZombieController* enemycontroller)
+    {
+        Enemymodel = (EnemyModel*)enemymodel;
+        Enemyview = (EnemyView*)enemyview;
+        Enemycontroller =(EnemyController*) enemycontroller;
+    }
+};
+class EnemyFactory{
+private:
+    int EnemyLevel;
+public:
+    //Constructor========================
+    EnemyFactory() = default;
+    EnemyFactory(int enemylevel)
+    {
+        EnemyLevel = enemylevel;
+    }
+    //Setter and Getters=================
+    void setEnemyLevel(int enemylevel)
+    {
+        EnemyLevel = enemylevel;
+    }
+    int getEnemyLevel()
+    {
+        return EnemyLevel;
+    }
+    //Algorithm Of Calculating==========
+
+    // Code is in functions and they're below.
+    //Functions=========================
+    Zombie* makeZombie()
+    {
+        ZombieModel zombiemodel{"Zombie", CalculateHPForZombie(EnemyLevel) , CalculateSTforZombie(EnemyLevel) , CalculateDMPAforZombie(EnemyLevel) , EnemyLevel}; 
+        ZombieView zombieview = ZombieView(&zombiemodel);      
+        ZombieController zombiecontroller{&zombiemodel};
+        Zombie zombie{&zombiemodel , &zombieview , &zombiecontroller};
+        return &zombie;
+    }
 };
 class MainCharacter{
 protected:
@@ -122,7 +243,7 @@ public:
     //=====================================
 };
 class EnemyModel{
-private:
+protected:
     string Name;
     int HP;
     int DamagePerAttack;
@@ -263,6 +384,7 @@ public:
         }
     }
 };
+
 
 class Weapon{
 protected:
@@ -609,32 +731,33 @@ void reciveInfoOfPlayer(MainCharacter* player)
 
 }
 
+
 int main()
 {
+    EnemyFactory Factory{4};
+    ZombieModel* Zmodel = new ZombieModel;
+    Zombie* zombie = new Zombie;
 
-	MainCharacter player{"Saeed" , 10 , 100 , 100 , 100 , "male" , 10000};
-    ThrowableWeapon batrang{10 , 5 , 1 , "ThrowableItem" , "bating"};
-	Shop market;
-	EnemyModel zombie{"name" , 50 , 45 , 10 , 10};
-    player.addWeapon(&batrang);
-    player.addWeapon(&batrang);
-    
- 
-    cout << zombie.getHP() << endl;
-    for(int i = 0 ; i < player.getWeapons().size() ; i++)
-    {
-        cout << i << "." << player.getWeapons()[i]->getName() << endl;
-    }
-
-
-    batrang.Attack(&player , &zombie);
-
-    cout << zombie.getHP() << endl;
-    for(int i = 0 ; i < player.getWeapons().size() ; i++)
-    {
-        cout << i << "." << player.getWeapons()[i]->getName() << endl;
-    }
-
-
+    zombie->getEnemyView()->ShowEnemyInfo();
+	
 	return 0;
+}
+
+int CalculateDMPAforZombie(int level)
+{
+    int DMPA;
+    DMPA = pow(level , 8/7) + 10;
+    return DMPA;
+}
+int CalculateSTforZombie(int level)
+{
+    int ST;
+    ST = pow(level , 7/5) + 80;
+    return ST;
+}
+int CalculateHPForZombie(int level)
+{
+    int HP;
+    HP = pow(level , 4/3) * 50 + 100;
+    return HP;
 }
