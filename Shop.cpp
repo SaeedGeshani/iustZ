@@ -6,6 +6,14 @@
 #include<algorithm>
 #include<cmath>
 #include<ctime>
+#include "Headers/EnemyFactory.h"
+#include "Headers/EnemyFactory.cpp"
+#include "Headers/Zombie.h"
+#include "Headers/Zombie.cpp"
+#include "Headers/Enemy.h"
+#include "Headers/Enemy.cpp"
+#include "Headers/MainCharacter.h"
+#include "Headers/MainCharacter.cpp"
 using namespace std;
 
 class MainCharacter;
