@@ -1,6 +1,7 @@
 #include<string>
 #include<vector>
 #include "MainCharacter.h"
+#include "Zombie.h"
 using namespace std;
 
 

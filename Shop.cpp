@@ -140,11 +140,11 @@ void reciveInfoOfPlayer(MainCharacter* player)
 int main()
 {
     EnemyFactory Factory{4};
-    ZombieModel* Zmodel = new ZombieModel;
-    Zombie* zombie = new Zombie;
+    Zombie* zombie = nullptr;
 
-    zombie->getEnemyView()->ShowEnemyInfo();
+    zombie = Factory.makeZombie();
 	
+    zombie->getEnemyView()->ShowEnemyInfo();
 	return 0;
 }
 

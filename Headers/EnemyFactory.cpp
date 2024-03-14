@@ -2,6 +2,7 @@
 #include<string>
 #include<vector>
 #include "EnemyFactory.h"
+#include "Zombie.h"
 
 using namespace std;
 //EnemyFactory///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,11 +27,11 @@ using namespace std;
     //Functions=========================
     Zombie* EnemyFactory::makeZombie()
     {
-        ZombieModel zombiemodel{"Zombie", CalculateHPForZombie(EnemyLevel) , CalculateSTforZombie(EnemyLevel) , CalculateDMPAforZombie(EnemyLevel) , EnemyLevel}; 
-        ZombieView zombieview = ZombieView(&zombiemodel);      
-        ZombieController zombiecontroller{&zombiemodel};
-        Zombie zombie{&zombiemodel , &zombieview , &zombiecontroller};
-        Zombie* ptrZombie = &zombie;
-        return ptrZombie;
+        ZombieModel* zombiemodel = new ZombieModel("Zombie", CalculateHPForZombie(EnemyLevel) , CalculateSTforZombie(EnemyLevel) , CalculateDMPAforZombie(EnemyLevel) , EnemyLevel); 
+        ZombieView* zombieview = new ZombieView(zombiemodel);      
+        ZombieController* zombiecontroller = new ZombieController(zombiemodel);
+        Zombie* zombie = new Zombie(zombiemodel , zombieview , zombiecontroller);
+        return zombie;
+        
     }
 
