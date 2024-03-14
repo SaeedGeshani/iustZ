@@ -13,7 +13,7 @@ protected:
     EnemyModel* Enemymodel;
 public:
     //Constructor======================
-    EnemyController() = default;
+    EnemyController();
     EnemyController(EnemyModel* enemymodel);
     
     //Setter and Getters===============
@@ -35,7 +35,7 @@ public:
     EnemyModel* getEnemyModel();
    
     //Constructors===============================
-    EnemyView() = default;
+    EnemyView();
     EnemyView(EnemyModel* enemymodel);
     
     //Friend classes and Functions===============
@@ -84,7 +84,7 @@ public:
    
     //=========================================
     //Constructor==============================
-    EnemyModel() = default;
+    EnemyModel();
     EnemyModel(string name , int hp , int stamina , int damageperattack , int level);
     
 };
@@ -109,7 +109,7 @@ public:
     EnemyController* getEnemyController();
     
     //Constructor==============================
-    Enemy() = default;
+    Enemy();
     Enemy(EnemyModel* enemymodel , EnemyView* enemyview , EnemyController* enemycontroller);
    
 };

@@ -9,7 +9,7 @@ using namespace std;
 class ThrowableWeapon : public Weapon{
 public:
     //Constructors==================================
-    ThrowableWeapon() = default;
+    ThrowableWeapon();
     ThrowableWeapon(int damageperattack , int neededstaminaperattack , int level , string type , string name);
    
     //==============================================

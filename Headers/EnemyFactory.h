@@ -14,7 +14,7 @@ private:
     int EnemyLevel;
 public:
     //Constructor========================
-    EnemyFactory() = default;
+    EnemyFactory();
     EnemyFactory(int enemylevel);
    
     //Setter and Getters=================

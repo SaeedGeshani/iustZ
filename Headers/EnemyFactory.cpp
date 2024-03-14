@@ -30,6 +30,7 @@ using namespace std;
         ZombieView zombieview = ZombieView(&zombiemodel);      
         ZombieController zombiecontroller{&zombiemodel};
         Zombie zombie{&zombiemodel , &zombieview , &zombiecontroller};
-        return &zombie;
+        Zombie* ptrZombie = &zombie;
+        return ptrZombie;
     }
 

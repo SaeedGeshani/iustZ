@@ -37,7 +37,7 @@ public:
     
     //============================
     //Constructor=================
-    Weapon() = default;
+    Weapon();
     Weapon(int damageperattack , int neededstaminaperattack , int level , string type , string name);
     
     //====================================================================

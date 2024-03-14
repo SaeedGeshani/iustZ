@@ -58,7 +58,7 @@ public:
     vector<UseableItems*> getUseableItems();
     
     //Constructors=========================
-    MainCharacter() = default;
+    MainCharacter();
     MainCharacter(string name , int level , int hp , int xp , int stamina , string gender , int gold);
     
     //=====================================

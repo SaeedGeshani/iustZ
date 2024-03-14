@@ -37,7 +37,7 @@ public:
     
     //------------------------
     //Constructors============
-    UseableItems() = default;
+    UseableItems();
     UseableItems(int energy , int healingpower , int level , string classname , string name);
    
 };

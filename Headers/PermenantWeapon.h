@@ -7,6 +7,6 @@ class PermenantWeapon : public Weapon{
 
 public:
     //Constructors==================================
-    PermenantWeapon() = default;
+    PermenantWeapon();
     PermenantWeapon(int damageperattack , int neededstaminaperattack , int level , string type , string name);
 };

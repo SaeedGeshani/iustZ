@@ -35,8 +35,6 @@ int CalculateDMPAforZombie(int);
 
 
 
-
-
 void showItemsOfShop(Shop Market)
 {
     cout << "Weapons: " << endl << "==================================" << endl;

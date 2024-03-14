@@ -15,7 +15,7 @@ private:
     vector<Weapon*> weapons;
 
 public:
-    Shop() = default;
+    Shop();
     Shop(string name , int level);
     
     //Setter & Getters=================

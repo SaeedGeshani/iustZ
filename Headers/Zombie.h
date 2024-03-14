@@ -23,7 +23,7 @@ class ZombieModel : public EnemyModel{
 protected:
 
 public:
-    ZombieModel() = default;
+    ZombieModel();
     ZombieModel(string name , int hp , int stamina , int damageperattack , int level);
 };
 class Zombie : public Enemy{
@@ -31,6 +31,6 @@ protected:
 
 public:
     //Constructor===================
-    Zombie() = default;
+    Zombie();
     Zombie(ZombieModel* enemymodel , ZombieView* enemyview , ZombieController* enemycontroller);
 };
