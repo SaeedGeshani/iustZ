@@ -1,7 +1,7 @@
 #include<iostream>
 #include<string>
-#include "Enemy2.h"
-#include "Zombie2.h"
+#include "Enemy.h"
+#include "Zombie.h"
 
 //Zombie////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Constructor===================
