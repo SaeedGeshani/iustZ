@@ -121,6 +121,93 @@ void reciveInfoOfPlayer(MainCharacter* player)
 }
 
 
+//if return value was 1 MainCharacter goes shopping if return value was 0 MainCharacter fights ;
+int randomShuffle ( int Difficulty , int Level ) {
+    srand(time(0)) ;   
+    vector<int> shuffle ;     
+    int random ;
+    if (Difficulty == 1) {
+        random = ((rand() % 100) / Level) - (Level%10) + 35 ;
+        if (random>=100 ){
+            random = 90 ;
+        }
+        if (random<=0 ){
+            random = 10 ;
+        }
+        for (int i=0 ; i<random ; ++i){
+            shuffle.push_back(1);
+        }
+        for (int i=0 ; i<100-shuffle.size() ; ++i){
+            shuffle.push_back(0);
+        }
+        random_shuffle(shuffle.begin() , shuffle.end());
+        if (shuffle[0] == 1){
+            cout << "go to shop" << endl ;
+            return 1 ;
+        }
+        if (shuffle[0] == 0){
+            cout << "FIGHT" << endl ;
+            return 0 ;
+        }
+        shuffle.clear() ;
+        shuffle.shrink_to_fit();
+    }
+    if (Difficulty == 2) {
+        random = ((rand() % 100) / Level) - (Level%10) + 25 ;
+        if (random>=100 ){
+            random = 90 ;
+        }
+        if (random<=0 ){
+            random = 10 ;
+        }
+        for (int i=0 ; i<random ; ++i){
+            shuffle.push_back(1);
+        }
+        for (int i=0 ; i<100-shuffle.size() ; ++i){
+            shuffle.push_back(0);
+        }
+        random_shuffle(shuffle.begin() , shuffle.end());
+        if (shuffle[0] == 1){
+            cout << "go to shop" << endl ;
+            return 1 ;
+        }
+        if (shuffle[0] == 0){
+            cout << "FIGHT" << endl ;
+            return 0 ;
+        }
+        shuffle.clear() ;
+        shuffle.shrink_to_fit();
+    }
+    if (Difficulty == 3) {
+        random = ((rand() % 100) / Level) - (Level%10) + 15 ;
+        if (random>=100 ){
+            random = 90 ;
+        }
+        if (random<=0 ){
+            random = 10 ;
+        }  
+        for (int i=0 ; i<random ; ++i){
+            shuffle.push_back(1);
+        }
+        for (int i=0 ; i<100-shuffle.size() ; ++i){
+            shuffle.push_back(0);
+        }
+        random_shuffle(shuffle.begin() , shuffle.end());
+        if (shuffle[0] == 1){
+            //cout << "go to shop" << endl ;
+            return 1 ;
+        }
+        if (shuffle[0] == 0){
+            //cout << "FIGHT" << endl ;
+            return 0 ;
+        }
+        shuffle.clear() ;
+        shuffle.shrink_to_fit();
+    }
+}
+
+
+
 int main()
 {
     
