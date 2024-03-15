@@ -1,36 +1,29 @@
 #pragma once
+#include <string>
 #include "MainCharacter.h"
 #include "Weapon.h"
+#include "Items.h"
 
-using namespace std;
+using namespace std; 
 
-class UseableItems{
+class UseableItems: public Items{
 
 private:
     int Energy;
     int HealingPower;
     int Level;
-    int Price;
-    string className;
-    string Name;
+    std::string className;
+
 public:
     //Setter & Getters---------
-    void setName(string name);
-    
-    string getName();
-    
-    void setType(string classname);
-    
-    string getType();
+    void setType(std::string classname);
    
-    void setPrice(int price);
-    
-    int getPrice();
+    std::string getType();
     
     void setEnergy(int energy);
     
     int getEnergy();
-    
+   
     void setHealingPower(int healingpower);
     
     int getHealingPower();
@@ -38,6 +31,6 @@ public:
     //------------------------
     //Constructors============
     UseableItems();
-    UseableItems(int energy , int healingpower , int level , string classname , string name);
-   
+    UseableItems(int energy , int healingpower , int level , std::string classname , std::string name, int price);
+    
 };

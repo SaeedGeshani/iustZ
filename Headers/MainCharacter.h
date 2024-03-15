@@ -2,16 +2,20 @@
 #include<string>
 #include<iostream>
 #include<vector>
+#include "Enemy.h"
+#include "Weapon.h"
+#include "ThrowableWeapon.h"
 using namespace std;
 class UseableItems;
 class Weapon;
+class Enemy;
 
 class MainCharacter{
 protected:
     string Name;
-    int Level;
     int HP;
     int XP;
+	int Level;
     string Gender;
     int Stamina;
     int Gold;
@@ -21,17 +25,17 @@ protected:
 public:
     //Setter & Getters ================
     void setGold(int gold);
-    
+   
     int getGold();
-    
+
     void setName(string name);
-    
+  
     string getName();
     
     void setLevel(int level);
     
     int getLevel();
-    
+   
     void setHP(int hp);
     
     int getHP();
@@ -41,7 +45,7 @@ public:
     int getXP();
     
     void setGender(string gender);
-    
+   
     string getGender();
     
     void setStamina(int stamina);
@@ -50,16 +54,19 @@ public:
     
     //=====================================
     void addWeapon(Weapon * weapon);
-   
-    vector<Weapon*> getWeapons();
+    
+    vector<Weapon*> &getWeapons();
    
     void addUseableItems(UseableItems* useableitem);
-    
-    vector<UseableItems*> getUseableItems();
-    
+   
+    vector<UseableItems*> &getUseableItems();
+   
+    //Attack func==========================
+    void Attack(Enemy* enemy, Weapon* weapon);
+
     //Constructors=========================
     MainCharacter();
-    MainCharacter(string name , int level , int hp , int xp , int stamina , string gender , int gold);
+    MainCharacter(string name , int hp , int xp , int stamina , string gender , int gold);
     
     //=====================================
 };

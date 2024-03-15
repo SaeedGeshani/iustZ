@@ -1,33 +1,19 @@
 #include "MainCharacter.h"
 #include "Weapon.h"
 #include "UseableItems.h"
+#include<string>
 using namespace std;
 
 
+
     //Setter & Getters---------
-    void UseableItems::setName(string name)
-    {
-        Name = name;
-    }
-    string UseableItems::getName()
-    {
-        return Name;
-    }
-    void UseableItems::setType(string classname)
+    void UseableItems::setType(std::string classname)
     {
         className = classname;
     }
-    string UseableItems::getType()
+    std::string UseableItems::getType()
     {
         return className;
-    }
-    void UseableItems::setPrice(int price)
-    {
-        Price = price;
-    }
-    int UseableItems::getPrice()
-    {
-        return Price;
     }
     void UseableItems::setEnergy(int energy)
     {
@@ -48,10 +34,10 @@ using namespace std;
     //------------------------
     //Constructors============
     UseableItems::UseableItems() = default;
-    UseableItems::UseableItems(int energy , int healingpower , int level , string classname , string name)
+    UseableItems::UseableItems(int energy , int healingpower , int level , string classname , string name, int price) : Items( name,  price)
     {  
         className = classname;
-        Name = name;
+//        Name = name;
         Energy = energy;
         HealingPower = healingpower;
         Level = level;

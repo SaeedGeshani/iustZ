@@ -6,6 +6,8 @@
 #include<algorithm>
 #include<cmath>
 #include<ctime>
+#include "Headers/Items.h"
+#include "Headers/Items.cpp"
 #include "Headers/EnemyFactory.h"
 #include "Headers/EnemyFactory.cpp"
 #include "Headers/Zombie.h"
@@ -83,24 +85,6 @@ void buyitemFromShop(Shop Market , int numberOfProduct , string classNameOfProdu
         }
     }
 }
-void RecieveAttack(EnemyModel* zombie , MainCharacter* Playar)
-{
-    Playar->setHP(Playar->getHP() - zombie->getDamagePerAttack());
-
-}
-void Attack(MainCharacter* Player , EnemyModel* zombie , Weapon* gun)
-{
-    if(Player->getStamina() >= gun->getNeededStaminaPerAttack())
-    {
-        zombie->setHP(zombie->getHP() - gun->getDamagePerAttack());
-        Player->setStamina(Player->getStamina() - gun->getNeededStaminaPerAttack());
-    }
-    else{
-
-        cout << "your stamina is less than gun's needed stamina and you will die soon :)";
-    }
-
-}
 void reciveInfoOfPlayer(MainCharacter* player)
 {
 	string name;
@@ -139,13 +123,7 @@ void reciveInfoOfPlayer(MainCharacter* player)
 
 int main()
 {
-    EnemyFactory Factory{4};
-    Zombie* zombie = nullptr;
-
-    zombie = Factory.makeZombie();
-	
-    zombie->getEnemyView()->ShowEnemyInfo();
-	return 0;
+    
 }
 
 int CalculateDMPAforZombie(int level)

@@ -2,7 +2,21 @@
 #include<vector>
 #include "MainCharacter.h"
 #include "Zombie.h"
+
 using namespace std;
+
+
+    //Constructors=====================
+    MainCharacter::MainCharacter() = default;
+    MainCharacter::MainCharacter(string name , int hp , int xp , int stamina , string gender , int gold)
+    {
+        Name = name;
+        HP = hp;
+        Stamina = stamina;
+        Gender = gender;
+        Gold = gold;
+    }
+    
 
 
     //Setter & Getters ================
@@ -67,7 +81,7 @@ using namespace std;
     {
         weapons.push_back(weapon);
     }
-    vector<Weapon*> MainCharacter::getWeapons()
+    vector<Weapon*> &MainCharacter::getWeapons()
     {
         return weapons;
     }
@@ -75,20 +89,26 @@ using namespace std;
     {
         useAbleItems.push_back(useableitem);
     }
-    vector<UseableItems*> MainCharacter::getUseableItems()
+    vector<UseableItems*> &MainCharacter::getUseableItems()
     {
         return useAbleItems;
     }
-    //Constructors=========================
-    MainCharacter::MainCharacter() = default;
-    MainCharacter::MainCharacter(string name , int level , int hp , int xp , int stamina , string gender , int gold)
-    {
-        Gold = gold;
-        Name = name;
-        Level = level;
-        HP = hp;
-        XP = xp;
-        Stamina = stamina;
-        Gender = gender;
-    }
-    //=====================================
+    //Attack func==========================
+     void MainCharacter::Attack(Enemy* enemy, Weapon* weapon){
+    	if(Stamina >= weapon->getNeededStaminaPerAttack() ){
+    		int totalDamage = (weapon->getDamagePerAttack() + (weapon->getLevel()-1)*weapon->getDamagePerAttack()/8) + (weapon->getDamagePerAttack() + (weapon->getLevel()-1)*weapon->getDamagePerAttack()/8)*(Level-1)/5;
+    		enemy->getEnemyModel()->setHP(enemy->getEnemyModel()->getHP()-totalDamage);
+    		enemy->getEnemyModel()->setStamina(enemy->getEnemyModel()->getStamina()-(totalDamage/4));
+			Stamina -= weapon->getNeededStaminaPerAttack();   
+			if((ThrowableWeapon *)weapon != NULL){
+				for(int i=0;i<weapons.size();i++){
+					if(weapons[i]==weapon){
+						weapons.erase(weapons.begin()+i);
+						break;
+					}	
+				}
+			}
+			
+		}
+		
+	}

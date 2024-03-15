@@ -9,11 +9,11 @@ using namespace std;
 
     //Constructors==================================
     PermenantWeapon::PermenantWeapon() = default;
-    PermenantWeapon::PermenantWeapon(int damageperattack , int neededstaminaperattack , int level , string type , string name)
-    {
-        damagePerAttack = damageperattack;
-        neededStaminaPerAttack = neededstaminaperattack;
-        Level = level;
-        Type = type;
-        Name = name;
-    }    
+    PermenantWeapon::PermenantWeapon(int damageperattack , int neededstaminaperattack , int level  , string name, int price) : Weapon( damageperattack ,  neededstaminaperattack ,  level  ,  name,  price){
+	}
+//    {
+//        damagePerAttack = damageperattack;
+//        neededStaminaPerAttack = neededstaminaperattack;
+//        Level = level;
+//        Name = name;
+//    }    

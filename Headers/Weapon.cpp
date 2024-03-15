@@ -10,6 +10,16 @@ using namespace std;
 //Weapon//////////////////////////////////////////////////////////////////////////////////////////
 
     //Setter & Getter
+    void Weapon::setLevel(int level)
+    {
+        Level = level;
+    }
+
+    int Weapon::getLevel()
+    {
+        return Level;
+    }
+
     void Weapon::setPrice(int price)
     {
         Price = price;
@@ -53,28 +63,28 @@ using namespace std;
     //============================
     //Constructor=================
     Weapon::Weapon() = default;
-    Weapon::Weapon(int damageperattack , int neededstaminaperattack , int level , string type , string name)
+    Weapon::Weapon(int damageperattack , int neededstaminaperattack , int level , string type , int price)
     {
         Type = type;
-        Name = name;
+        Price = price;
         damagePerAttack = damageperattack;
         neededStaminaPerAttack = neededstaminaperattack;
         Level = level;
     }
     //====================================================================
     //Attack Function ====================================================
-    void Weapon::Attack(MainCharacter* Player , EnemyModel* zombie)
-    {
-        if(Player->getStamina() >= neededStaminaPerAttack)
-        {
-            zombie->setHP(zombie->getHP() - damagePerAttack);
-            Player->setStamina(Player->getStamina() - neededStaminaPerAttack);
-        }
-        else{
+    // void Weapon::Attack(MainCharacter* Player , EnemyModel* zombie)
+    // {
+    //     if(Player->getStamina() >= neededStaminaPerAttack)
+    //     {
+    //         zombie->setHP(zombie->getHP() - damagePerAttack);
+    //         Player->setStamina(Player->getStamina() - neededStaminaPerAttack);
+    //     }
+    //     else{
 
-            cout << "your stamina is less than gun's needed stamina and you will die soon :)";
-        }
+    //         cout << "your stamina is less than gun's needed stamina and you will die soon :)";
+    //     }
 
-    }
+    // }
 
 

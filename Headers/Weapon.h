@@ -15,6 +15,10 @@ protected:
     string Name;
 public:
     //Setter & Getter
+    void setLevel(int);
+
+    int getLevel();
+    
     void setPrice(int price);
    
     int getPrice();
@@ -38,10 +42,10 @@ public:
     //============================
     //Constructor=================
     Weapon();
-    Weapon(int damageperattack , int neededstaminaperattack , int level , string type , string name);
+    Weapon(int damageperattack , int neededstaminaperattack , int level , string type , int price);
     
     //====================================================================
     //Attack Function ====================================================
-    virtual void Attack(MainCharacter* Player , EnemyModel* zombie);
+    //virtual void Attack(MainCharacter* Player , EnemyModel* zombie);
     
 };
