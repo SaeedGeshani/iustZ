@@ -2,22 +2,11 @@
 #include<vector>
 #include "MainCharacter.h"
 #include "Zombie.h"
+#include "UseableItems.h"
+#include "Weapon.h"
+#include "Enemy.h"
 
 using namespace std;
-
-
-    //Constructors=====================
-    MainCharacter::MainCharacter() = default;
-    MainCharacter::MainCharacter(string name , int hp , int xp , int stamina , string gender , int gold)
-    {
-        Name = name;
-        HP = hp;
-        Stamina = stamina;
-        Gender = gender;
-        Gold = gold;
-    }
-    
-
 
     //Setter & Getters ================
     void MainCharacter::setGold(int gold)
@@ -93,6 +82,35 @@ using namespace std;
     {
         return useAbleItems;
     }
+
+    void MainCharacter::showCharacterWeapons()
+    {
+        cout << "The Inventory Includes:" << endl;
+
+        cout << "Weapons==========================================" << endl;
+        for(int i = 0 ; i < this->getWeapons().size() ; i++)
+        {
+            cout << i+1 << "." << this->getWeapons()[i]->getType() << endl;
+        }
+    }
+
+    void MainCharacter::showCharacterUsableItems()
+    {
+        cout << "The Items are: =======================" << endl;
+
+        for(int i = 0 ; i < this->getUseableItems().size() ; i++)
+        {
+            cout << i+1 << "." << this->getUseableItems()[i]->getName() << endl;
+        }
+    }
+
+    void MainCharacter::useItem(int numberOfItemInInventory)
+    {
+        this->setHP(this->getHP() + this->getUseableItems()[numberOfItemInInventory]->getHealingPower());
+        this->setStamina(this->getStamina() + this->getUseableItems()[numberOfItemInInventory]->getEnergy());
+        this->getUseableItems().erase(this->getUseableItems().begin() + numberOfItemInInventory);
+    }
+
     //Attack func==========================
      void MainCharacter::Attack(Enemy* enemy, Weapon* weapon){
     	if(Stamina >= weapon->getNeededStaminaPerAttack() ){
@@ -112,3 +130,16 @@ using namespace std;
 		}
 		
 	}
+
+     //Constructors=====================
+    MainCharacter::MainCharacter() = default;
+    MainCharacter::MainCharacter(string name , int hp , int xp , int stamina , string gender , int gold)
+    {
+        Name = name;
+        HP = hp;
+        Stamina = stamina;
+        Gender = gender;
+        Gold = gold;
+    }
+    
+

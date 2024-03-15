@@ -11,8 +11,8 @@ class Shop{
 private:
     int Level;
     string Name;
-    vector<UseableItems*> useableitems;
-    vector<Weapon*> weapons;
+    // vector<UseableItems*> useableitems;
+    // vector<Weapon*> weapons;
 
 public:
     Shop();
@@ -26,15 +26,19 @@ public:
     void setLevel(int level);
     
     int getLevel();
+
+    void ShowItems();
+
+    void BuyItem(MainCharacter* player);
     
-    vector<UseableItems*> getUseableItem();
+    // vector<UseableItems*> getUseableItem();
     
-    vector<Weapon*> getWeapon();
+    // vector<Weapon*> getWeapon();
     
-    //Add Items========================
-    void addWeapon(Weapon* weapon);
+    // //Add Items========================
+    // void addWeapon(Weapon* weapon);
     
-    void addUseableItems(UseableItems* useableitem);
+    // void addUseableItems(UseableItems* useableitem);
     
 
 

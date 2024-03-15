@@ -5,6 +5,8 @@
 #include "Enemy.h"
 #include "Weapon.h"
 #include "ThrowableWeapon.h"
+#include "UseableItems.h"
+
 using namespace std;
 class UseableItems;
 class Weapon;
@@ -60,6 +62,12 @@ public:
     void addUseableItems(UseableItems* useableitem);
    
     vector<UseableItems*> &getUseableItems();
+
+    void showCharacterWeapons();
+
+    void showCharacterUsableItems();
+
+    void useItem(int);
    
     //Attack func==========================
     void Attack(Enemy* enemy, Weapon* weapon);
