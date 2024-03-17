@@ -10,6 +10,10 @@
 using namespace std;
 
 	HotWeapon::HotWeapon()=default;
-	HotWeapon::HotWeapon(int damageperattack , int neededstaminaperattack  , string name , int price) : Weapon( damageperattack ,  neededstaminaperattack ,name ,  price){
-	}
+	HotWeapon::HotWeapon(int damageperattack , int neededstaminaperattack  , string name , int price){
 
+		damagePerAttack = damageperattack;
+		neededStaminaPerAttack = neededstaminaperattack;
+		Name = name;
+		Price = price;
+	}

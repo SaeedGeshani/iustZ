@@ -11,6 +11,10 @@
 using namespace std;
  
 	Blaster::Blaster()=default;
-	Blaster::Blaster(int damageperattack , int neededstaminaperattack  , string name , int price) : HotWeapon( damageperattack ,  neededstaminaperattack ,name ,  price){
-	}
+	Blaster::Blaster(int damageperattack , int neededstaminaperattack  , string name , int price){
 
+		damagePerAttack = damageperattack;
+		neededStaminaPerAttack = neededstaminaperattack;
+		Name = name;
+		Price = price;
+	}

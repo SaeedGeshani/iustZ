@@ -109,7 +109,9 @@ using namespace std;
         this->setHP(this->getHP() + this->getUseableItems()[numberOfItemInInventory]->getHealingPower());
         this->setStamina(this->getStamina() + this->getUseableItems()[numberOfItemInInventory]->getEnergy());
         this->setXP( this->getXP() + this->getUseableItems()[numberOfItemInInventory]->getAddedXP());
+        delete this->getUseableItems()[numberOfItemInInventory];
         this->getUseableItems().erase(this->getUseableItems().begin() + numberOfItemInInventory);
+        this->getUseableItems().shrink_to_fit();
     }
 
     //Attack func==========================
@@ -122,13 +124,19 @@ using namespace std;
 			if(dynamic_cast<ThrowableWeapon*> (weapon) != NULL){
 				for(int i=0;i<weapons.size();i++){
 					if(weapons[i]==weapon){
+                        delete weapons[i];
 						weapons.erase(weapons.begin()+i);
+                        weapons.shrink_to_fit();
 						break;
 					}	
 				}
 			}
 			
 		}
+        else{
+
+            cout << "Character Doesn't have enough energy to use weapon" << endl;
+        }
 		
 	}
 

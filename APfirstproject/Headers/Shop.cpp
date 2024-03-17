@@ -55,7 +55,7 @@ using namespace std;
 				player->addUseableItems(availableUseables[ChosenNumber-1-availableWeapons.size()]);
 			}
 			else if(ChosenNumber==0){
-				return;
+                return;
 			}
             
         }while(ChosenNumber < 0 || ChosenNumber > availableWeapons.size()+availableUseables.size() );

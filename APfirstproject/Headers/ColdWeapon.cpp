@@ -10,6 +10,10 @@
 using namespace std;
 
 	ColdWeapon::ColdWeapon()=default;
-	ColdWeapon::ColdWeapon(int damageperattack , int neededstaminaperattack  , string name , int price) : Weapon( damageperattack ,  neededstaminaperattack ,name ,  price){
+	ColdWeapon::ColdWeapon(int damageperattack , int neededstaminaperattack  , string name , int price)
+	{
+		damagePerAttack = damageperattack;
+		neededStaminaPerAttack = neededstaminaperattack;
+		Name = name;
+		Price = price;
 	}
-
