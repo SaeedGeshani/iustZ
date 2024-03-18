@@ -46,7 +46,7 @@ using namespace std;
 
 //Global Objects And Variables==============================
     static MainCharacter Warior;
-//    Shop Store;
+    Shop Store;
     EnemyFactory Enemyhouse;
 //==========================================================
 
@@ -317,8 +317,8 @@ int main()
         checkStatus = randomShuffle(1 , 1);
         if(checkStatus)
         {
-            randomShopGenerator().BuyItem(&Warior);
-            
+            Store = randomShopGenerator();
+            Store.BuyItem(&Warior);
         }
         else{
 
