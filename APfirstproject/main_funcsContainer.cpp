@@ -80,7 +80,7 @@ Shop randomShopGenerator(){
 	}
 	randomStore.setWeapon(outputweapon);
 	randomStore.setUsableItems(outputusable);
-	return randomStore;	
+	return randomStore;	 
 
 }
 
