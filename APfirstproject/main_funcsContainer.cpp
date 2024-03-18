@@ -46,7 +46,7 @@ using namespace std;
 
 //Global Objects And Variables==============================
     static MainCharacter Warior;
-    Shop Store;
+    Shop* Store;
     EnemyFactory Enemyhouse;
 //==========================================================
 
@@ -55,13 +55,13 @@ int CalculateHPForZombie(int);
 int CalculateSTforZombie(int);
 int CalculateDMPAforZombie(int);
 
-Shop randomShopGenerator(){
-	Shop randomStore;
+Shop* randomShopGenerator(){
+	Shop* randomStore = new Shop;
 	Batarang* a = new Batarang(40 , 10 , "Batrang" , 50);
 	Blaster* b = new Blaster(50 , 10 , "Blaster" , 100);
 	Katana* c = new Katana(80 , 5 , "Katana" , 75);
-	grenade* d = new grenade(200 , 70 , "Grenade" , 50);
-	Egg* e = new Egg(10 , 50 , "Egg" , 10 , 5);
+	grenade* d = new grenade(200 , 50 , "Grenade" , 50);
+	Egg* e = new Egg(20 , 50 , "Egg" , 10 , 5);
 	WheyProtein* f = new WheyProtein(40 , 100 , "Whey Protein" , 50 , 10);
 	vector<Weapon*> wp{a, b, c, d};
 	vector<UseableItems*> itms{e, f};
@@ -72,14 +72,21 @@ Shop randomShopGenerator(){
 		if(rand()%2 == 0){
 			outputweapon.push_back(wp[i]);
 		}	
+        else{
+            delete wp[i];
+        }
 	}
 	for(int i=0;i<2;i++){
 		if(rand()%2 == 0){
 			outputusable.push_back(itms[i]);
 		}	
+        else{
+
+            delete itms[i];
+        }
 	}
-	randomStore.setWeapon(outputweapon);
-	randomStore.setUsableItems(outputusable);
+	randomStore->setWeapon(outputweapon);
+	randomStore->setUsableItems(outputusable);
 	return randomStore;	 
 
 }
@@ -174,7 +181,7 @@ void makingNewcharacter()
 
         if(ChosenWeapon == 1)
         {
-        	Katana* yourkat = new Katana(20 , 15 , "Katana" , 100);
+        	Katana* yourkat = new Katana(40 , 15 , "Katana" , 100);
             Warior.setGold(Warior.getGold()-yourkat->getPrice());
             Warior.addWeapon(yourkat);
         }
@@ -195,8 +202,8 @@ void makingNewcharacter()
 
     cout << endl << "===== Now we will give you somthing that you can heal yourself and give your muscular body a litle bit Energy so take them and put in your Inventory" << endl;
     cout << endl << "The first one is WheyPowder it helps you to get Stamina(20) and heal your body(10) you will have two:" << endl;
-    WheyProtein* ptr1WheyPowder = new WheyProtein(20 , 10   , "Whey Powder" , 30, 0);
-    WheyProtein* ptr2WheyPowder = new WheyProtein(20 , 10   , "Whey Powder" , 30, 0);
+    WheyProtein* ptr1WheyPowder = new WheyProtein(50 , 10   , "Whey Powder" , 30, 0);
+    WheyProtein* ptr2WheyPowder = new WheyProtein(50 , 10   , "Whey Powder" , 30, 0);
     Warior.addUseableItems(ptr1WheyPowder);
     Warior.addUseableItems(ptr2WheyPowder);
 
@@ -315,45 +322,78 @@ int main()
     while(Warior.getHP() > 0)
     {
         checkStatus = randomShuffle(1 , 1);
+
         if(checkStatus)
         {
             Store = randomShopGenerator();
-            Store.BuyItem(&Warior);
+            Store->BuyItem(&Warior);
+            delete Store;
         }
+
         else{
 
             Zombie* enemy = Enemyhouse.makeZombie();
+
             while(Warior.getHP() > 0 && enemy->getEnemyModel()->getHP() > 0)
             {
-                cout << "enemy is against you what you want to do?" << endl;
-                cout << "1.Fight" << endl << "2.use Inventory" << endl;
-                int input;
-                cin >> input;
 
-                if(input == 1)
+                while(true)
                 {
-                    cout << "Which Weapon you wanna use?" << endl;
-                    Warior.showCharacterWeapons();
+                    cout << "enemy is against you what you want to do?" << endl;
+                    cout << "1.Fight" << endl << "2.use Inventory" << endl;
+                    int input;
                     cin >> input;
-                        Warior.Attack(enemy , Warior.getWeapons()[input-1]);
-                        enemy->getEnemyController()->Attack(&Warior);
-                } 
-                else if(input == 2)
-                {
-                    Warior.showCharacterUsableItems();
-                    cin >> input;
+                
 
-                    Warior.useItem(input);
+                    if(input == 1)
+                    {
+                        
+                        
+                        while(true)
+                        {
+                            cout << "Which Weapon you wanna use?" << endl;
+                            Warior.showCharacterWeapons();
+                            cin >> input;
+                            if(input <= Warior.getWeapons().size() && input >= 1)
+                            {
+                                Warior.Attack(enemy , Warior.getWeapons()[input-1]);
+                                enemy->getEnemyController()->Attack(&Warior);
+                                break;
+                            }
+                        }
+                        
+                        break;
+                    } 
+
+                    else if(input == 2)
+                    {
+                        while(true)
+                        {
+                            cout << "which item you wanna choose? " << endl;
+                            Warior.showCharacterUsableItems();
+                            cin >> input;
+
+                            if(input >= 1 && input <= Warior.getUseableItems().size())
+                            {
+                                Warior.useItem(input);
+                                break;
+                            }
+                        }
+                        break;
+                    }
                 }
+                
+                
             }
+
             if(Warior.getHP() < 0)
             {
                 cout << " YOU ARE DEAD" << endl;
-                Warior.setGold(Warior.getGold() + 100);
             }
             else if(enemy->getEnemyModel()->getHP() < 0)
             {
                 cout << endl << "ENEMY IS DEAD" << endl;
+                Warior.setGold(Warior.getGold() + 100);
                 delete enemy;
             }
         }
@@ -371,12 +411,12 @@ int CalculateDMPAforZombie(int level)
 int CalculateSTforZombie(int level)
 {
     int ST;
-    ST = pow(level , 7/5) + 80;
+    ST = pow(level , 7/5) + 50;
     return ST;
 }
 int CalculateHPForZombie(int level)
 {
     int HP;
-    HP = pow(level , 4/3) * 50 + 100;
+    HP = pow(level , 4/3) * 50 + 50;
     return HP;
 }

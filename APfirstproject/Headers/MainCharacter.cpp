@@ -106,12 +106,15 @@ using namespace std;
 
     void MainCharacter::useItem(int numberOfItemInInventory)
     {
-        this->setHP(this->getHP() + this->getUseableItems()[numberOfItemInInventory]->getHealingPower());
-        this->setStamina(this->getStamina() + this->getUseableItems()[numberOfItemInInventory]->getEnergy());
-        this->setXP( this->getXP() + this->getUseableItems()[numberOfItemInInventory]->getAddedXP());
-        delete this->getUseableItems()[numberOfItemInInventory];
-        this->getUseableItems().erase(this->getUseableItems().begin() + numberOfItemInInventory);
-        this->getUseableItems().shrink_to_fit();
+        if(numberOfItemInInventory <= useAbleItems.size() && numberOfItemInInventory >= 1)
+        {
+            HP = HP + useAbleItems[numberOfItemInInventory-1]->getHealingPower();   
+            Stamina = Stamina + useAbleItems[numberOfItemInInventory-1]->getEnergy();
+            XP = XP + useAbleItems[numberOfItemInInventory-1]->getAddedXP();
+            delete useAbleItems[numberOfItemInInventory-1];
+            useAbleItems.erase(useAbleItems.begin() + numberOfItemInInventory-1);
+            useAbleItems.shrink_to_fit();
+        }
     }
 
     //Attack func==========================
