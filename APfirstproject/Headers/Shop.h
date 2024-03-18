@@ -28,6 +28,10 @@ public:
 
     vector<Weapon*> &getWeapon();
 
+    void setWeapon(vector<Weapon*> wep);
+
+    void setUsableItems(vector<UseableItems*> usa);
+
     
 
 

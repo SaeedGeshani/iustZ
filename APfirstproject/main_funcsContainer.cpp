@@ -78,8 +78,8 @@ Shop randomShopGenerator(){
 			outputusable.push_back(itms[i]);
 		}	
 	}
-	randomStore.getWeapon()=outputweapon;
-	randomStore.getUseableItem()=outputusable;
+	randomStore.setWeapon(outputweapon);
+	randomStore.setUsableItems(outputusable);
 	return randomStore;	
 
 }
@@ -193,7 +193,7 @@ void makingNewcharacter()
 	
     }while(ChosenWeapon != 1 && ChosenWeapon != 2 );
 
-    cout << endl << "===== Now we will give you somthing that you can heal yourself and give your muscular body a litle bit Energy so give them and put in your Inventory" << endl;
+    cout << endl << "===== Now we will give you somthing that you can heal yourself and give your muscular body a litle bit Energy so take them and put in your Inventory" << endl;
     cout << endl << "The first one is WheyPowder it helps you to get Stamina(20) and heal your body(10) you will have two:" << endl;
     WheyProtein* ptr1WheyPowder = new WheyProtein(20 , 10   , "Whey Powder" , 30, 0);
     WheyProtein* ptr2WheyPowder = new WheyProtein(20 , 10   , "Whey Powder" , 30, 0);

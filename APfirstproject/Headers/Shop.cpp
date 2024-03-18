@@ -30,12 +30,14 @@ using namespace std;
 //        cout << "5.Egg" << endl;
 //        cout << "6.Peace Herbal Tea" << endl;
 		cout<<"Here are available weapons on this market: "<<endl;
-		for(int i=0;i<availableWeapons.size();i++){
-			cout<<i+1<<". "<<availableWeapons[i]->getName()<<endl;
+		for(int i = 0 ; i < availableWeapons.size() ; i++)
+        {
+			cout<< i+1 << ". " << availableWeapons[i]->getName() << endl;
 		}
-		cout<<"Here are available usable items on this market: "<<endl;
-		for(int i=0;i<availableUseables.size();i++){
-			cout<<i+1+availableWeapons.size()<<". "<<availableUseables[i]->getName()<<endl;
+		cout << "Here are available usable items on this market: " << endl;
+		for(int i = 0 ; i < availableUseables.size() ; i++)
+        {
+			cout << i+1+availableWeapons.size() << ". " << availableUseables[i]->getName() << endl;
 		}
     }
 
@@ -61,4 +63,12 @@ using namespace std;
         }while(ChosenNumber < 0 || ChosenNumber > availableWeapons.size()+availableUseables.size() );
     }
 
+    void Shop::setWeapon(vector<Weapon*> wep)
+    {
+        availableWeapons = wep;
+    }
 
+    void Shop::setUsableItems(vector<UseableItems*> usa)
+    {
+       availableUseables = usa; 
+    }
