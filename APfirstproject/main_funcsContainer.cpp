@@ -6,6 +6,7 @@
 #include<algorithm>
 #include<cmath>
 #include<ctime>
+#include<stdlib.h>
 #include "Headers/Items.h"
 #include "Headers/Items.cpp"
 #include "Headers/EnemyFactory.h"
@@ -49,7 +50,26 @@ using namespace std;
     Shop* Store;
     EnemyFactory Enemyhouse;
 //==========================================================
-
+//=====Function for cout slowly=============================
+    // void printS(string s)
+    // {
+    //     for(int i = 0 ; i < s.size() ; i++)
+    //     {
+    //         cout << s[i];
+    //         Sleep(20);
+    //     }
+    //     cout << endl << endl;
+    // }
+    // void prints(string s)
+    // {
+    //     for(int i = 0 ; i < s.size() ; i++)
+    //     {
+    //         cout << s[i];
+    //         Sleep(8);
+    //     }
+    //     cout << endl << endl;
+    // }
+//==========================================================
 
 int CalculateHPForZombie(int);
 int CalculateSTforZombie(int);
@@ -161,55 +181,6 @@ Shop* randomShopGenerator(){
 
 }
 
-// void showItemsOfShop(Shop Market)
-// {
-//     cout << "Weapons: " << endl << "==================================" << endl;
-//     for(int i = 0 ; i < Market.getWeapon().size() ; i++)
-//     {
-//         cout << i+1 << "_ " << Market.getWeapon()[i]->getName() << endl;
-//     }
-//     cout << endl << "=================================";
-//     cout << "UseableItems: " << endl;
-//     for(int i = 0 ; i < Market.getUseableItem().size() ; i++)
-//     {
-//         cout << i + Market.getWeapon().size()+1 << "_ " << Market.getUseableItem()[i]->getType() << endl;
-//     }
-//     cout << "===================================" << endl;
-// }
-// void buyitemFromShop(Shop Market , int numberOfProduct , string classNameOfProduct , MainCharacter Player)
-// {
-// 	showItemsOfShop(Market);
-//     if(numberOfProduct > Market.getUseableItem().size() || numberOfProduct <= 0)
-//     {
-//         cout << "Invalid input" << endl;
-//     }
-//     else{
-
-//         if(numberOfProduct <= Market.getWeapon().size())
-//         {
-//             if(Player.getGold() >= Market.getWeapon()[numberOfProduct - 1]->getPrice())
-//             {
-//                 Player.addWeapon(Market.getWeapon()[numberOfProduct-1]);
-//             }
-//             else{
-
-//                 cout << "your currency is not enough" << endl;
-//             }
-//         }
-//         else{
-
-//             if(Player.getGold() >= Market.getUseableItem()[numberOfProduct - 1 - Market.getWeapon().size()]->getPrice())
-//             {
-//                 Player.addUseableItems(Market.getUseableItem()[numberOfProduct -1 - Market.getWeapon().size()]);
-//             }
-//             else{
-
-//                 cout <<"your currency is not enough" << endl;
-//             }
-//         }
-//     }
-// }
-
 
 void makingNewcharacter()
 {
@@ -217,34 +188,46 @@ void makingNewcharacter()
 	int age;
 	string gender;
 
-	cout << "===============Section of making your dreamy wariror===============" << endl;
-	cout << "Enter name of the Warior :" << endl;
+	prints("===============Section of making your dreamy wariror===============");
+    cout << endl;
+    printS("Enter name of the Warior :");
 	getline(cin , name);
 
 	
-	cout << "Enter gender of the Warior:(male - female) "  << endl;
+	printS("Enter gender of the Warior:(male - female) ");
 	getline(cin , gender);
 	while(gender != "male" && gender != "female")
 	{
-		cout << "Invalid Input try again: " << endl;
+        prints("Invalid Input try again: ");
 		getline(cin , gender);
 	}
 
 	Warior.setName(name);	
 	Warior.setGender(gender);
-
-    cout << endl << "===This gift is given from the King to you to buy your Weapons to continue:===" << endl << endl;
-    cout << endl << "===== Here you are:" << endl << endl <<"Now you have 1000 G" << endl << endl;
+    cout << endl;
+    prints("===============================================");
+    cout << endl;
+    printS("KING Summoned you");
+    printS("===This gift is given from the King to you to buy your Weapons to continue:===");
+    cout << endl;
+    printS("===== Here you are:" );
+    cout << endl << endl;
+    printS("Now you have 1000 G");
     Warior.setGold(1000);
-    
+    prints("================================================");
+
+    printS("==========Here is the section of that you shold pick one glorious Permenant Weapon ==============");
+    cout << endl;
     int ChosenWeapon;
     do{
-        cout << endl <<"==Now you should pick up a powerful permenant weapon which will be with you till the end of the war :==" << endl;
-	    cout << endl <<"plese pick up one weapon: " << endl;
+        printS("==Now you should pick up a powerful permenant weapon which will be with you till the end of the war :==");
+	    printS("plese pick up one weapon: ");
+        cout << endl;
+
 	    cout << "1.Katana" << endl << "2.Blaster" << endl;
-	
-	    cout << endl <<"Katana(100 G)(Damage : 20) (NeededStamina : 15)" << endl;
-	    cout << endl <<"Blaster(75 G) (Damage : 15) (Needed Stamina : 10)" << endl;
+
+        printS("Katana(100 G)(Damage : 20) (NeededStamina : 15)");
+        printS("Blaster(75 G) (Damage : 15) (Needed Stamina : 10)");
 
 	    
 	    cin >> ChosenWeapon;
@@ -270,8 +253,12 @@ void makingNewcharacter()
 	
     }while(ChosenWeapon != 1 && ChosenWeapon != 2 );
 
-    cout << endl << "===== Now we will give you somthing that you can heal yourself and give your muscular body a litle bit Energy so take them and put in your Inventory" << endl;
-    cout << endl << "The first one is WheyPowder it helps you to get Stamina(20) and heal your body(10) you will have two:" << endl;
+    prints("==============================================");
+    cout << endl;
+
+    printS("========================== GIFT ===========================");
+    printS("===== Now we will give you somthing that you can heal yourself and give your muscular body a litle bit Energy so take them and put in your Inventory");
+    printS("The first one is WheyPowder it helps you to get Stamina(50) and heal your body(10) you will have two:");
     WheyProtein* ptr1WheyPowder = new WheyProtein(50 , 10   , "Whey Powder" , 30, 0);
     WheyProtein* ptr2WheyPowder = new WheyProtein(50 , 10   , "Whey Powder" , 30, 0);
     Warior.addUseableItems(ptr1WheyPowder);
@@ -314,7 +301,7 @@ bool randomShuffle ( int Difficulty , int Level ) {
         }
         random_shuffle(shuffle.begin() , shuffle.end());
         if (shuffle[0] == 1){
-            cout << "go to shop" << endl ;
+            cout << "Go to shop" << endl ;
             return 1 ;
         }
         if (shuffle[0] == 0){
@@ -409,7 +396,8 @@ int main()
 
                 while(true)
                 {
-                    cout << "enemy is against you what you want to do?" << endl;
+                    prints("================== Danger ===============");
+                    printS("Enemy is against you what you want to do?");
                     cout << "1.Fight" << endl << "2.use Inventory" << endl;
                     int input;
                     cin >> input;
@@ -421,7 +409,7 @@ int main()
                         
                         while(true)
                         {
-                            cout << "Which Weapon you wanna use?" << endl;
+                            printS("=========Choose a Weapon=========");
                             Warior.showCharacterWeapons();
                             cin >> input;
                             if(input <= Warior.getWeapons().size() && input >= 1)
@@ -439,7 +427,7 @@ int main()
                     {
                         while(true)
                         {
-                            cout << "which item you wanna choose? " << endl;
+                            printS("Which item you wanna choose? ");
                             Warior.showCharacterUsableItems();
                             cin >> input;
 
@@ -462,7 +450,9 @@ int main()
             }
             else if(enemy->getEnemyModel()->getHP() < 0)
             {
+                prints("========================");
                 cout << endl << "ENEMY IS DEAD" << endl;
+                prints("========================");
                 Warior.setGold(Warior.getGold() + 100);
                 delete enemy;
             }

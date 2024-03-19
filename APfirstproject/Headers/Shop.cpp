@@ -1,4 +1,5 @@
 #include<string>
+#include<windows.h>
 #include "MainCharacter.h"
 #include "Weapon.h"
 #include "Shop.h"
@@ -6,6 +7,28 @@
 
 using namespace std;
 
+
+
+    //Functions for printing
+        void printS(string s)
+        {
+            for(int i = 0 ; i < s.size() ; i++)
+            {
+                cout << s[i];
+                Sleep(20);
+            }
+            cout << endl << endl;
+        }
+        void prints(string s)
+        {
+            for(int i = 0 ; i < s.size() ; i++)
+            {
+                cout << s[i];
+                Sleep(8);
+            }
+            cout << endl << endl;
+        }
+    //=======================
 
     Shop::Shop() = default;
     //Setter & Getters=================
@@ -29,17 +52,25 @@ using namespace std;
 //        cout << "4.WheyProtein" << endl;
 //        cout << "5.Egg" << endl;
 //        cout << "6.Peace Herbal Tea" << endl;
-		cout<<"Here are available weapons on this market: "<<endl;
+        prints("======================== Weapons =========================");
+		
 		for(int i = 0 ; i < availableWeapons.size() ; i++)
         {
 			cout<< i+1 << ". " << availableWeapons[i]->getName() << endl;
+            Sleep(10);
 		}
-		cout << "Here are available usable items on this market: " << endl;
+        prints("==========================================================");
+        printS("===================== Available Items ====================");
+		
 		for(int i = 0 ; i < availableUseables.size() ; i++)
         {
 			cout << i+1 + availableWeapons.size() << ". " << availableUseables[i]->getName() << endl;
+            Sleep(10);
 		}
+         prints("=========================================================");
     }
+
+   
 
     void Shop::BuyItem(MainCharacter* player)
     {
@@ -49,7 +80,8 @@ using namespace std;
         
         while(true)
         {
-            cout << "Please enter the number of the Item you wanna buy(Enter zero if you'd like to exit this shop)" << endl;
+
+            printS("===Please enter the number of the Item you wanna buy(Enter zero if you'd like to exit this shop)===");
             cin >> ChosenNumber;
             if(ChosenNumber <= availableWeapons.size() && ChosenNumber > 0)
             {
