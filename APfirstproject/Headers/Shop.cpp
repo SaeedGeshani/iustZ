@@ -43,7 +43,7 @@ using namespace std;
 
     void Shop::BuyItem(MainCharacter* player)
     {
-        this->ShowItems();
+        ShowItems();
 
         int ChosenNumber;
         
@@ -53,40 +53,58 @@ using namespace std;
             cin >> ChosenNumber;
             if(ChosenNumber <= availableWeapons.size() && ChosenNumber > 0)
             {
-            	player->addWeapon(availableWeapons[ChosenNumber-1]);
-                for(int i = ChosenNumber ; i < availableWeapons.size() ; i++)
+                if(availableWeapons[ChosenNumber-1] != nullptr)
                 {
-                    delete this->availableWeapons[i];
+                    player->addWeapon(availableWeapons[ChosenNumber-1]);
+                }
+                else{
+
+                    cout << "Passing null ptr so" << endl;
+                    delete availableWeapons[ChosenNumber-1];
+                    availableWeapons.erase(availableWeapons.begin() + ChosenNumber-1);
+                }
+
+                for(int i = ChosenNumber ; i < availableWeapons.size() ; )
+                {
+                    delete availableWeapons[i];
                     availableWeapons.erase(availableWeapons.begin() + ChosenNumber);
                 }
-                for(int i = 0 ; i < ChosenNumber-1 ; i++)
+                for(int i = 0 , k = 0  ; i < ChosenNumber-1-k ;k++ )
                 {
-                    delete this->availableWeapons[i];  
+                    delete availableWeapons[i];  
                     availableWeapons.erase(availableWeapons.begin() + 0);
                 }
-                for(int i = 0 ; i < availableUseables.size() ; i++)
+                for(int i = 0 ; i < availableUseables.size() ; )
                 {
-                    delete this->availableUseables[i];
+                    delete availableUseables[i];
                     availableUseables.erase(availableUseables.begin() + 0);
+                    
                 }
                 return;
 			}
 			else if(ChosenNumber > availableWeapons.size() && ChosenNumber <= availableWeapons.size() + availableUseables.size()){
-				player->addUseableItems(availableUseables[ChosenNumber-1-availableWeapons.size()]);
-
-                for(int i = ChosenNumber-availableWeapons.size() ; i < availableUseables.size() ; i++)
+				if(availableUseables[ChosenNumber-1-availableWeapons.size()] != nullptr)
                 {
-                    delete this->availableUseables[i];
+                    player->addUseableItems(availableUseables[ChosenNumber-1-availableWeapons.size()]);
+                }
+                else
+                {
+                    cout << "Passing was failed so" << endl; 
+                }
+                for(int i = ChosenNumber-availableWeapons.size() ; i < availableUseables.size() ; )
+                {
+                    delete availableUseables[i];
                     availableUseables.erase(availableUseables.begin() + ChosenNumber-availableWeapons.size());
                 }
-                for(int i = 0 ; i < ChosenNumber - 1 - availableWeapons.size() ; i++)
+                
+                for(int i = 0 , j = 0  ; i < ChosenNumber - 1 - availableWeapons.size() - j ; j++)
                 {
-                    delete this->availableUseables[i];
+                    delete availableUseables[i];
                     availableUseables.erase(availableUseables.begin() + 0);
                 }
-                for(int i = 0 ; i < availableWeapons.size() ; i++)
+                for(int i = 0 ; i < availableWeapons.size() ; )
                 {
-                    delete this->availableWeapons[i];
+                    delete availableWeapons[i];
                     availableWeapons.erase(availableWeapons.begin() + 0 );
                 }
                 return;
@@ -98,8 +116,6 @@ using namespace std;
         }
             
 
-        
-        delete this;
     }
 
     void Shop::setWeapon(vector<Weapon*> wep)

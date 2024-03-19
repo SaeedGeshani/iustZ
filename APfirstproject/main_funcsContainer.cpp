@@ -56,13 +56,83 @@ int CalculateSTforZombie(int);
 int CalculateDMPAforZombie(int);
 
 Shop* randomShopGenerator(){
-	Shop* randomStore = new Shop;
-	Batarang* a = new Batarang(40 , 10 , "Batrang" , 50);
-	Blaster* b = new Blaster(50 , 10 , "Blaster" , 100);
-	Katana* c = new Katana(80 , 5 , "Katana" , 75);
-	grenade* d = new grenade(200 , 50 , "Grenade" , 50);
-	Egg* e = new Egg(20 , 50 , "Egg" , 10 , 5);
-	WheyProtein* f = new WheyProtein(40 , 100 , "Whey Protein" , 50 , 10);
+	Shop* randomStore = nullptr;
+    Batarang* a = nullptr;
+    Blaster* b = nullptr;
+    Katana* c = nullptr;
+    grenade* d = nullptr;
+    Egg* e = nullptr;
+    WheyProtein* f = nullptr;
+
+    while(true)
+    {
+        randomStore = new Shop;
+        if(randomStore != nullptr)
+        {
+            break;
+        }
+    }
+    while(true)
+    {
+        a = new Batarang(40 , 10 , "Batrang" , 50);
+        if(a != nullptr)
+        {
+            break;
+        }
+        delete a;
+    }
+	
+    while(true)
+    {
+        b = new Blaster(50 , 10 , "Blaster" , 100);
+        if(b != nullptr)
+        {
+            break;
+        }
+        delete b;
+    }
+	
+    while(true)
+    {
+        c = new Katana(80 , 5 , "Katana" , 75);
+        if(c != nullptr)
+        {
+            break;
+        }
+        delete c;
+    }
+
+	
+    while(true)
+    {
+        d = new grenade(200 , 50 , "Grenade" , 50);
+        if(d != nullptr)
+        {
+            break;
+        }
+        delete d;
+    }
+	
+    while(true)
+    {
+        e = new Egg(20 , 50 , "Egg" , 10 , 5);
+        if(e != nullptr)
+        {
+            break;
+        }
+        delete e;
+    }
+	
+    while(true)
+    {
+        f = new WheyProtein(40 , 100 , "Whey Protein" , 50 , 10);
+        if(f != nullptr)
+        {
+            break;
+        }
+        delete f;
+    }
+
 	vector<Weapon*> wp{a, b, c, d};
 	vector<UseableItems*> itms{e, f};
 	srand(time(0));
@@ -321,7 +391,7 @@ int main()
     
     while(Warior.getHP() > 0)
     {
-        checkStatus = randomShuffle(1 , 1);
+        checkStatus = randomShuffle(2 , 1);
 
         if(checkStatus)
         {
