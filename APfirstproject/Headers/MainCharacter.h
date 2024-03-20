@@ -6,6 +6,7 @@
 #include "Weapon.h"
 #include "ThrowableWeapon.h"
 #include "UseableItems.h"
+#include<cmath>
 
 using namespace std;
 class UseableItems;
@@ -68,6 +69,8 @@ public:
     void showCharacterUsableItems();
 
     void useItem(int);
+
+    void CalculateLevel();
    
     //Attack func==========================
     void Attack(Enemy* enemy, Weapon* weapon);

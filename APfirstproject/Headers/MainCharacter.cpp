@@ -35,7 +35,14 @@ using namespace std;
     }
     void MainCharacter::setHP(int hp)
     {
-        HP = hp;
+        if(hp > 90 + Level * 10)
+        {
+            HP = 90 + Level*10;
+        }
+        else{
+            HP = hp;
+        }
+        
     }
     int MainCharacter::getHP()
     {
@@ -59,7 +66,15 @@ using namespace std;
     }
     void MainCharacter::setStamina(int stamina)
     {
-        Stamina = stamina;
+        if(stamina > 90 + 15*Level)
+        {
+            Stamina = 90 + 15*Level;
+        }
+        else{
+
+            Stamina = stamina;
+        }
+        
     }
     int MainCharacter::getStamina()
     {
@@ -104,6 +119,20 @@ using namespace std;
         }
     }
 
+    void MainCharacter::CalculateLevel()
+    {
+        int exLevel = Level;
+        Level = floor((double)sqrt(((double)(XP/10)+((1.0)*81/4))) - 0.5) - 3; 
+        if(Level > exLevel)
+        {
+            cout << "===============================" << endl;
+            cout << "           Level UP            " << endl;
+            cout << "===============================" << endl;
+            setHP(HP + Level*5 + 30);
+            setStamina(Stamina + Level*7 + 10);
+        }
+    
+    }
     void MainCharacter::useItem(int numberOfItemInInventory)
     {
         if(numberOfItemInInventory <= useAbleItems.size() && numberOfItemInInventory >= 1)
@@ -114,6 +143,7 @@ using namespace std;
             delete useAbleItems[numberOfItemInInventory-1];
             useAbleItems.erase(useAbleItems.begin() + numberOfItemInInventory-1);
             useAbleItems.shrink_to_fit();
+            CalculateLevel();
         }
     }
 
@@ -138,7 +168,9 @@ using namespace std;
 		}
         else{
 
-            cout << "Character Doesn't have enough energy to use weapon" << endl;
+            cout << "======================================" << endl;
+            cout << "               LOW ENERGY             "<< endl;
+            cout << "======================================" << endl;
         }
 		
 	}
@@ -154,4 +186,4 @@ using namespace std;
         Gold = gold;
     }
     
-
+   

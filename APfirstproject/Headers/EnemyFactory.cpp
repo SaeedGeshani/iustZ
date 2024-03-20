@@ -8,18 +8,18 @@ using namespace std;
 //EnemyFactory///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Constructor========================
     EnemyFactory::EnemyFactory() = default;
-    EnemyFactory::EnemyFactory(int enemylevel)
+    EnemyFactory::EnemyFactory(MainCharacter* player)
     {
-        EnemyLevel = enemylevel;
+        Player = player;
     }
     //Setter and Getters=================
-    void EnemyFactory::setEnemyLevel(int enemylevel)
+    void EnemyFactory::setEnemy(MainCharacter* player)
     {
-        EnemyLevel = enemylevel;
+        Player = player;
     }
-    int EnemyFactory::getEnemyLevel()
+    MainCharacter* EnemyFactory::getEnemy()
     {
-        return EnemyLevel;
+        return Player;
     }
     //Algorithm Of Calculating==========
 
@@ -27,7 +27,7 @@ using namespace std;
     //Functions=========================
     Zombie* EnemyFactory::makeZombie()
     {
-        ZombieModel* zombiemodel = new ZombieModel("Zombie", CalculateHPForZombie(EnemyLevel) , CalculateSTforZombie(EnemyLevel) , CalculateDMPAforZombie(EnemyLevel) , EnemyLevel); 
+        ZombieModel* zombiemodel = new ZombieModel("Zombie", CalculateHPForZombie(Player->getLevel()) , CalculateSTforZombie(Player->getLevel()) , CalculateDMPAforZombie(Player->getLevel()) , Player->getLevel()); 
         ZombieView* zombieview = new ZombieView(zombiemodel);      
         ZombieController* zombiecontroller = new ZombieController(zombiemodel);
         Zombie* zombie = new Zombie(zombiemodel , zombieview , zombiecontroller);

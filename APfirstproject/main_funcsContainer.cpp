@@ -48,7 +48,7 @@ using namespace std;
 //Global Objects And Variables==============================
     static MainCharacter Warior;
     Shop* Store;
-    EnemyFactory Enemyhouse;
+    EnemyFactory Enemyhouse(&Warior);
 //==========================================================
 //=====Function for cout slowly=============================
     // void printS(string s)
@@ -94,7 +94,7 @@ Shop* randomShopGenerator(){
     }
     while(true)
     {
-        a = new Batarang(40 , 10 , "Batrang" , 50);
+        a = new Batarang(40 , 15 , "Batrang" , 75);
         if(a != nullptr)
         {
             break;
@@ -104,7 +104,7 @@ Shop* randomShopGenerator(){
 	
     while(true)
     {
-        b = new Blaster(50 , 10 , "Blaster" , 100);
+        b = new Blaster(20 , 10 , "Blaster" , 50);
         if(b != nullptr)
         {
             break;
@@ -114,7 +114,7 @@ Shop* randomShopGenerator(){
 	
     while(true)
     {
-        c = new Katana(80 , 5 , "Katana" , 75);
+        c = new Katana(30 , 15 , "Katana" , 100);
         if(c != nullptr)
         {
             break;
@@ -125,7 +125,7 @@ Shop* randomShopGenerator(){
 	
     while(true)
     {
-        d = new grenade(200 , 50 , "Grenade" , 50);
+        d = new grenade(75 , 50 , "Grenade" , 120);
         if(d != nullptr)
         {
             break;
@@ -135,7 +135,7 @@ Shop* randomShopGenerator(){
 	
     while(true)
     {
-        e = new Egg(20 , 50 , "Egg" , 10 , 5);
+        e = new Egg(20 , 20 , "Egg" , 20 , 10);
         if(e != nullptr)
         {
             break;
@@ -145,7 +145,7 @@ Shop* randomShopGenerator(){
 	
     while(true)
     {
-        f = new WheyProtein(40 , 100 , "Whey Protein" , 50 , 10);
+        f = new WheyProtein(15 , 30 , "Whey Protein" , 50 , 10);
         if(f != nullptr)
         {
             break;
@@ -272,13 +272,13 @@ void makingNewcharacter()
 }
 
 //Making Game ready to Start the story
-void makeGameplayReady()
-{
-//    Store.setLevel(1);
-//    Store.setName("BlackMarket");
-    Enemyhouse.setEnemyLevel(1);
+// void makeGameplayReady()
+// {
+// //    Store.setLevel(1);
+// //    Store.setName("BlackMarket");
+//     Enemyhouse.setEnemyLevel();
 
-}
+// }
 
 //if return value was 1 MainCharacter goes shopping if return value was 0 MainCharacter fights ;
 bool randomShuffle ( int Difficulty , int Level ) {
@@ -371,14 +371,23 @@ bool randomShuffle ( int Difficulty , int Level ) {
 int main()
 {
     makingNewcharacter();
-    makeGameplayReady();
-
+    int Difficulty;
+    while(true)
+    {
+        printS("Choose your game Difficulty : (1 , 2 , 3)");
+        cin >> Difficulty;
+        if(Difficulty == 1 || Difficulty == 2 || Difficulty == 3)
+        {
+            break;
+        }
+    }
+    
 
     bool checkStatus;
     
     while(Warior.getHP() > 0)
     {
-        checkStatus = randomShuffle(2 , 1);
+        checkStatus = randomShuffle(Difficulty , Warior.getLevel());
 
         if(checkStatus)
         {
@@ -396,9 +405,13 @@ int main()
 
                 while(true)
                 {
+                    cout << "LEVEL" << Warior.getLevel() << endl;
                     prints("================== Danger ===============");
                     printS("Enemy is against you what you want to do?");
                     cout << "1.Fight" << endl << "2.use Inventory" << endl;
+
+                    cout << "==Warior's HP: " << Warior.getHP() << "     ==Warior's ST: " << Warior.getStamina() << endl;
+                    cout << "==Enemy's HP: " << enemy->getEnemyModel()->getHP() << "         ==Enmey's DMPA: " << enemy->getEnemyModel()->getDamagePerAttack() << endl;
                     int input;
                     cin >> input;
                 
@@ -409,13 +422,17 @@ int main()
                         
                         while(true)
                         {
-                            printS("=========Choose a Weapon=========");
+                            printS("=========Choose a Weapon========= (0 = exit)");
                             Warior.showCharacterWeapons();
                             cin >> input;
                             if(input <= Warior.getWeapons().size() && input >= 1)
                             {
                                 Warior.Attack(enemy , Warior.getWeapons()[input-1]);
                                 enemy->getEnemyController()->Attack(&Warior);
+                                break;
+                            }
+                            else if(input == 0)
+                            {
                                 break;
                             }
                         }
@@ -427,13 +444,17 @@ int main()
                     {
                         while(true)
                         {
-                            printS("Which item you wanna choose? ");
+                            printS("=========Choose Item=========  (0 = exit) ");
                             Warior.showCharacterUsableItems();
                             cin >> input;
 
                             if(input >= 1 && input <= Warior.getUseableItems().size())
                             {
                                 Warior.useItem(input);
+                                break;
+                            }
+                            else if(input == 0)
+                            {
                                 break;
                             }
                         }
@@ -446,15 +467,19 @@ int main()
 
             if(Warior.getHP() < 0)
             {
-                cout << " YOU ARE DEAD" << endl;
+                prints("=============================");
+                cout << "         YOU ARE DEAD        " << endl;
+                prints("=============================");
             }
             else if(enemy->getEnemyModel()->getHP() < 0)
             {
                 prints("========================");
-                cout << endl << "ENEMY IS DEAD" << endl;
+                cout << "       ENEMY IS DEAD     " << endl;
                 prints("========================");
-                Warior.setGold(Warior.getGold() + 100);
+                Warior.setGold(Warior.getGold() + 50);
+                Warior.setXP(Warior.getXP() + 100);
                 delete enemy;
+                Warior.CalculateLevel();
             }
         }
     }
@@ -465,18 +490,18 @@ int main()
 int CalculateDMPAforZombie(int level)
 {
     int DMPA;
-    DMPA = pow(level , 8/7) + 10;
+    DMPA = pow(level , 10/7) + 10;
     return DMPA;
 }
 int CalculateSTforZombie(int level)
 {
     int ST;
-    ST = pow(level , 7/5) + 50;
+    ST = level * 20 + 50;
     return ST;
 }
 int CalculateHPForZombie(int level)
 {
     int HP;
-    HP = pow(level , 4/3) * 50 + 50;
+    HP = pow(level , 4/3) * 20 + 50;
     return HP;
 }

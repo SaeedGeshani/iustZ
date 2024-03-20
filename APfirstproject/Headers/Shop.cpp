@@ -15,7 +15,7 @@ using namespace std;
             for(int i = 0 ; i < s.size() ; i++)
             {
                 cout << s[i];
-                Sleep(20);
+                Sleep(15);
             }
             cout << endl << endl;
         }
@@ -24,7 +24,7 @@ using namespace std;
             for(int i = 0 ; i < s.size() ; i++)
             {
                 cout << s[i];
-                Sleep(8);
+                Sleep(5);
             }
             cout << endl << endl;
         }
@@ -56,15 +56,15 @@ using namespace std;
 		
 		for(int i = 0 ; i < availableWeapons.size() ; i++)
         {
-			cout<< i+1 << ". " << availableWeapons[i]->getName() << endl;
+			cout<< i+1 << ". " << availableWeapons[i]->getName() << "   Price: " << availableWeapons[i]->getPrice()  << "   Damage: " << availableWeapons[i]->getDamagePerAttack() << "    NeededSTPA: " << availableWeapons[i]->getNeededStaminaPerAttack() << endl;
             Sleep(10);
 		}
         prints("==========================================================");
-        printS("===================== Available Items ====================");
+        printS("===================== Useable Items ====================");
 		
 		for(int i = 0 ; i < availableUseables.size() ; i++)
         {
-			cout << i+1 + availableWeapons.size() << ". " << availableUseables[i]->getName() << endl;
+			cout << i+1 + availableWeapons.size() << ". " << availableUseables[i]->getName() << "    Price: " << availableUseables[i]->getPrice() << "     HealinPower: " << availableUseables[i]->getHealingPower() << "    Energy:" << availableUseables[i]->getEnergy() << endl;
             Sleep(10);
 		}
          prints("=========================================================");
@@ -74,20 +74,34 @@ using namespace std;
 
     void Shop::BuyItem(MainCharacter* player)
     {
-        ShowItems();
 
         int ChosenNumber;
         
         while(true)
         {
+            cout << "Your Wealth is: " << player->getGold() << endl;
+            ShowItems();
+            prints("===Please enter the number of the Item you wanna buy(Enter zero if you'd like to exit this shop)===");
 
-            printS("===Please enter the number of the Item you wanna buy(Enter zero if you'd like to exit this shop)===");
             cin >> ChosenNumber;
             if(ChosenNumber <= availableWeapons.size() && ChosenNumber > 0)
             {
                 if(availableWeapons[ChosenNumber-1] != nullptr)
                 {
+                    if(dynamic_cast<PermenantWeapon*>(availableWeapons[ChosenNumber-1]) != NULL)
+                    {
+                        for(int i = 0 ; i < player->getWeapons().size() ; i++)
+                        {
+                            if(dynamic_cast<PermenantWeapon*>(player->getWeapons()[i]) != NULL)
+                            {
+                                delete player->getWeapons()[i];
+                                player->getWeapons().erase(player->getWeapons().begin() + i);
+                                break;
+                            }
+                        }
+                    }
                     player->addWeapon(availableWeapons[ChosenNumber-1]);
+                    player->setGold(player->getGold() - availableWeapons[ChosenNumber-1]->getPrice());
                 }
                 else{
 
@@ -118,6 +132,7 @@ using namespace std;
 				if(availableUseables[ChosenNumber-1-availableWeapons.size()] != nullptr)
                 {
                     player->addUseableItems(availableUseables[ChosenNumber-1-availableWeapons.size()]);
+                    player->setGold(player->getGold() - availableUseables[ChosenNumber-1-availableWeapons.size()]->getPrice());
                 }
                 else
                 {
