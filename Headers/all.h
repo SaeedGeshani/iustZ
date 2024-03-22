@@ -489,7 +489,7 @@ public:
 
 class HumanEnemyFactory{
 private:
-    int EnemyLevel;
+    int HumanEnemyLevel;
 public:
     //Constructor========================
     HumanEnemyFactory();

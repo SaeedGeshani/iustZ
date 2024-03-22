@@ -837,7 +837,7 @@ bool Items::operator==(Items other){
                 ///////  
 
                 ///////
-                //use an item to attack ;
+                //use an item to attack and set stamina and DamagePerAttack of that weapon and use the comment code below ;
                 ///////
                 break;
             case average:  
@@ -846,7 +846,7 @@ bool Items::operator==(Items other){
                 ///////
 
                 ///////
-                //use an item to attack ;
+                //use an item to attack and set stamina and DamagePerAttack of that weapon and use the comment code below ;
                 ///////
                 break;
             default:
@@ -873,7 +873,7 @@ bool Items::operator==(Items other){
                 ///////
 
                 ///////
-                //use an item to attack ;
+                //use an item to attack and set stamina and DamagePerAttack of that weapon and use the comment code below ;
                 ///////
                 break;
             default:
@@ -897,7 +897,7 @@ bool Items::operator==(Items other){
                 ///////
 
                 ///////
-                //use an item to attack ;
+                //use an item to attack and set stamina and DamagePerAttack of that weapon and use the comment code below ;
                 ///////
                 break;
             default:
@@ -942,6 +942,31 @@ bool Items::operator==(Items other){
         }
     }
 
+//HumanEnemyFactory///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Constructor========================
+    HumanEnemyFactory::HumanEnemyFactory() = default;
+    HumanEnemyFactory::HumanEnemyFactory(int humanenemylevel)
+    {
+        HumanEnemyLevel = humanenemylevel;
+    }
+    //Setter and Getters=================
+    void HumanEnemyFactory::setHumanEnemyLevel(int humanenemylevel)
+    {
+        HumanEnemyLevel = humanenemylevel;
+    }
+    int HumanEnemyFactory::getHumanEnemyLevel()
+    {
+        return HumanEnemyLevel;
+    }
+    Zombie* HumanEnemyFactory::makeZombie()
+    {
+        ZombieModel* zombiemodel = new ZombieModel("Zombie", CalculateHPForZombie(HumanEnemyLevel) , CalculateSTforZombie(HumanEnemyLevel) , CalculateDMPAforZombie(HumanEnemyLevel) , HumanEnemyLevel); 
+        ZombieView* zombieview = new ZombieView(zombiemodel);      
+        ZombieController* zombiecontroller = new ZombieController(zombiemodel);
+        Zombie* zombie = new Zombie(zombiemodel , zombieview , zombiecontroller);
+        return zombie;
+        
+    }
 
 
 
