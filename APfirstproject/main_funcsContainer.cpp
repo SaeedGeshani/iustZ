@@ -400,16 +400,30 @@ int main()
 
         else{
 
-            Enemy* enemy;
+            Enemy* enemy = nullptr;
 
             srand(time(0));
             if(rand()%2 == 0)
             {
-                 enemy = Enemyhouse.makeZombie();
+                while(true)
+                {
+                    enemy = Enemyhouse.makeZombie();
+                    if(enemy!=nullptr)
+                    {
+                        break;
+                    }
+                    delete enemy;
+                }
+                 
             }
             else if(rand()%2 == 1)
             {
                  enemy = Enemyhouse.makeHuman(); 
+                 if(enemy != nullptr)
+                 {
+                    break;
+                 }
+                 delete enemy;
             }
 
             while(Warior.getHP() > 0 && enemy->getEnemyModel()->getHP() > 0)
