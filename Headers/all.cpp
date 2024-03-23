@@ -922,10 +922,10 @@ bool Items::operator==(Items other){
         if (player->getHP() <= 10){
             return 0 ;
         }
-        else if (player->getHP()>10 and player->getHP()<=50){
+        else if (player->getHP()>10 && player->getHP()<=50){
             return 50 ;
         }
-        else if (player->getHP()<=100 and player->getHP()>50){
+        else if (player->getHP()<=100 && player->getHP()>50){
             return 100 ;
         }
     }
@@ -934,10 +934,10 @@ bool Items::operator==(Items other){
         if (player->getStamina() <= 10){
             return 0 ;
         }
-        else if (player->getStamina()>10 and player->getStamina()<=50){
+        else if (player->getStamina()>10 && player->getStamina()<=50){
             return 50 ;
         }
-        else if (player->getStamina()<=100 and player->getStamina()>50){
+        else if (player->getStamina()<=100 && player->getStamina()>50){
             return 100 ;
         }
     }
