@@ -43,6 +43,8 @@
 #include "Headers/WheyProtein.cpp"
 #include "Headers/Blaster.h"
 #include "Headers/Blaster.cpp"
+#include "Headers/HUMAN.h"
+#include "Headers/HUMAN.cpp"
 using namespace std;
 
 //Global Objects And Variables==============================
@@ -398,7 +400,17 @@ int main()
 
         else{
 
-            Zombie* enemy = Enemyhouse.makeZombie();
+            Enemy* enemy;
+
+            srand(time(0));
+            if(rand()%2 == 0)
+            {
+                 enemy = Enemyhouse.makeZombie();
+            }
+            else if(rand()%2 == 1)
+            {
+                 enemy = Enemyhouse.makeHuman(); 
+            }
 
             while(Warior.getHP() > 0 && enemy->getEnemyModel()->getHP() > 0)
             {
