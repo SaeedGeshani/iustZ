@@ -139,6 +139,7 @@ using namespace std;
             } 
         }
 
+
         humanModel->setEnemyWeapons(wepItem);
         humanModel->setEnemyUsableItems(usaItem);
         //================================================

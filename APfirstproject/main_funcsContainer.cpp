@@ -402,25 +402,28 @@ int main()
 
             Enemy* enemy = nullptr;
 
-            srand(time(0));
-            if(rand()%2 == 0)
+            
+            
+            if(false)
             {
                 while(true)
                 {
                     enemy = Enemyhouse.makeZombie();
                     if(enemy!=nullptr)
                     {
+                        cout << "ZOMBIE MADE" << endl;
                         break;
                     }
                     delete enemy;
                 }
                  
             }
-            else if(rand()%2 == 1)
+            else if(true)
             {
                  enemy = Enemyhouse.makeHuman(); 
                  if(enemy != nullptr)
                  {
+                    cout << "HUMAN MADE" << endl;
                     break;
                  }
                  delete enemy;
