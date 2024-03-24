@@ -1,3 +1,15 @@
+#include<string>
+#include<iostream>
+#include<vector>
+#include<windows.h>
+#include<iomanip>
+#include<algorithm>
+#include<cmath>
+#include<ctime>
+#include "human.h"
+using namespace std;
+
+
 //Enemy/////////////////////////////////////////////////////////////////////////////
     //Getter and Setter=====================
     void HumanEnemy::setHumanEnemyModel(HumanEnemyModel* humanenemymodel)
