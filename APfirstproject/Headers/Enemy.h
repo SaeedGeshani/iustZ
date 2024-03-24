@@ -1,5 +1,6 @@
 #pragma once
 #include<string>
+#include<vector>
 #include<iostream>
 #include "MainCharacter.h"
 using namespace std;
@@ -22,7 +23,7 @@ public:
     EnemyModel* getEnemyModel();
    
     //Functions=========================
-    void Attack(MainCharacter* player);
+    virtual void Attack(MainCharacter* player);
     
 };
 class EnemyView{
@@ -52,7 +53,8 @@ protected:
     int DamagePerAttack;
     int Stamina;
     int Level;
-    int neededStaminaPerAttack; 
+    int neededStaminaPerAttack;     
+    
 public:
     //Friend classes ==========================
     friend class EnemyView;

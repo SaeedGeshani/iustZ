@@ -106,6 +106,7 @@ using namespace std;
         Stamina = stamina;
         DamagePerAttack = damageperattack;
         Level = level;
+        
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

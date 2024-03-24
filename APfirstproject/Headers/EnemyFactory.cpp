@@ -29,6 +29,7 @@ using namespace std;
     Zombie* EnemyFactory::makeZombie()
     {
         ZombieModel* zombiemodel = new ZombieModel("Zombie", CalculateHPForZombie(Player->getLevel()) , CalculateSTforZombie(Player->getLevel()) , CalculateDMPAforZombie(Player->getLevel()) , Player->getLevel()); 
+        zombiemodel->setNeededStaminaPerAttack(Player->getLevel()*4 + 5);
         ZombieView* zombieview = new ZombieView(zombiemodel);      
         ZombieController* zombiecontroller = new ZombieController(zombiemodel);
         Zombie* zombie = new Zombie(zombiemodel , zombieview , zombiecontroller);
