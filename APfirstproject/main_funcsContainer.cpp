@@ -43,16 +43,12 @@
 #include "Headers/WheyProtein.cpp"
 #include "Headers/Blaster.h"
 #include "Headers/Blaster.cpp"
-#include "Headers/HUMAN.h"
-#include "Headers/HUMAN.cpp"
 using namespace std;
 
 //Global Objects And Variables==============================
     static MainCharacter Warior;
     Shop* Store;
     EnemyFactory Enemyhouse(&Warior);
-    Zombie* zombie = nullptr;
-    HumanEnemy* humanenemy = nullptr;
 //==========================================================
 //=====Function for cout slowly=============================
     // void printS(string s)
@@ -370,176 +366,6 @@ bool randomShuffle ( int Difficulty , int Level ) {
     return -1;
 }
 
-void runCodeForHuman()
-{
-    while(Warior.getHP() > 0 && humanenemy->getEnemyModel()->getHP() > 0)
-            {
-
-                while(true)
-                {
-                    cout << "LEVEL" << Warior.getLevel() << endl;
-                    prints("================== Danger ===============");
-                    printS("Enemy is against you what you want to do?");
-                    cout << "1.Fight" << endl << "2.use Inventory" << endl;
-
-                    cout << "==Warior's HP: " << Warior.getHP() << "     ==Warior's ST: " << Warior.getStamina() << endl;
-                    cout << "==Enemy's HP: " << zombie->getEnemyModel()->getHP() << "         ==Enmey's DMPA: " << zombie->getEnemyModel()->getDamagePerAttack() << endl;
-                    int input;
-                    cin >> input;
-                
-
-                    if(input == 1)
-                    {
-                        
-                        
-                        while(true)
-                        {
-                            printS("=========Choose a Weapon========= (0 = exit)");
-                            Warior.showCharacterWeapons();
-                            cin >> input;
-                            if(input <= Warior.getWeapons().size() && input >= 1)
-                            {
-                                Warior.Attack(zombie , Warior.getWeapons()[input-1]);
-                                zombie->getEnemyController()->Attack(&Warior);
-                                break;
-                            }
-                            else if(input == 0)
-                            {
-                                break;
-                            }
-                        }
-                        
-                        break;
-                    } 
-
-                    else if(input == 2)
-                    {
-                        while(true)
-                        {
-                            printS("=========Choose Item=========  (0 = exit) ");
-                            Warior.showCharacterUsableItems();
-                            cin >> input;
-
-                            if(input >= 1 && input <= Warior.getUseableItems().size())
-                            {
-                                Warior.useItem(input);
-                                break;
-                            }
-                            else if(input == 0)
-                            {
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
-                
-                
-            }
-
-            if(Warior.getHP() < 0)
-            {
-                prints("=============================");
-                cout << "         YOU ARE DEAD        " << endl;
-                prints("=============================");
-            }
-            else if(zombie->getEnemyModel()->getHP() < 0)
-            {
-                prints("========================");
-                cout << "       ENEMY IS DEAD     " << endl;
-                prints("========================");
-                Warior.setGold(Warior.getGold() + 50);
-                Warior.setXP(Warior.getXP() + 100);
-                delete zombie;
-                Warior.CalculateLevel();
-            }
-}
-
-void runCodeForZombie()
-{
-    while(Warior.getHP() > 0 && zombie->getEnemyModel()->getHP() > 0)
-            {
-
-                while(true)
-                {
-                    cout << "LEVEL" << Warior.getLevel() << endl;
-                    prints("================== Danger ===============");
-                    printS("Enemy is against you what you want to do?");
-                    cout << "1.Fight" << endl << "2.use Inventory" << endl;
-
-                    cout << "==Warior's HP: " << Warior.getHP() << "     ==Warior's ST: " << Warior.getStamina() << endl;
-                    cout << "==Enemy's HP: " << humanenemy->getEnemyModel()->getHP() << "         ==Enmey's DMPA: " << humanenemy->getEnemyModel()->getDamagePerAttack() << endl;
-                    int input;
-                    cin >> input;
-                
-
-                    if(input == 1)
-                    {
-                        
-                        
-                        while(true)
-                        {
-                            printS("=========Choose a Weapon========= (0 = exit)");
-                            Warior.showCharacterWeapons();
-                            cin >> input;
-                            if(input <= Warior.getWeapons().size() && input >= 1)
-                            {
-                                Warior.Attack(humanenemy , Warior.getWeapons()[input-1]);
-                                humanenemy->getEnemyController()->Attack(&Warior);
-                                break;
-                            }
-                            else if(input == 0)
-                            {
-                                break;
-                            }
-                        }
-                        
-                        break;
-                    } 
-
-                    else if(input == 2)
-                    {
-                        while(true)
-                        {
-                            printS("=========Choose Item=========  (0 = exit) ");
-                            Warior.showCharacterUsableItems();
-                            cin >> input;
-
-                            if(input >= 1 && input <= Warior.getUseableItems().size())
-                            {
-                                Warior.useItem(input);
-                                break;
-                            }
-                            else if(input == 0)
-                            {
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
-                
-                
-            }
-
-            if(Warior.getHP() < 0)
-            {
-                prints("=============================");
-                cout << "         YOU ARE DEAD        " << endl;
-                prints("=============================");
-            }
-            else if(humanenemy->getEnemyModel()->getHP() < 0)
-            {
-                prints("========================");
-                cout << "       ENEMY IS DEAD     " << endl;
-                prints("========================");
-                Warior.setGold(Warior.getGold() + 50);
-                Warior.setXP(Warior.getXP() + 100);
-                delete humanenemy;
-                Warior.CalculateLevel();
-            }
-}
-
 
 
 int main()
@@ -572,40 +398,89 @@ int main()
 
         else{
 
-            
-            int random = rand();
-            
-            if(true)
+            Zombie* enemy = Enemyhouse.makeZombie();
+
+            while(Warior.getHP() > 0 && enemy->getEnemyModel()->getHP() > 0)
             {
+
                 while(true)
                 {
-                    zombie = Enemyhouse.makeZombie();
-                    if(zombie != nullptr)
+                    cout << "LEVEL" << Warior.getLevel() << endl;
+                    prints("================== Danger ===============");
+                    printS("Enemy is against you what you want to do?");
+                    cout << "1.Fight" << endl << "2.use Inventory" << endl;
+
+                    cout << "==Warior's HP: " << Warior.getHP() << "     ==Warior's ST: " << Warior.getStamina() << endl;
+                    cout << "==Enemy's HP: " << enemy->getEnemyModel()->getHP() << "         ==Enmey's DMPA: " << enemy->getEnemyModel()->getDamagePerAttack() << endl;
+                    int input;
+                    cin >> input;
+                
+
+                    if(input == 1)
                     {
+                        
+                        
+                        while(true)
+                        {
+                            printS("=========Choose a Weapon========= (0 = exit)");
+                            Warior.showCharacterWeapons();
+                            cin >> input;
+                            if(input <= Warior.getWeapons().size() && input >= 1)
+                            {
+                                Warior.Attack(enemy , Warior.getWeapons()[input-1]);
+                                enemy->getEnemyController()->Attack(&Warior);
+                                break;
+                            }
+                            else if(input == 0)
+                            {
+                                break;
+                            }
+                        }
+                        
+                        break;
+                    } 
+
+                    else if(input == 2)
+                    {
+                        while(true)
+                        {
+                            printS("=========Choose Item=========  (0 = exit) ");
+                            Warior.showCharacterUsableItems();
+                            cin >> input;
+
+                            if(input >= 1 && input <= Warior.getUseableItems().size())
+                            {
+                                Warior.useItem(input);
+                                break;
+                            }
+                            else if(input == 0)
+                            {
+                                break;
+                            }
+                        }
                         break;
                     }
-                    delete zombie;
                 }
-
-                runCodeForZombie();
-
-            } 
-            else if(random%2 == 1)
-            {
-                while(true)
-                {
-                    humanenemy = Enemyhouse.makeHuman();
-                    if(humanenemy != nullptr)
-                    {
-                        break;
-                    }
-                    delete humanenemy;
-                }
-
-                runCodeForHuman();
+                
+                
             }
-            
-            
+
+            if(Warior.getHP() < 0)
+            {
+                prints("=============================");
+                cout << "         YOU ARE DEAD        " << endl;
+                prints("=============================");
+            }
+            else if(enemy->getEnemyModel()->getHP() < 0)
+            {
+                prints("========================");
+                cout << "       ENEMY IS DEAD     " << endl;
+                prints("========================");
+                Warior.setGold(Warior.getGold() + 50);
+                Warior.setXP(Warior.getXP() + 100);
+                delete enemy;
+                Warior.CalculateLevel();
+            }
         }
     }
 

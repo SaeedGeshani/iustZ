@@ -3,7 +3,6 @@
 #include<vector>
 #include<iostream>
 #include "Zombie.h"
-#include "HUMAN.h"
 #include "Katana.h"
 #include "Blaster.h"
 #include "Batarang.h"
@@ -37,6 +36,5 @@ public:
     //Functions=========================
     Zombie* makeZombie();
     
-    HumanEnemy* makeHuman();
     
 };
