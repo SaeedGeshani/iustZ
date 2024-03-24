@@ -1,6 +1,24 @@
+#pragma once
+#include<string>
+#include<vector>
+#include<iostream>
+#include "MainCharacter.h"
+#include "Enemy.h"
+#include "Zombie.h"
+using namespace std;
 
-
-
+class Enemy;
+class EnemyModel;
+class EnemyView;
+class EnemyController;
+class MainCharacter;
+class Zombie;
+class ZombieModel;
+class ZombieView;
+class ZombieController;
+class UseableItems;
+class Weapon;
+class Enemy;
 
 
 class HumanEnemy {

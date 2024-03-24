@@ -55,8 +55,7 @@ protected:
     int neededStaminaPerAttack; 
 public:
     //Friend classes ==========================
-    friend class EnemyView;
-    friend class EnemyController;
+
     //Setter & Getters ==========================
     void setNeededStaminaPerAttack(int neededstperattack);
     
@@ -85,7 +84,7 @@ public:
     //=========================================
     //Constructor==============================
     EnemyModel();
-    EnemyModel(string name , int hp , int stamina , int damageperattack , int level);
+    EnemyModel(string name , int hp , int stamina , int damageperattack , int level , int neededstaminaperattack);
     
 };
 class Enemy{

@@ -284,28 +284,3 @@ using namespace std;
         }
     }
 
-//HumanEnemyFactory///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //Constructor========================
-    HumanEnemyFactory::HumanEnemyFactory() = default;
-    HumanEnemyFactory::HumanEnemyFactory(int humanenemylevel)
-    {
-        HumanEnemyLevel = humanenemylevel;
-    }
-    //Setter and Getters=================
-    void HumanEnemyFactory::setHumanEnemyLevel(int humanenemylevel)
-    {
-        HumanEnemyLevel = humanenemylevel;
-    }
-    int HumanEnemyFactory::getHumanEnemyLevel()
-    {
-        return HumanEnemyLevel;
-    }
-    Zombie* HumanEnemyFactory::makeZombie()
-    {
-        ZombieModel* zombiemodel = new ZombieModel("Zombie", CalculateHPForZombie(HumanEnemyLevel) , CalculateSTforZombie(HumanEnemyLevel) , CalculateDMPAforZombie(HumanEnemyLevel) , HumanEnemyLevel); 
-        ZombieView* zombieview = new ZombieView(zombiemodel);      
-        ZombieController* zombiecontroller = new ZombieController(zombiemodel);
-        Zombie* zombie = new Zombie(zombiemodel , zombieview , zombiecontroller);
-        return zombie;
-        
-    }

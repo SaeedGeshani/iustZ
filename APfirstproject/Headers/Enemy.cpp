@@ -99,13 +99,14 @@ using namespace std;
     //=========================================
     //Constructor==============================
     EnemyModel::EnemyModel() = default;
-    EnemyModel::EnemyModel(string name , int hp , int stamina , int damageperattack , int level)
+    EnemyModel::EnemyModel(string name , int hp , int stamina , int damageperattack , int level , int neededstaminaperattack)
     {
         Name = name;
         HP = hp;
         Stamina = stamina;
         DamagePerAttack = damageperattack;
         Level = level;
+        neededStaminaPerAttack = neededstaminaperattack;
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
