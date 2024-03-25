@@ -21,63 +21,65 @@ class Weapon;
 class Enemy;
 
 
-class HumanEnemy {
+class HumanEnemy : public Enemy{
 
 protected :
-    HumanEnemyModel* humanenemymodel;
-    HumanEnemyView* humanenemyview;
-    HumanEnemyController* humanenemycontroller;
+    // HumanEnemyModel* humanenemymodel;
+    // HumanEnemyView* humanenemyview;
+    // HumanEnemyController* humanenemycontroller;
 public :
     //Getter and Setter=====================
-    void setHumanEnemyModel(HumanEnemyModel* humanenemymodel);
+    void setHumanEnemyModel(EnemyModel* humanenemymodel);
 
-    HumanEnemyModel* getHumanEnemyModel();
+    EnemyModel* getHumanEnemyModel();
 
-    void setHumanEnemyView(HumanEnemyView* humanenemyview);
+    void setHumanEnemyView(EnemyView* humanenemyview);
     
-    HumanEnemyView* getHumanEnemyView();
+    EnemyView* getHumanEnemyView();
     
-    void setHumanEnemyController(HumanEnemyController* humanenemycontroller);
+    void setHumanEnemyController(EnemyController* humanenemycontroller);
    
-    HumanEnemyController* getHumanEnemyController();
+    EnemyController* getHumanEnemyController();
     
     //Constructor==============================
     HumanEnemy();
-    HumanEnemy(HumanEnemyModel* humanenemymodel , HumanEnemyView* humanenemyview , HumanEnemyController* humanenemycontroller);
+    HumanEnemy(EnemyModel* humanenemymodel , EnemyView* humanenemyview , EnemyController* humanenemycontroller);
    
 };
 
-class HumanEnemyController{
+class HumanEnemyController : public EnemyController{
 protected:
-    HumanEnemyModel* humanenemymodel;
+    // HumanEnemyModel* humanenemymodel;
 public:
     //Constructor======================
     HumanEnemyController();
-    HumanEnemyController(HumanEnemyModel* humanenemymodel);
+    HumanEnemyController(EnemyModel* humanenemymodel);
     
     //Setter and Getters===============
-    void setHumanEnemyModel(HumanEnemyModel* humanenemymodel);
+    void setHumanEnemyModel(EnemyModel* humanenemymodel);
     
-    HumanEnemyModel* getHumanEnemyModel();
+    EnemyModel* getHumanEnemyModel();
    
     //Functions=========================
-    void Attack(MainCharacter* player);
-    int CheckHealth(MainCharacter* player);
-    int CheckStamina(MainCharacter* player);
+    void WeaponAttack(MainCharacter* player , int number) override;
+    void Attack(MainCharacter* player ) override;
+    void useItems(int number) override;
+    int CheckHealth();
+    int CheckStamina();
     
 };
-class HumanEnemyView{
+class HumanEnemyView : public EnemyView{
 protected:
-    HumanEnemyModel* humanenemymodel;
+    // HumanEnemyModel* humanenemymodel;
 public: 
     //Setter and Getters=========================
-    void setHumanEnemyModel(HumanEnemyModel* humanenemymodel);
+    void setHumanEnemyModel(EnemyModel* humanenemymodel);
     
-    HumanEnemyModel* getHumanEnemyModel();
+    EnemyModel* getHumanEnemyModel();
    
     //Constructors===============================
     HumanEnemyView();
-    HumanEnemyView(HumanEnemyModel* humanenemymodel);
+    HumanEnemyView(EnemyModel* humanenemymodel);
     
     //Friend classes and Functions===============
     friend class HumanEnemyModel;
@@ -86,19 +88,22 @@ public:
     virtual void ShowHumanEnemyInfo();
     
 };
-class HumanEnemyModel{
+class HumanEnemyModel : public EnemyModel{
 protected:
-    string Name;
-    int HP;
-    int DamagePerAttack;
-    int Stamina;
-    int Level;
-    int neededStaminaPerAttack; 
+    
 public:
     //Friend classes ==========================
     friend class HumanEnemyView;
     friend class HumanEnemyController;
     //Setter & Getters ==========================
+    virtual void setEnemyWeapons(vector<Weapon*>enemyweapon);
+
+    virtual vector<Weapon*> getEnemyWeapons();
+
+    virtual void setEnemyUseableItems(vector<UseableItems*>enemyuseableitems);
+
+    virtual vector<UseableItems*> getEnemyUseableItems();
+
     void setNeededStaminaPerAttack(int neededstperattack);
     
     int getNeededStaminaPerAttack();

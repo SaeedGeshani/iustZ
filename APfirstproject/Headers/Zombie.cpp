@@ -16,8 +16,8 @@
 //ZombieModel///////////////////////////////////////////////////////////////////////////////////////////////////
 
     ZombieModel::ZombieModel() = default;
-    ZombieModel::ZombieModel(string name , int hp , int stamina , int damageperattack , int level)
-    :EnemyModel(name , hp , stamina , damageperattack , level)
+    ZombieModel::ZombieModel(string name , int hp , int stamina , int damageperattack , int level , int neededstaminaperattack)
+    :EnemyModel(name , hp , stamina , damageperattack , level , neededstaminaperattack)
     {
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,6 +33,30 @@
 
     ZombieController::ZombieController(EnemyModel* zombieModel)
     :EnemyController(zombieModel)
+    {
+
+    }
+
+    void ZombieController::WeaponAttack(MainCharacter* player , int number)
+    {
+
+    }
+
+    void ZombieController::Attack(MainCharacter* player)
+    {
+        
+        if((Enemymodel->getStamina() - Enemymodel->getNeededStaminaPerAttack()) > 0)
+        {
+        player->setHP(player->getHP() - Enemymodel->getDamagePerAttack());
+        Enemymodel->setStamina(Enemymodel->getStamina() - Enemymodel->getNeededStaminaPerAttack());
+        }
+        else{
+            cout << "Enemy Doesn't have enough Energy to attack" << endl;
+        }
+
+    }
+
+    void ZombieController::useItems(int number)
     {
 
     }

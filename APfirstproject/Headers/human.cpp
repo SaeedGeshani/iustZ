@@ -7,47 +7,71 @@
 #include<cmath>
 #include<ctime>
 #include "human.h"
+#include<cstdlib>
 using namespace std;
+
+int CalculateHPForHuman(int);
+int CalculateSTForHuman(int);
 
 
 //Enemy/////////////////////////////////////////////////////////////////////////////
     //Getter and Setter=====================
-    void HumanEnemy::setHumanEnemyModel(HumanEnemyModel* humanenemymodel)
+    void HumanEnemy::setHumanEnemyModel(EnemyModel* humanenemymodel)
     {
-        this->humanenemymodel = humanenemymodel;
+        Enemymodel = humanenemymodel;
     }
-    HumanEnemyModel* HumanEnemy::getHumanEnemyModel()
+    EnemyModel* HumanEnemy::getHumanEnemyModel()
     {
-        return humanenemymodel;
+        return Enemymodel;
     }
-    void HumanEnemy::setHumanEnemyView(HumanEnemyView* humanenemyview)
+    void HumanEnemy::setHumanEnemyView(EnemyView* humanenemyview)
     {
-        this->humanenemyview = humanenemyview;
+        Enemyview = humanenemyview;
     }
-    HumanEnemyView* HumanEnemy::getHumanEnemyView()
+    EnemyView* HumanEnemy::getHumanEnemyView()
     {
-        return humanenemyview;
+        return Enemyview;
     }
-    void HumanEnemy::setHumanEnemyController(HumanEnemyController* humanenemycontroller)
+    void HumanEnemy::setHumanEnemyController(EnemyController* humanenemycontroller)
     {
-        this->humanenemycontroller = humanenemycontroller;
+        Enemycontroller = humanenemycontroller;
     }
-    HumanEnemyController* HumanEnemy::getHumanEnemyController()
+    EnemyController* HumanEnemy::getHumanEnemyController()
     {
-        return humanenemycontroller;
+        return Enemycontroller;
     }
     //Constructor==============================
     HumanEnemy::HumanEnemy() = default;
-    HumanEnemy::HumanEnemy(HumanEnemyModel* humanenemymodel , HumanEnemyView* humanenemyview , HumanEnemyController* humanenemycontroller)
+    HumanEnemy::HumanEnemy(EnemyModel* humanenemymodel , EnemyView* humanenemyview , EnemyController* humanenemycontroller)
     {
-        this->humanenemymodel = humanenemymodel;
-        this->humanenemyview = humanenemyview;
-        this->humanenemycontroller = humanenemycontroller;
+        Enemymodel = humanenemymodel;
+        Enemyview = humanenemyview;
+        Enemycontroller = humanenemycontroller;
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //EnemyModel//////////////////////////////////////////////////////////////////////////////////////////////////
 
     //Setter & Getters ==========================
+    // void EnemyModel::setEnemyWeapons(vector<Weapon*> enemyweapon)
+    // {
+    //     EnemyWeapons = enemyweapon;
+    // }
+
+    // vector<Weapon*> EnemyModel::getEnemyWeapons()
+    // {
+    //     return EnemyWeapons;
+    // }
+
+    // void EnemyModel::setEnemyUseableItems(vector<UseableItems*> enemyuseableitem)
+    // {
+    //     EnemyUseableItems = enemyuseableitem;
+    // }
+
+    // vector<UseableItems*> EnemyModel:: getEnemyUseableItems()
+    // {
+    //     return EnemyUseableItems;
+    // }
+
     void HumanEnemyModel::setNeededStaminaPerAttack(int neededstperattack)
     {
         if(neededstperattack < 0)
@@ -118,28 +142,28 @@ using namespace std;
 //EnemyView/////////////////////////////////////////////////////////////////////////////////////////
  
     //Setter and Getters=========================
-    void HumanEnemyView::setHumanEnemyModel(HumanEnemyModel* humanenemymodel)
+    void HumanEnemyView::setHumanEnemyModel(EnemyModel* humanenemymodel)
     {
-        this->humanenemymodel = humanenemymodel;
+        Enemymodel = humanenemymodel;
     }
-    HumanEnemyModel* HumanEnemyView::getHumanEnemyModel()
+    EnemyModel* HumanEnemyView::getHumanEnemyModel()
     {
-        return humanenemymodel;
+        return Enemymodel;
     }
     //Constructors===============================
     HumanEnemyView::HumanEnemyView() = default;
-    HumanEnemyView::HumanEnemyView(HumanEnemyModel* humanenemymodel)
+    HumanEnemyView::HumanEnemyView(EnemyModel* humanenemymodel)
     {
-        this->humanenemymodel = humanenemymodel;
+       Enemymodel = humanenemymodel;
     }
 
     //Functions==================================
     void HumanEnemyView::ShowHumanEnemyInfo()
     {
         cout << "Here is status of enemy : " << endl;
-        cout << "Enemy's Name: " << humanenemymodel->getName() << endl;
-        cout << "Enemy's HP : " << humanenemymodel->getHP() << endl;
-        cout << "Enemy's Stamina: " << humanenemymodel->getStamina() << endl;
+        cout << "Enemy's Name: " << Enemymodel->getName() << endl;
+        cout << "Enemy's HP : " << Enemymodel->getHP() << endl;
+        cout << "Enemy's Stamina: " << Enemymodel->getStamina() << endl;
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //EnemyController/////////////////////////////////////////////////////////////////////////////////////////
@@ -148,105 +172,568 @@ using namespace std;
 
     //Constructor======================
     HumanEnemyController::HumanEnemyController() = default;
-    HumanEnemyController::HumanEnemyController(HumanEnemyModel* humanenemymodel)
+    HumanEnemyController::HumanEnemyController(EnemyModel* humanenemymodel)
     {
-        this->humanenemymodel = humanenemymodel;
+        Enemymodel = humanenemymodel;
     }
     //Setter and Getters===============
-    void HumanEnemyController::setHumanEnemyModel(HumanEnemyModel* humanenemymodel)
+    void HumanEnemyController::setHumanEnemyModel(EnemyModel* humanenemymodel)
     {
-        this->humanenemymodel = humanenemymodel;
+        Enemymodel = humanenemymodel;
     }
-    HumanEnemyModel* HumanEnemyController::getHumanEnemyModel()
+    EnemyModel* HumanEnemyController::getHumanEnemyModel()
     {
-        return humanenemymodel;
+        return Enemymodel;
     }
     //Functions=========================
+    void HumanEnemyController::WeaponAttack(MainCharacter*player , int number)
+    {
+        player->setHP(player->getHP() - Enemymodel->getEnemyWeapons()[number]->getDamagePerAttack());
+        Enemymodel->setStamina(Enemymodel->getStamina() - Enemymodel->getEnemyWeapons()[number]->getNeededStaminaPerAttack());
+        if(dynamic_cast<ThrowableWeapon*>(Enemymodel->getEnemyWeapons()[number]) != NULL)
+        {
+            delete Enemymodel->getEnemyWeapons()[number];
+            Enemymodel->getEnemyWeapons().erase(Enemymodel->getEnemyWeapons().begin() + number);
+        }
+    }
+
+    void HumanEnemyController::useItems(int number)
+    {
+        Enemymodel->setStamina(Enemymodel->getStamina() + Enemymodel->getEnemyUseableItems()[number]->getEnergy());
+        Enemymodel->setHP(Enemymodel->getHP() + Enemymodel->getEnemyUseableItems()[number]->getHealingPower());
+        delete Enemymodel->getEnemyUseableItems()[number];
+        Enemymodel->getEnemyUseableItems().erase(Enemymodel->getEnemyUseableItems().begin() + number);
+    }
+
     void HumanEnemyController::Attack(MainCharacter* player)
     {
-
-        switch (CheckHealth(player))
+        int MaxHP = CalculateHPForHuman(player->getLevel());
+        int MaxST = CalculateSTForHuman(player->getLevel());
+        bool checkGone = false;
+        switch (CheckHealth())
         {
         case Low:
-            ///////
-            //use an item to heal or more than one , Hp is under 10 percent ;
-            ///////
-            switch (CheckStamina(player))
+            switch (CheckStamina())
             {
             case low:
                 ///////
                 //use an item to generate stamina or more than one , Stamina is under 10 percent ;
-                ///////  
+                ///////
+                
+                while(Enemymodel->getHP() < (0.7)*(MaxHP) || Enemymodel->getStamina() < (0.7)*(MaxST))
+                {
+                    if(Enemymodel->getEnemyUseableItems().size() > 0)
+                    {
+                        useItems(0);
+                    }
+                    else{
+
+                        break;
+                    }
+                    
+                }
 
                 ///////
                 //use an item to attack and set stamina and DamagePerAttack of that weapon and use the comment code below ;
                 ///////
+                checkGone = false;
+                srand(time(0));
+                int random1;
+                random1 = rand()%Enemymodel->getEnemyWeapons().size();
+                for(int i = random1 ; i < Enemymodel->getEnemyWeapons().size() ; i++)
+                {
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    {
+                        WeaponAttack(player , i);
+                        checkGone = true;
+                        break;
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    for(int i = 0 ; i < random1 ; i++)
+                    {
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        {
+                            WeaponAttack(player , i);
+                            checkGone = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    cout << "Couldn't use Weapon cause Stamina" << endl;
+                }
+
                 break;
             case average:  
                 ///////
                 //use an item to generate stamina , stamina is under 50 percent ;
                 ///////
+                while(Enemymodel->getHP() < (0.5)*(MaxHP) || Enemymodel->getStamina() < (0.5)*(MaxST))
+                {
+                    if(Enemymodel->getEnemyUseableItems().size() > 0)
+                    {
+                        useItems(0);
+                    }
+                    else{
+
+                        break;
+                    }
+                    
+                }
 
                 ///////
                 //use an item to attack and set stamina and DamagePerAttack of that weapon and use the comment code below ;
                 ///////
+                checkGone = false;
+                srand(time(0));
+                random1 = rand()%Enemymodel->getEnemyWeapons().size();
+                for(int i = random1 ; i < Enemymodel->getEnemyWeapons().size() ; i++)
+                {
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    {
+                        WeaponAttack(player , i);
+                        checkGone = true;
+                        break;
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    for(int i = 0 ; i < random1 ; i++)
+                    {
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        {
+                            WeaponAttack(player , i);
+                            checkGone = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    cout << "Couldn't use Weapon cause Stamina" << endl;
+                }
+
+
                 break;
             default:
+            //FIRST CODE
+             while(Enemymodel->getHP() < (0.7)*(MaxHP) || Enemymodel->getStamina() < (0.7)*(MaxST))
+                {
+                    if(Enemymodel->getEnemyUseableItems().size() > 0)
+                    {
+                        useItems(0);
+                    }
+                    else{
+
+                        break;
+                    }
+                    
+                }
+
+            //SECOND PART
+            checkGone = false;
+                srand(time(0));
+                int random;
+                random = rand()%Enemymodel->getEnemyWeapons().size();
+                for(int i = random ; i < Enemymodel->getEnemyWeapons().size() ; i++)
+                {
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    {
+                        WeaponAttack(player , i);
+                        checkGone = true;
+                        break;
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    for(int i = 0 ; i < random ; i++)
+                    {
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        {
+                            WeaponAttack(player , i);
+                            checkGone = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    cout << "Couldn't use Weapon cause Stamina" << endl;
+                }
+
+
                 break;
             }
             break;
         case Average:
-            ///////
-            //use an item to heal , Hp is under 50 percent ;
-            ///////
-            switch (CheckStamina(player))
+            switch (CheckStamina())
             {
             case low:
                 ///////
                 //use an item to generate stamina or more than one , Stamina is under 10 percent ;
                 /////// 
+                while(Enemymodel->getHP() < (0.6)*(MaxHP) || Enemymodel->getStamina() < (0.6)*(MaxST))
+                {
+                    if(Enemymodel->getEnemyUseableItems().size() > 0)
+                    {
+                        useItems(0);
+                    }
+                    else{
 
+                        break;
+                    }
+                    
+                }
                 ///////
                 //use an item to attack ;
                 /////// 
+                checkGone = false;
+                srand(time(0));
+                int random;
+                random = rand()%Enemymodel->getEnemyWeapons().size();
+                for(int i = random ; i < Enemymodel->getEnemyWeapons().size() ; i++)
+                {
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    {
+                        WeaponAttack(player , i);
+                        checkGone = true;
+                        break;
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    for(int i = 0 ; i < random ; i++)
+                    {
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        {
+                            WeaponAttack(player , i);
+                            checkGone = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    cout << "Couldn't use Weapon cause Stamina" << endl;
+                }
+                break;
             case average:  
                 ///////
                 //use an item to generate stamina , stamina is under 50 percent ;
                 ///////
+                while(Enemymodel->getHP() < (0.6)*(MaxHP) || Enemymodel->getStamina() < (0.6)*(MaxST))
+                {
+                    if(Enemymodel->getEnemyUseableItems().size() > 0)
+                    {
+                        useItems(0);
+                    }
+                    else{
 
+                        break;
+                    }
+                    
+                }
                 ///////
                 //use an item to attack and set stamina and DamagePerAttack of that weapon and use the comment code below ;
                 ///////
+                checkGone = false;
+                srand(time(0));
+                random;
+                random = rand()%Enemymodel->getEnemyWeapons().size();
+                for(int i = random ; i < Enemymodel->getEnemyWeapons().size() ; i++)
+                {
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    {
+                        WeaponAttack(player , i);
+                        checkGone = true;
+                        break;
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    for(int i = 0 ; i < random ; i++)
+                    {
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        {
+                            WeaponAttack(player , i);
+                            checkGone = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    cout << "Couldn't use Weapon cause Stamina" << endl;
+                }
                 break;
             default:
+            //FIRST PART
+            while(Enemymodel->getHP() < (0.6)*(MaxHP) || Enemymodel->getStamina() < (0.6)*(MaxST))
+                {
+                    if(Enemymodel->getEnemyUseableItems().size() > 0)
+                    {
+                        useItems(0);
+                    }
+                    else{
+
+                        break;
+                    }
+                    
+                }
+            //SECONDPART
+            checkGone = false;
+                srand(time(0));
+                random;
+                random = rand()%Enemymodel->getEnemyWeapons().size();
+                for(int i = random ; i < Enemymodel->getEnemyWeapons().size() ; i++)
+                {
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    {
+                        WeaponAttack(player , i);
+                        checkGone = true;
+                        break;
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    for(int i = 0 ; i < random ; i++)
+                    {
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        {
+                            WeaponAttack(player , i);
+                            checkGone = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    cout << "Couldn't use Weapon cause Stamina" << endl;
+                }
                 break;
             }
             break;
+
         case High:
-            switch (CheckStamina(player))
+            switch (CheckStamina())
             {
             case low:
                 ///////
                 //use an item to generate stamina or more than one , Stamina is under 10 percent ;
                 ///////  
+                while(Enemymodel->getHP() < (0.6)*(MaxHP) || Enemymodel->getStamina() < (0.6)*(MaxST))
+                {
+                    if(Enemymodel->getEnemyUseableItems().size() > 0)
+                    {
+                        useItems(0);
+                    }
+                    else{
 
+                        break;
+                    }
+                    
+                }
                 ///////
                 //use an item to attack ;
                 ///////
+                checkGone = false;
+                srand(time(0));
+                int random;
+                random = rand()%Enemymodel->getEnemyWeapons().size();
+                
+                for(int i = random ; i < Enemymodel->getEnemyWeapons().size() ; i++)
+                {
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    {
+                        WeaponAttack(player , i);
+                        checkGone = true;
+                        break;
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    for(int i = 0 ; i < random ; i++)
+                    {
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        {
+                            WeaponAttack(player , i);
+                            checkGone = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    cout << "Couldn't use Weapon cause Stamina" << endl;
+                }
+                break;
             case average:
                 ///////
                 //use an item to generate stamina , stamina is under 50 percent ;
                 ///////
+                while(Enemymodel->getHP() < (0.6)*(MaxHP) || Enemymodel->getStamina() < (0.6)*(MaxST))
+                {
+                    if(Enemymodel->getEnemyUseableItems().size() > 0)
+                    {
+                        useItems(0);
+                    }
+                    else{
+
+                        break;
+                    }
+                    
+                }
 
                 ///////
                 //use an item to attack and set stamina and DamagePerAttack of that weapon and use the comment code below ;
                 ///////
+                checkGone = false;
+                srand(time(0));
+                random;
+                random = rand()%Enemymodel->getEnemyWeapons().size();
+                for(int i = random ; i < Enemymodel->getEnemyWeapons().size() ; i++)
+                {
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    {
+                        WeaponAttack(player , i);
+                        checkGone = true;
+                        break;
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    for(int i = 0 ; i < random ; i++)
+                    {
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        {
+                            WeaponAttack(player , i);
+                            checkGone = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    cout << "Couldn't use Weapon cause Stamina" << endl;
+                }
                 break;
             default:
+            //FIRTPART
+            while(Enemymodel->getHP() < (0.6)*(MaxHP) || Enemymodel->getStamina() < (0.6)*(MaxST))
+                {
+                    if(Enemymodel->getEnemyUseableItems().size() > 0)
+                    {
+                        useItems(0);
+                    }
+                    else{
+
+                        break;
+                    }
+                    
+                }
+
+            //SECONDPART
+            checkGone = false;
+                srand(time(0));
+                random ;
+                random = rand()%Enemymodel->getEnemyWeapons().size();
+                for(int i = random ; i < Enemymodel->getEnemyWeapons().size() ; i++)
+                {
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    {
+                        WeaponAttack(player , i);
+                        checkGone = true;
+                        break;
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    for(int i = 0 ; i < random ; i++)
+                    {
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        {
+                            WeaponAttack(player , i);
+                            checkGone = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    cout << "Couldn't use Weapon cause Stamina" << endl;
+                }
                 break;
             }
             break;
+
         default:
+
+        //FIRTPART
+        while(Enemymodel->getHP() < (0.6)*(MaxHP) || Enemymodel->getStamina() < (0.6)*(MaxST))
+                {
+                    if(Enemymodel->getEnemyUseableItems().size() > 0)
+                    {
+                        useItems(0);
+                    }
+                    else{
+
+                        break;
+                    }
+                    
+                }
+        //SECONDPART
+         checkGone = false;
+                srand(time(0));
+                int random;
+                random = rand()%Enemymodel->getEnemyWeapons().size();
+                for(int i = random ; i < Enemymodel->getEnemyWeapons().size() ; i++)
+                {
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    {
+                        WeaponAttack(player , i);
+                        checkGone = true;
+                        break;
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    for(int i = 0 ; i < random ; i++)
+                    {
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        {
+                            WeaponAttack(player , i);
+                            checkGone = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(!checkGone)
+                {
+                    cout << "Couldn't use Weapon cause Stamina" << endl;
+                }
             break;
         }
         
@@ -259,28 +746,34 @@ using namespace std;
         //    cout << "Enemy Doesn't have enough Energy to attack" << endl;
         //}
     }
-    int HumanEnemyController::CheckHealth(MainCharacter* player){
+
+
+
+    int HumanEnemyController::CheckHealth(){
         //*************add percent of Health , now it is just a number between 0 to 100 ;*****************
-        if (player->getHP() <= 10){
+        if (Enemymodel->getHP() <= 10){
             return 0 ;
         }
-        else if (player->getHP()>10 && player->getHP()<=50){
+        else if (Enemymodel->getHP()>10 && Enemymodel->getHP()<=50){
             return 50 ;
         }
-        else if (player->getHP()<=100 && player->getHP()>50){
+        else if (Enemymodel->getHP()<=100 && Enemymodel->getHP()>50){
             return 100 ;
         }
+        return -1;
     }
-    int HumanEnemyController::CheckStamina(MainCharacter* player){
+    int HumanEnemyController::CheckStamina(){
         //*************add percent of Health , now it is just a number between 0 to 100 ;*****************
-        if (player->getStamina() <= 10){
+        if (Enemymodel->getStamina() <= 10){
             return 0 ;
         }
-        else if (player->getStamina()>10 && player->getStamina()<=50){
+        else if (Enemymodel->getStamina()>10 && Enemymodel->getStamina()<=50){
             return 50 ;
         }
-        else if (player->getStamina()<=100 && player->getStamina()>50){
+        else if (Enemymodel->getStamina()<=100 && Enemymodel->getStamina()>50){
             return 100 ;
         }
+
+        return -1;
     }
 

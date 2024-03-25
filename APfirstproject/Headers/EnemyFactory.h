@@ -3,6 +3,13 @@
 #include<vector>
 #include<iostream>
 #include "Zombie.h"
+#include "human.h"
+#include "Katana.h"
+#include "Blaster.h"
+#include "Batarang.h"
+#include "grenade.h"
+#include "Egg.h"
+#include "WheyProtein.h"
 
 
 using namespace std;
@@ -29,5 +36,6 @@ public:
     // Code is in functions and they're below.
     //Functions=========================
     Zombie* makeZombie();
+    HumanEnemy* makeHuman();
     
 };

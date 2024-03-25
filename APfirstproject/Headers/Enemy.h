@@ -1,7 +1,9 @@
 #pragma once
 #include<string>
 #include<iostream>
+#include<vector>
 #include "MainCharacter.h"
+#include "Weapon.h"
 using namespace std;
     class EnemyView;
     class EnemyModel;
@@ -20,9 +22,15 @@ public:
     void setEnemyModel(EnemyModel* enemymodel);
     
     EnemyModel* getEnemyModel();
-   
+    
     //Functions=========================
-    void Attack(MainCharacter* player);
+    virtual void WeaponAttack(MainCharacter* player , int number) = 0;
+
+    virtual void Attack(MainCharacter* player) = 0;
+
+    virtual void useItems(int number) = 0;
+
+    
     
 };
 class EnemyView{
@@ -45,6 +53,7 @@ public:
     virtual void ShowEnemyInfo();
     
 };
+
 class EnemyModel{
 protected:
     string Name;
@@ -53,10 +62,20 @@ protected:
     int Stamina;
     int Level;
     int neededStaminaPerAttack; 
+    vector<Weapon*>EnemyWeapons;
+    vector<UseableItems*>EnemyUseableItems;
 public:
     //Friend classes ==========================
 
     //Setter & Getters ==========================
+    virtual void setEnemyWeapons(vector<Weapon*>enemyweapon);
+
+    virtual vector<Weapon*> getEnemyWeapons();
+
+    virtual void setEnemyUseableItems(vector<UseableItems*>enemyuseableitems);
+
+    virtual vector<UseableItems*> getEnemyUseableItems();
+
     void setNeededStaminaPerAttack(int neededstperattack);
     
     int getNeededStaminaPerAttack();

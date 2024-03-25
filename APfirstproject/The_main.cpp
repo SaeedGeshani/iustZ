@@ -43,6 +43,8 @@
 #include "Headers/WheyProtein.cpp"
 #include "Headers/Blaster.h"
 #include "Headers/Blaster.cpp"
+#include "Headers/human.h"
+#include "Headers/human.cpp"
 using namespace std;
 
 //Global Objects And Variables==============================
@@ -71,6 +73,8 @@ using namespace std;
     // }
 //==========================================================
 
+int CalculateHPForHuman(int);
+int CalculateSTForHuman(int);
 int CalculateHPForZombie(int);
 int CalculateSTforZombie(int);
 int CalculateDMPAforZombie(int);
@@ -370,6 +374,7 @@ bool randomShuffle ( int Difficulty , int Level ) {
 
 int main()
 {
+    Enemy* enemy;
     makingNewcharacter();
     int Difficulty;
     while(true)
@@ -398,7 +403,16 @@ int main()
 
         else{
 
-            Zombie* enemy = Enemyhouse.makeZombie();
+            int Whichenemy = rand()%2;
+
+            if(Whichenemy == 0 && false)
+            {
+                enemy = Enemyhouse.makeZombie();
+            }
+            else if(Whichenemy == 1) 
+            {
+                enemy = Enemyhouse.makeHuman();
+            }
 
             while(Warior.getHP() > 0 && enemy->getEnemyModel()->getHP() > 0)
             {
@@ -485,6 +499,14 @@ int main()
     }
 
     
+}
+int CalculateHPForHuman(int level)
+{
+    return level*8 + 80; 
+}
+int CalculateSTForHuman(int level)
+{
+    return level *10 + 70;
 }
 
 int CalculateDMPAforZombie(int level)

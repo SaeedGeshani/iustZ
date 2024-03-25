@@ -13,6 +13,9 @@ protected:
 
 public:
     ZombieController(EnemyModel* zombieModel);
+    virtual void WeaponAttack(MainCharacter*player , int number) override;
+    virtual void Attack(MainCharacter* player) override;
+    virtual void useItems(int number) override;
 };
 class ZombieView : public EnemyView{
 protected:
@@ -25,7 +28,7 @@ protected:
 
 public:
     ZombieModel();
-    ZombieModel(string name , int hp , int stamina , int damageperattack , int level);
+    ZombieModel(string name , int hp , int stamina , int damageperattack , int level , int neededdamageperattack);
 };
 class Zombie : public Enemy{
 protected:
