@@ -188,21 +188,30 @@ int CalculateSTForHuman(int);
     //Functions=========================
     void HumanEnemyController::WeaponAttack(MainCharacter*player , int number)
     {
+        cout << "===============================" << endl;
+        cout << "       Enemy is attacking      " << endl;
+        cout << "===============================" << endl;
         player->setHP(player->getHP() - Enemymodel->getEnemyWeapons()[number]->getDamagePerAttack());
         Enemymodel->setStamina(Enemymodel->getStamina() - Enemymodel->getEnemyWeapons()[number]->getNeededStaminaPerAttack());
         if(dynamic_cast<ThrowableWeapon*>(Enemymodel->getEnemyWeapons()[number]) != NULL)
         {
-            delete Enemymodel->getEnemyWeapons()[number];
-            Enemymodel->getEnemyWeapons().erase(Enemymodel->getEnemyWeapons().begin() + number);
+            delete Enemymodel->EnemyWeapons[number];
+            Enemymodel->EnemyWeapons.erase(Enemymodel->EnemyWeapons.begin() + number);
         }
     }
 
     void HumanEnemyController::useItems(int number)
     {
+        cout << "====================================" << endl;
+        cout << "          Enemy is using Item       " << endl;
+        cout << "====================================" << endl;
+        cout << "Added ST: " << Enemymodel->getEnemyUseableItems()[number]->getEnergy() << endl;
+        cout << "Added HP: " << Enemymodel->getEnemyUseableItems()[number]->getHealingPower() <<endl;
         Enemymodel->setStamina(Enemymodel->getStamina() + Enemymodel->getEnemyUseableItems()[number]->getEnergy());
         Enemymodel->setHP(Enemymodel->getHP() + Enemymodel->getEnemyUseableItems()[number]->getHealingPower());
-        delete Enemymodel->getEnemyUseableItems()[number];
-        Enemymodel->getEnemyUseableItems().erase(Enemymodel->getEnemyUseableItems().begin() + number);
+        delete Enemymodel->EnemyUseableItems[number];
+        Enemymodel->EnemyUseableItems.erase(Enemymodel->EnemyUseableItems.begin() + number);
+        bool checkToDelete = false;
     }
 
     void HumanEnemyController::Attack(MainCharacter* player)
@@ -224,6 +233,7 @@ int CalculateSTForHuman(int);
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
                     {
+                        cout << "==========Low  low ===Using item===" <<endl;
                         useItems(0);
                     }
                     else{
@@ -239,10 +249,12 @@ int CalculateSTForHuman(int);
                 checkGone = false;
                 srand(time(0));
                 int random1;
-                random1 = rand()%Enemymodel->getEnemyWeapons().size();
+               if(Enemymodel->getEnemyWeapons().size() > 0)
+                {
+                    random1 = rand()%Enemymodel->getEnemyWeapons().size();
                 for(int i = random1 ; i < Enemymodel->getEnemyWeapons().size() ; i++)
                 {
-                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP()>0)
                     {
                         WeaponAttack(player , i);
                         checkGone = true;
@@ -254,7 +266,7 @@ int CalculateSTForHuman(int);
                 {
                     for(int i = 0 ; i < random1 ; i++)
                     {
-                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP() > 0)
                         {
                             WeaponAttack(player , i);
                             checkGone = true;
@@ -267,7 +279,8 @@ int CalculateSTForHuman(int);
                 {
                     cout << "Couldn't use Weapon cause Stamina" << endl;
                 }
-
+                break;
+                }
                 break;
             case average:  
                 ///////
@@ -277,6 +290,7 @@ int CalculateSTForHuman(int);
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
                     {
+                        cout << "=====Low average=====Using Item======" << endl;
                         useItems(0);
                     }
                     else{
@@ -291,10 +305,12 @@ int CalculateSTForHuman(int);
                 ///////
                 checkGone = false;
                 srand(time(0));
-                random1 = rand()%Enemymodel->getEnemyWeapons().size();
-                for(int i = random1 ; i < Enemymodel->getEnemyWeapons().size() ; i++)
+                if(Enemymodel->getEnemyWeapons().size() > 0)
                 {
-                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    random1 = rand()%Enemymodel->getEnemyWeapons().size();
+                for(int i = random1; i < Enemymodel->getEnemyWeapons().size() ; i++)
+                {
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP() > 0)
                     {
                         WeaponAttack(player , i);
                         checkGone = true;
@@ -306,7 +322,7 @@ int CalculateSTForHuman(int);
                 {
                     for(int i = 0 ; i < random1 ; i++)
                     {
-                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP() > 0)
                         {
                             WeaponAttack(player , i);
                             checkGone = true;
@@ -319,7 +335,8 @@ int CalculateSTForHuman(int);
                 {
                     cout << "Couldn't use Weapon cause Stamina" << endl;
                 }
-
+                break;
+                }
 
                 break;
             default:
@@ -328,6 +345,7 @@ int CalculateSTForHuman(int);
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
                     {
+                        cout << "=====Low high=====Using Item====" << endl;
                         useItems(0);
                     }
                     else{
@@ -341,10 +359,12 @@ int CalculateSTForHuman(int);
             checkGone = false;
                 srand(time(0));
                 int random;
-                random = rand()%Enemymodel->getEnemyWeapons().size();
+                if(Enemymodel->getEnemyWeapons().size() > 0)
+                {
+                    random = rand()%Enemymodel->getEnemyWeapons().size();
                 for(int i = random ; i < Enemymodel->getEnemyWeapons().size() ; i++)
                 {
-                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP() > 0)
                     {
                         WeaponAttack(player , i);
                         checkGone = true;
@@ -356,7 +376,7 @@ int CalculateSTForHuman(int);
                 {
                     for(int i = 0 ; i < random ; i++)
                     {
-                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP() > 0)
                         {
                             WeaponAttack(player , i);
                             checkGone = true;
@@ -369,8 +389,8 @@ int CalculateSTForHuman(int);
                 {
                     cout << "Couldn't use Weapon cause Stamina" << endl;
                 }
-
-
+                break;
+                }
                 break;
             }
             break;
@@ -385,6 +405,7 @@ int CalculateSTForHuman(int);
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
                     {
+                        cout << "====Average low====Using Item====" << endl;
                         useItems(0);
                     }
                     else{
@@ -399,10 +420,12 @@ int CalculateSTForHuman(int);
                 checkGone = false;
                 srand(time(0));
                 int random;
-                random = rand()%Enemymodel->getEnemyWeapons().size();
+                if(Enemymodel->getEnemyWeapons().size() > 0)
+                {
+                    random = rand()%Enemymodel->getEnemyWeapons().size();
                 for(int i = random ; i < Enemymodel->getEnemyWeapons().size() ; i++)
                 {
-                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP() > 0)
                     {
                         WeaponAttack(player , i);
                         checkGone = true;
@@ -414,7 +437,7 @@ int CalculateSTForHuman(int);
                 {
                     for(int i = 0 ; i < random ; i++)
                     {
-                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP() > 0)
                         {
                             WeaponAttack(player , i);
                             checkGone = true;
@@ -428,6 +451,8 @@ int CalculateSTForHuman(int);
                     cout << "Couldn't use Weapon cause Stamina" << endl;
                 }
                 break;
+                }
+                break;
             case average:  
                 ///////
                 //use an item to generate stamina , stamina is under 50 percent ;
@@ -436,6 +461,7 @@ int CalculateSTForHuman(int);
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
                     {
+                        cout << "====Average average ======Using Item" << endl;
                         useItems(0);
                     }
                     else{
@@ -450,10 +476,12 @@ int CalculateSTForHuman(int);
                 checkGone = false;
                 srand(time(0));
                 random;
-                random = rand()%Enemymodel->getEnemyWeapons().size();
+               if(Enemymodel->getEnemyWeapons().size() > 0)
+                {
+                    random = rand()%Enemymodel->getEnemyWeapons().size();
                 for(int i = random ; i < Enemymodel->getEnemyWeapons().size() ; i++)
                 {
-                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP())
                     {
                         WeaponAttack(player , i);
                         checkGone = true;
@@ -465,7 +493,7 @@ int CalculateSTForHuman(int);
                 {
                     for(int i = 0 ; i < random ; i++)
                     {
-                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack()&& Enemymodel->getHP() > 0)
                         {
                             WeaponAttack(player , i);
                             checkGone = true;
@@ -479,12 +507,15 @@ int CalculateSTForHuman(int);
                     cout << "Couldn't use Weapon cause Stamina" << endl;
                 }
                 break;
+                }
+                break;
             default:
             //FIRST PART
             while(Enemymodel->getHP() < (0.6)*(MaxHP) || Enemymodel->getStamina() < (0.6)*(MaxST))
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
                     {
+                        cout <<"===== Average high====Using Item====" << endl;
                         useItems(0);
                     }
                     else{
@@ -497,10 +528,13 @@ int CalculateSTForHuman(int);
             checkGone = false;
                 srand(time(0));
                 random;
-                random = rand()%Enemymodel->getEnemyWeapons().size();
+
+                if(Enemymodel->getEnemyWeapons().size() > 0)
+                {
+                    random = rand()%Enemymodel->getEnemyWeapons().size();
                 for(int i = random ; i < Enemymodel->getEnemyWeapons().size() ; i++)
                 {
-                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP() > 0)
                     {
                         WeaponAttack(player , i);
                         checkGone = true;
@@ -512,7 +546,7 @@ int CalculateSTForHuman(int);
                 {
                     for(int i = 0 ; i < random ; i++)
                     {
-                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP() > 0)
                         {
                             WeaponAttack(player , i);
                             checkGone = true;
@@ -526,6 +560,8 @@ int CalculateSTForHuman(int);
                     cout << "Couldn't use Weapon cause Stamina" << endl;
                 }
                 break;
+                }
+                
             }
             break;
 
@@ -540,6 +576,7 @@ int CalculateSTForHuman(int);
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
                     {
+                        cout << "======High low=====Using Item====" << endl;
                         useItems(0);
                     }
                     else{
@@ -554,11 +591,12 @@ int CalculateSTForHuman(int);
                 checkGone = false;
                 srand(time(0));
                 int random;
-                random = rand()%Enemymodel->getEnemyWeapons().size();
-                
+                if(Enemymodel->getEnemyWeapons().size() > 0)
+                {
+                    random = rand()%Enemymodel->getEnemyWeapons().size();
                 for(int i = random ; i < Enemymodel->getEnemyWeapons().size() ; i++)
                 {
-                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP() > 0)
                     {
                         WeaponAttack(player , i);
                         checkGone = true;
@@ -570,7 +608,7 @@ int CalculateSTForHuman(int);
                 {
                     for(int i = 0 ; i < random ; i++)
                     {
-                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP() > 0)
                         {
                             WeaponAttack(player , i);
                             checkGone = true;
@@ -584,6 +622,8 @@ int CalculateSTForHuman(int);
                     cout << "Couldn't use Weapon cause Stamina" << endl;
                 }
                 break;
+                }
+                break;
             case average:
                 ///////
                 //use an item to generate stamina , stamina is under 50 percent ;
@@ -592,6 +632,7 @@ int CalculateSTForHuman(int);
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
                     {
+                        cout << "=====High average===== Using Item" << endl;
                         useItems(0);
                     }
                     else{
@@ -607,10 +648,12 @@ int CalculateSTForHuman(int);
                 checkGone = false;
                 srand(time(0));
                 random;
-                random = rand()%Enemymodel->getEnemyWeapons().size();
+                if(Enemymodel->getEnemyWeapons().size() > 0)
+                {
+                    random = rand()%Enemymodel->getEnemyWeapons().size();
                 for(int i = random ; i < Enemymodel->getEnemyWeapons().size() ; i++)
                 {
-                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP() > 0)
                     {
                         WeaponAttack(player , i);
                         checkGone = true;
@@ -622,7 +665,7 @@ int CalculateSTForHuman(int);
                 {
                     for(int i = 0 ; i < random ; i++)
                     {
-                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack()&& Enemymodel->getHP() > 0)
                         {
                             WeaponAttack(player , i);
                             checkGone = true;
@@ -636,12 +679,15 @@ int CalculateSTForHuman(int);
                     cout << "Couldn't use Weapon cause Stamina" << endl;
                 }
                 break;
+                }
+                break;
             default:
             //FIRTPART
             while(Enemymodel->getHP() < (0.6)*(MaxHP) || Enemymodel->getStamina() < (0.6)*(MaxST))
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
                     {
+                        cout <<"=====High high==== Using Item====" << endl;
                         useItems(0);
                     }
                     else{
@@ -655,10 +701,12 @@ int CalculateSTForHuman(int);
             checkGone = false;
                 srand(time(0));
                 random ;
-                random = rand()%Enemymodel->getEnemyWeapons().size();
+               if(Enemymodel->getEnemyWeapons().size() > 0)
+                {
+                    random = rand()%Enemymodel->getEnemyWeapons().size();
                 for(int i = random ; i < Enemymodel->getEnemyWeapons().size() ; i++)
                 {
-                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP() > 0)
                     {
                         WeaponAttack(player , i);
                         checkGone = true;
@@ -670,7 +718,7 @@ int CalculateSTForHuman(int);
                 {
                     for(int i = 0 ; i < random ; i++)
                     {
-                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP() > 0)
                         {
                             WeaponAttack(player , i);
                             checkGone = true;
@@ -684,6 +732,8 @@ int CalculateSTForHuman(int);
                     cout << "Couldn't use Weapon cause Stamina" << endl;
                 }
                 break;
+                }
+                break;
             }
             break;
 
@@ -692,8 +742,9 @@ int CalculateSTForHuman(int);
         //FIRTPART
         while(Enemymodel->getHP() < (0.6)*(MaxHP) || Enemymodel->getStamina() < (0.6)*(MaxST))
                 {
-                    if(Enemymodel->getEnemyUseableItems().size() > 0)
+                    if(Enemymodel->getEnemyWeapons().size() > 0)
                     {
+                        cout <<" ANYTHING ELSE" << endl;
                         useItems(0);
                     }
                     else{
@@ -706,10 +757,12 @@ int CalculateSTForHuman(int);
          checkGone = false;
                 srand(time(0));
                 int random;
-                random = rand()%Enemymodel->getEnemyWeapons().size();
+               if(Enemymodel->getEnemyWeapons().size() > 0)
+                {
+                    random = rand()%Enemymodel->getEnemyWeapons().size();
                 for(int i = random ; i < Enemymodel->getEnemyWeapons().size() ; i++)
                 {
-                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP() > 0)
                     {
                         WeaponAttack(player , i);
                         checkGone = true;
@@ -721,7 +774,7 @@ int CalculateSTForHuman(int);
                 {
                     for(int i = 0 ; i < random ; i++)
                     {
-                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack())
+                        if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP() > 0)
                         {
                             WeaponAttack(player , i);
                             checkGone = true;
@@ -733,6 +786,8 @@ int CalculateSTForHuman(int);
                 if(!checkGone)
                 {
                     cout << "Couldn't use Weapon cause Stamina" << endl;
+                }
+                break;
                 }
             break;
         }

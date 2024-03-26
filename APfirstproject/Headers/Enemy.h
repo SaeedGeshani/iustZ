@@ -62,11 +62,11 @@ protected:
     int Stamina;
     int Level;
     int neededStaminaPerAttack; 
-    vector<Weapon*>EnemyWeapons;
-    vector<UseableItems*>EnemyUseableItems;
+    
 public:
     //Friend classes ==========================
-
+    vector<Weapon*>EnemyWeapons;
+    vector<UseableItems*>EnemyUseableItems;
     //Setter & Getters ==========================
     virtual void setEnemyWeapons(vector<Weapon*>enemyweapon);
 

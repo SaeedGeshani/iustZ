@@ -35,4 +35,5 @@ public:
     UseableItems();
     UseableItems(int energy , int healingpower , std::string name, int price, int addedxp);
     
+    virtual ~UseableItems();
 };

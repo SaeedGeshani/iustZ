@@ -93,16 +93,15 @@ protected:
     
 public:
     //Friend classes ==========================
-    friend class HumanEnemyView;
-    friend class HumanEnemyController;
+
     //Setter & Getters ==========================
-    virtual void setEnemyWeapons(vector<Weapon*>enemyweapon);
+    // void setEnemyWeapons(vector<Weapon*>enemyweapon);
 
-    virtual vector<Weapon*> getEnemyWeapons();
+    // vector<Weapon*> getEnemyWeapons();
 
-    virtual void setEnemyUseableItems(vector<UseableItems*>enemyuseableitems);
+    // void setEnemyUseableItems(vector<UseableItems*>enemyuseableitems);
 
-    virtual vector<UseableItems*> getEnemyUseableItems();
+    // vector<UseableItems*> getEnemyUseableItems();
 
     void setNeededStaminaPerAttack(int neededstperattack);
     
@@ -132,7 +131,7 @@ public:
     //Constructor==============================
     HumanEnemyModel();
     HumanEnemyModel(string name , int hp , int stamina , int damageperattack , int level);
-    
+
 };
 
 class HumanEnemyFactory{

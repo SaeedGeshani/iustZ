@@ -409,7 +409,7 @@ int main()
             {
                 enemy = Enemyhouse.makeZombie();
             }
-            else if(Whichenemy == 1) 
+            else if(Whichenemy == 1 || true) 
             {
                 enemy = Enemyhouse.makeHuman();
             }
@@ -425,7 +425,7 @@ int main()
                     cout << "1.Fight" << endl << "2.use Inventory" << endl;
 
                     cout << "==Warior's HP: " << Warior.getHP() << "     ==Warior's ST: " << Warior.getStamina() << endl;
-                    cout << "==Enemy's HP: " << enemy->getEnemyModel()->getHP() << "         ==Enmey's DMPA: " << enemy->getEnemyModel()->getDamagePerAttack() << endl;
+                    cout << "==Enemy's HP: " << enemy->getEnemyModel()->getHP() << "         ==Enmey's DMPA: " << enemy->getEnemyModel()->getDamagePerAttack() << "     ==Enemy's ST: " << enemy->getEnemyModel()->getStamina() << endl;
                     int input;
                     cin >> input;
                 
