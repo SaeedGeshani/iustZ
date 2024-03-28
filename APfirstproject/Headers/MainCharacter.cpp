@@ -154,7 +154,10 @@ using namespace std;
     		enemy->getEnemyModel()->setHP(enemy->getEnemyModel()->getHP()-totalDamage);
     		enemy->getEnemyModel()->setStamina(enemy->getEnemyModel()->getStamina()-(totalDamage/4));
 			Stamina -= weapon->getNeededStaminaPerAttack();   
-			if(dynamic_cast<ThrowableWeapon*> (weapon) != NULL){
+            cout << "==================Attacking==========================================" << endl;
+            cout << "Damage enemy: " << totalDamage << "  Costed ST from Enemy: " << (totalDamage/4) << "  Costed St From Warior: " << weapon->getNeededStaminaPerAttack() << endl;
+			cout << "=====================================================================" << endl;
+            if(dynamic_cast<ThrowableWeapon*> (weapon) != NULL){
 				for(int i=0;i<weapons.size();i++){
 					if(weapons[i]==weapon){
                         delete weapons[i];
@@ -174,6 +177,22 @@ using namespace std;
         }
 		
 	}
+
+    void MainCharacter::getEnemyWeapons(vector<Weapon*> enemyweps)
+    {
+        for(int i = 0 ; i < enemyweps.size() ; i++)
+        {
+            weapons.push_back(enemyweps[i]);
+        }
+    }
+
+    void MainCharacter::getEnemyUseableItems(vector<UseableItems*> enemyuseableitems)
+    {
+        for(int i = 0 ; i < enemyuseableitems.size() ; i++)
+        {
+            useAbleItems.push_back(enemyuseableitems[i]);
+        }
+    }
 
      //Constructors=====================
     MainCharacter::MainCharacter() = default;

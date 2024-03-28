@@ -188,9 +188,12 @@ int CalculateSTForHuman(int);
     //Functions=========================
     void HumanEnemyController::WeaponAttack(MainCharacter*player , int number)
     {
-        cout << "===============================" << endl;
-        cout << "       Enemy is attacking      " << endl;
-        cout << "===============================" << endl;
+        cout << "===================================================" << endl;
+        cout << "       Enemy is attacking with: " << Enemymodel->getEnemyWeapons()[number]->getName() << endl;
+        cout << "===================================================" << endl;
+        cout << "Damage: " << Enemymodel->getEnemyWeapons()[number]->getDamagePerAttack() << "   Costed ST from Enemy: " << Enemymodel->getEnemyWeapons()[number]->getNeededStaminaPerAttack() << endl; 
+        cout << "===================================================" << endl;
+
         player->setHP(player->getHP() - Enemymodel->getEnemyWeapons()[number]->getDamagePerAttack());
         Enemymodel->setStamina(Enemymodel->getStamina() - Enemymodel->getEnemyWeapons()[number]->getNeededStaminaPerAttack());
         if(dynamic_cast<ThrowableWeapon*>(Enemymodel->getEnemyWeapons()[number]) != NULL)
@@ -202,9 +205,9 @@ int CalculateSTForHuman(int);
 
     void HumanEnemyController::useItems(int number)
     {
-        cout << "====================================" << endl;
-        cout << "          Enemy is using Item       " << endl;
-        cout << "====================================" << endl;
+        cout << "===========================================" << endl;
+        cout << "          Enemy is using: " << Enemymodel->getEnemyUseableItems()[number]->getName() <<endl;
+        cout << "===========================================" << endl;
         cout << "Added ST: " << Enemymodel->getEnemyUseableItems()[number]->getEnergy() << endl;
         cout << "Added HP: " << Enemymodel->getEnemyUseableItems()[number]->getHealingPower() <<endl;
         Enemymodel->setStamina(Enemymodel->getStamina() + Enemymodel->getEnemyUseableItems()[number]->getEnergy());
@@ -228,7 +231,10 @@ int CalculateSTForHuman(int);
                 ///////
                 //use an item to generate stamina or more than one , Stamina is under 10 percent ;
                 ///////
-                
+                if(Enemymodel->getHP() <= 0)
+                {
+                    break;
+                }
                 while(Enemymodel->getHP() < (0.7)*(MaxHP) || Enemymodel->getStamina() < (0.7)*(MaxST))
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
@@ -254,7 +260,7 @@ int CalculateSTForHuman(int);
                     random1 = rand()%Enemymodel->getEnemyWeapons().size();
                 for(int i = random1 ; i < Enemymodel->getEnemyWeapons().size() ; i++)
                 {
-                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP()>0)
+                    if(Enemymodel->getStamina() > Enemymodel->getEnemyWeapons()[i]->getNeededStaminaPerAttack() && Enemymodel->getHP() > 0)
                     {
                         WeaponAttack(player , i);
                         checkGone = true;
@@ -275,9 +281,11 @@ int CalculateSTForHuman(int);
                     }
                 }
 
-                if(!checkGone)
+                if(!checkGone && Enemymodel->getHP() > 0)
                 {
-                    cout << "Couldn't use Weapon cause Stamina" << endl;
+                    cout << "========================================" << endl;
+                    cout << " Enemy Couldn't use Weapon cause Stamina" << endl;
+                    cout << "========================================" << endl;
                 }
                 break;
                 }
@@ -286,6 +294,10 @@ int CalculateSTForHuman(int);
                 ///////
                 //use an item to generate stamina , stamina is under 50 percent ;
                 ///////
+                if(Enemymodel->getHP() <= 0)
+                {
+                    break;
+                }
                 while(Enemymodel->getHP() < (0.5)*(MaxHP) || Enemymodel->getStamina() < (0.5)*(MaxST))
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
@@ -331,9 +343,11 @@ int CalculateSTForHuman(int);
                     }
                 }
 
-                if(!checkGone)
+                if(!checkGone && Enemymodel->getHP() > 0)
                 {
-                    cout << "Couldn't use Weapon cause Stamina" << endl;
+                    cout << "========================================" << endl;
+                    cout << " Enemy Couldn't use Weapon cause Stamina" << endl;
+                    cout << "========================================" << endl;
                 }
                 break;
                 }
@@ -341,6 +355,10 @@ int CalculateSTForHuman(int);
                 break;
             default:
             //FIRST CODE
+                if(Enemymodel->getHP() <= 0)
+                    {
+                        break;
+                    }
              while(Enemymodel->getHP() < (0.7)*(MaxHP) || Enemymodel->getStamina() < (0.7)*(MaxST))
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
@@ -385,9 +403,11 @@ int CalculateSTForHuman(int);
                     }
                 }
 
-                if(!checkGone)
+                if(!checkGone && Enemymodel->getHP() > 0)
                 {
+                    cout << "=================================" << endl;
                     cout << "Couldn't use Weapon cause Stamina" << endl;
+                    cout << "=================================" << endl;
                 }
                 break;
                 }
@@ -401,6 +421,10 @@ int CalculateSTForHuman(int);
                 ///////
                 //use an item to generate stamina or more than one , Stamina is under 10 percent ;
                 /////// 
+                if(Enemymodel->getHP() <= 0)
+                {
+                    break;
+                }
                 while(Enemymodel->getHP() < (0.6)*(MaxHP) || Enemymodel->getStamina() < (0.6)*(MaxST))
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
@@ -446,9 +470,11 @@ int CalculateSTForHuman(int);
                     }
                 }
 
-                if(!checkGone)
+                if(!checkGone && Enemymodel->getHP() > 0)
                 {
+                    cout << "=================================" << endl;
                     cout << "Couldn't use Weapon cause Stamina" << endl;
+                    cout << "=================================" << endl;
                 }
                 break;
                 }
@@ -457,6 +483,10 @@ int CalculateSTForHuman(int);
                 ///////
                 //use an item to generate stamina , stamina is under 50 percent ;
                 ///////
+                if(Enemymodel->getHP() <= 0)
+                {
+                    break;
+                }
                 while(Enemymodel->getHP() < (0.6)*(MaxHP) || Enemymodel->getStamina() < (0.6)*(MaxST))
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
@@ -502,15 +532,21 @@ int CalculateSTForHuman(int);
                     }
                 }
 
-                if(!checkGone)
+                if(!checkGone && Enemymodel->getHP() > 0)
                 {
+                    cout << "=================================" << endl;
                     cout << "Couldn't use Weapon cause Stamina" << endl;
+                    cout << "=================================" << endl;
                 }
                 break;
                 }
                 break;
             default:
             //FIRST PART
+            if(Enemymodel->getHP() <= 0)
+                {
+                    break;
+                }
             while(Enemymodel->getHP() < (0.6)*(MaxHP) || Enemymodel->getStamina() < (0.6)*(MaxST))
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
@@ -555,9 +591,11 @@ int CalculateSTForHuman(int);
                     }
                 }
 
-                if(!checkGone)
+                if(!checkGone && Enemymodel->getHP() > 0)
                 {
+                    cout << "=================================" << endl;
                     cout << "Couldn't use Weapon cause Stamina" << endl;
+                    cout << "=================================" << endl;
                 }
                 break;
                 }
@@ -572,6 +610,10 @@ int CalculateSTForHuman(int);
                 ///////
                 //use an item to generate stamina or more than one , Stamina is under 10 percent ;
                 ///////  
+                if(Enemymodel->getHP() <= 0)
+                {
+                    break;
+                }
                 while(Enemymodel->getHP() < (0.6)*(MaxHP) || Enemymodel->getStamina() < (0.6)*(MaxST))
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
@@ -617,9 +659,11 @@ int CalculateSTForHuman(int);
                     }
                 }
 
-                if(!checkGone)
+                if(!checkGone && Enemymodel->getHP() > 0)
                 {
+                    cout << "=================================" << endl;
                     cout << "Couldn't use Weapon cause Stamina" << endl;
+                    cout << "=================================" << endl;
                 }
                 break;
                 }
@@ -628,6 +672,10 @@ int CalculateSTForHuman(int);
                 ///////
                 //use an item to generate stamina , stamina is under 50 percent ;
                 ///////
+                if(Enemymodel->getHP() <= 0)
+                {
+                    break;
+                }
                 while(Enemymodel->getHP() < (0.6)*(MaxHP) || Enemymodel->getStamina() < (0.6)*(MaxST))
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
@@ -674,15 +722,21 @@ int CalculateSTForHuman(int);
                     }
                 }
 
-                if(!checkGone)
+                if(!checkGone && Enemymodel->getHP() > 0)
                 {
+                    cout << "=================================" << endl;
                     cout << "Couldn't use Weapon cause Stamina" << endl;
+                    cout << "=================================" << endl;
                 }
                 break;
                 }
                 break;
             default:
             //FIRTPART
+            if(Enemymodel->getHP() <= 0)
+                {
+                    break;
+                }
             while(Enemymodel->getHP() < (0.6)*(MaxHP) || Enemymodel->getStamina() < (0.6)*(MaxST))
                 {
                     if(Enemymodel->getEnemyUseableItems().size() > 0)
@@ -727,9 +781,11 @@ int CalculateSTForHuman(int);
                     }
                 }
 
-                if(!checkGone)
+                if(!checkGone && Enemymodel->getHP() > 0)
                 {
+                    cout << "=================================" << endl;
                     cout << "Couldn't use Weapon cause Stamina" << endl;
+                    cout << "=================================" << endl;
                 }
                 break;
                 }
@@ -740,6 +796,10 @@ int CalculateSTForHuman(int);
         default:
 
         //FIRTPART
+        if(Enemymodel->getHP() <= 0)
+                {
+                    break;
+                }
         while(Enemymodel->getHP() < (0.6)*(MaxHP) || Enemymodel->getStamina() < (0.6)*(MaxST))
                 {
                     if(Enemymodel->getEnemyWeapons().size() > 0)
@@ -783,9 +843,11 @@ int CalculateSTForHuman(int);
                     }
                 }
 
-                if(!checkGone)
+                if(!checkGone && Enemymodel->getHP() > 0)
                 {
+                    cout << "=================================" << endl;
                     cout << "Couldn't use Weapon cause Stamina" << endl;
+                    cout << "=================================" << endl;
                 }
                 break;
                 }

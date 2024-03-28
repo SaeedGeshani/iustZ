@@ -15,7 +15,7 @@ using namespace std;
             for(int i = 0 ; i < s.size() ; i++)
             {
                 cout << s[i];
-                Sleep(1);
+                Sleep(7);
             }
             cout << endl << endl;
         }
@@ -24,7 +24,7 @@ using namespace std;
             for(int i = 0 ; i < s.size() ; i++)
             {
                 cout << s[i];
-                Sleep(1);
+                Sleep(2);
             }
             cout << endl << endl;
         }
@@ -40,7 +40,79 @@ using namespace std;
     {
         return availableWeapons;
     }
+
+    bool Shop::isFirst(string name , MainCharacter* player , int place)
+    {
+        if(place < player->getUseableItems().size())
+        {
+            for(int i = 0 ; i < place ; i++)
+            {
+                if(player->getUseableItems()[i]->getName() == name)
+                {
+                    return false;
+                }
+            }
+        }
+
+        if(place < player->getWeapons().size())
+        {
+            for(int i = 0 ; i < place ; i++)
+            {
+                if(player->getWeapons()[i]->getName() == name)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+    
   
+    int Shop::numberInInventory(string name , MainCharacter* player)
+    {
+        int counter = 0;
+        for(int i = 0 ; i < player->getUseableItems().size() ; i++)
+        {
+            if(player->getUseableItems()[i]->getName() == name)
+            {
+                counter++;
+            }
+        }
+        for(int i = 0 ; i < player->getWeapons().size() ; i++)
+        {
+            if(player->getWeapons()[i]->getName() == name)
+            {
+                counter++;
+            }
+        }
+        
+        return counter;
+    }
+
+    void Shop::showDetailOfInventory(MainCharacter* player)
+    {
+        cout << "====================UsableItems======================" << endl;
+        for(int i = 0 ; i < player->getUseableItems().size() ; i++)
+        {
+            if(isFirst(player->getUseableItems()[i]->getName() , player , i))
+            {
+                int NUM = numberInInventory(player->getUseableItems()[i]->getName() , player);
+                cout << player->getUseableItems()[i]->getName() << "  x" << NUM << endl;
+            }
+        }
+        cout << "=====================================================" << endl;
+        cout << "=======================Weapons=======================" << endl;
+        for(int i = 0 ; i < player->getWeapons().size() ; i++)
+        {
+            if(isFirst(player->getWeapons()[i]->getName() , player , i))
+            {
+                int NUM = numberInInventory(player->getWeapons()[i]->getName() , player);
+                cout << player->getWeapons()[i]->getName() << "  x" << NUM << endl;
+            }
+        }
+        cout << "=====================================================" << endl << endl;
+    }
 
     void Shop::ShowItems()
     {
@@ -52,7 +124,7 @@ using namespace std;
 //        cout << "4.WheyProtein" << endl;
 //        cout << "5.Egg" << endl;
 //        cout << "6.Peace Herbal Tea" << endl;
-        prints("======================== Weapons =========================");
+        
 		
 		for(int i = 0 ; i < availableWeapons.size() ; i++)
         {
@@ -79,6 +151,8 @@ using namespace std;
         
         while(true)
         {
+            prints("your inventory includes: ");
+            showDetailOfInventory(player);
             cout << "Your Wealth is: " << player->getGold() << endl;
             ShowItems();
             prints("===Please enter the number of the Item you wanna buy(Enter zero if you'd like to exit this shop)===");

@@ -75,6 +75,10 @@ public:
     //Attack func==========================
     void Attack(Enemy* enemy, Weapon* weapon);
 
+    void getEnemyWeapons(vector<Weapon*> enemyweps);
+
+    void getEnemyUseableItems(vector<UseableItems*> enemyuseableitems);
+
     //Constructors=========================
     MainCharacter();
     MainCharacter(string name , int hp , int xp , int stamina , string gender , int gold);

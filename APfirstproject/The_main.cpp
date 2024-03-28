@@ -263,8 +263,8 @@ void makingNewcharacter()
     printS("========================== GIFT ===========================");
     printS("===== Now we will give you somthing that you can heal yourself and give your muscular body a litle bit Energy so take them and put in your Inventory");
     printS("The first one is WheyPowder it helps you to get Stamina(50) and heal your body(10) you will have two:");
-    WheyProtein* ptr1WheyPowder = new WheyProtein(50 , 10   , "Whey Powder" , 30, 0);
-    WheyProtein* ptr2WheyPowder = new WheyProtein(50 , 10   , "Whey Powder" , 30, 0);
+    WheyProtein* ptr1WheyPowder = new WheyProtein(30 , 30   , "Whey Protein" , 30, 10);
+    WheyProtein* ptr2WheyPowder = new WheyProtein(30 , 30   , "Whey Protein" , 30, 10);
     Warior.addUseableItems(ptr1WheyPowder);
     Warior.addUseableItems(ptr2WheyPowder);
 
@@ -405,11 +405,11 @@ int main()
 
             int Whichenemy = rand()%2;
 
-            if(Whichenemy == 0 && false)
+            if(Whichenemy == 0)
             {
                 enemy = Enemyhouse.makeZombie();
             }
-            else if(Whichenemy == 1 || true) 
+            else if(Whichenemy == 1) 
             {
                 enemy = Enemyhouse.makeHuman();
             }
@@ -422,6 +422,16 @@ int main()
                     cout << "LEVEL" << Warior.getLevel() << endl;
                     prints("================== Danger ===============");
                     printS("Enemy is against you what you want to do?");
+                    cout << "Enemy race: ";
+                    if(enemy->getEnemyModel()->getName() == "Human")
+                    {
+                        cout << "Human" << endl;
+                    }
+                    else if(enemy->getEnemyModel()->getName() == "Zombie")                    
+                    {
+                        cout << "Zombie" << endl;       
+                    }
+
                     cout << "1.Fight" << endl << "2.use Inventory" << endl;
 
                     cout << "==Warior's HP: " << Warior.getHP() << "     ==Warior's ST: " << Warior.getStamina() << endl;
@@ -487,11 +497,20 @@ int main()
             }
             else if(enemy->getEnemyModel()->getHP() < 0)
             {
-                prints("========================");
+                prints("===========================");
                 cout << "       ENEMY IS DEAD     " << endl;
-                prints("========================");
+                prints("===========================");
                 Warior.setGold(Warior.getGold() + 50);
                 Warior.setXP(Warior.getXP() + 100);
+                if(enemy->getEnemyModel()->getName() == "Human")
+                {
+                    cout << "==========================" << endl;
+                    cout << "Inventory Of Enemy Looted" << endl;
+                    cout << "==========================" << endl;
+                    Warior.getEnemyUseableItems(enemy->getEnemyModel()->getEnemyUseableItems());
+                    Warior.getEnemyWeapons(enemy->getEnemyModel()->getEnemyWeapons());
+
+                }
                 delete enemy;
                 Warior.CalculateLevel();
             }

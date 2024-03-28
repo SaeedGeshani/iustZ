@@ -18,7 +18,11 @@ public:
 
     Shop();
 
-        
+    bool isFirst(string , MainCharacter* , int);
+
+    void showDetailOfInventory(MainCharacter* player);
+    
+    int numberInInventory(string , MainCharacter*);
 
     void ShowItems();
 
