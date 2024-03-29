@@ -116,7 +116,7 @@ using namespace std;
        
 
         
-        tedad = rand()%2;
+        tedad = rand()%3;
         for(int i = 0 ; i < tedad ; i++)
         {
              while(true)
@@ -131,7 +131,7 @@ using namespace std;
             
             item.push_back(e);
         }
-        tedad = rand()%2;
+        tedad = rand()%3;
         for(int i = 0 ; i < tedad ; i++)
         {
             while(true)

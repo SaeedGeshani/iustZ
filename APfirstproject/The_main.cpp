@@ -451,9 +451,14 @@ int main()
                             cin >> input;
                             if(input <= Warior.getWeapons().size() && input >= 1)
                             {
-                                Warior.Attack(enemy , Warior.getWeapons()[input-1]);
-                                enemy->getEnemyController()->Attack(&Warior);
-                                break;
+                                if(Warior.getStamina() > Warior.getWeapons()[input-1]->getNeededStaminaPerAttack())
+                                {
+                                    Warior.Attack(enemy , Warior.getWeapons()[input-1]);
+                                    enemy->getEnemyController()->Attack(&Warior);
+                                    break;
+                                }
+
+                                prints("Your Warior doesn't have enough stamina to use this weapon");
                             }
                             else if(input == 0)
                             {

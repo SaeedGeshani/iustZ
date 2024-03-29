@@ -182,7 +182,10 @@ using namespace std;
     {
         for(int i = 0 ; i < enemyweps.size() ; i++)
         {
-            weapons.push_back(enemyweps[i]);
+            if(dynamic_cast<ThrowableWeapon*>(enemyweps[i])!= NULL)
+            {
+                 weapons.push_back(enemyweps[i]);
+            }
         }
     }
 
