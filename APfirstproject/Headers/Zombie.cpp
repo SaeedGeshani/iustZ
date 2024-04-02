@@ -45,12 +45,13 @@
     void ZombieController::Attack(MainCharacter* player)
     {
         
-        if((Enemymodel->getStamina() - Enemymodel->getNeededStaminaPerAttack()) > 0)
+        if((Enemymodel->getStamina() - Enemymodel->getNeededStaminaPerAttack()) > 0 && Enemymodel->getHP() > 0)
         {
         player->setHP(player->getHP() - Enemymodel->getDamagePerAttack());
         Enemymodel->setStamina(Enemymodel->getStamina() - Enemymodel->getNeededStaminaPerAttack());
         }
-        else{
+        else if(Enemymodel->getStamina() - Enemymodel->getNeededStaminaPerAttack() < 0 )
+        {
             cout << "Enemy Doesn't have enough Energy to attack" << endl;
         }
 

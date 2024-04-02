@@ -222,10 +222,10 @@ int CalculateSTForHuman(int);
         int MaxHP = CalculateHPForHuman(player->getLevel());
         int MaxST = CalculateSTForHuman(player->getLevel());
         bool checkGone = false;
-        switch (CheckHealth())
+        switch (CheckHealth(MaxHP))
         {
         case Low:
-            switch (CheckStamina())
+            switch (CheckStamina(MaxST))
             {
             case low:
                 ///////
@@ -415,7 +415,7 @@ int CalculateSTForHuman(int);
             }
             break;
         case Average:
-            switch (CheckStamina())
+            switch (CheckStamina(MaxST))
             {
             case low:
                 ///////
@@ -604,7 +604,7 @@ int CalculateSTForHuman(int);
             break;
 
         case High:
-            switch (CheckStamina())
+            switch (CheckStamina(MaxST))
             {
             case low:
                 ///////
@@ -866,28 +866,28 @@ int CalculateSTForHuman(int);
 
 
 
-    int HumanEnemyController::CheckHealth(){
+    int HumanEnemyController::CheckHealth(int maxHP){
         //*************add percent of Health , now it is just a number between 0 to 100 ;*****************
-        if (Enemymodel->getHP() <= 10){
+        if (Enemymodel->getHP() <= maxHP/10){
             return 0 ;
         }
-        else if (Enemymodel->getHP()>10 && Enemymodel->getHP()<=50){
+        else if (Enemymodel->getHP()>maxHP/10 && Enemymodel->getHP()<=maxHP/2){
             return 50 ;
         }
-        else if (Enemymodel->getHP()<=100 && Enemymodel->getHP()>50){
+        else if (Enemymodel->getHP()<=maxHP && Enemymodel->getHP()>maxHP/2){
             return 100 ;
         }
         return -1;
     }
-    int HumanEnemyController::CheckStamina(){
+    int HumanEnemyController::CheckStamina(int maxST){
         //*************add percent of Health , now it is just a number between 0 to 100 ;*****************
-        if (Enemymodel->getStamina() <= 10){
+        if (Enemymodel->getStamina() <= maxST/10){
             return 0 ;
         }
-        else if (Enemymodel->getStamina()>10 && Enemymodel->getStamina()<=50){
+        else if (Enemymodel->getStamina()>maxST/10 && Enemymodel->getStamina()<=maxST/2){
             return 50 ;
         }
-        else if (Enemymodel->getStamina()<=100 && Enemymodel->getStamina()>50){
+        else if (Enemymodel->getStamina()<=maxST && Enemymodel->getStamina()>maxST/2){
             return 100 ;
         }
 

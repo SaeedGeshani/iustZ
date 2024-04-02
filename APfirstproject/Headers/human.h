@@ -64,8 +64,8 @@ public:
     void WeaponAttack(MainCharacter* player , int number) override;
     void Attack(MainCharacter* player ) override;
     void useItems(int number) override;
-    int CheckHealth();
-    int CheckStamina();
+    int CheckHealth(int maxHP);
+    int CheckStamina(int maxST);
     
 };
 class HumanEnemyView : public EnemyView{
