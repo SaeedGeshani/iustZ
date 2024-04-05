@@ -91,7 +91,27 @@ using namespace std;
     // }
 //==========================================================
 
+bool checkContinue()
+{
+    bool check = false;
 
+    if(Warior.getUseableItems().size() <= 0)
+    {
+        for(int i = 0 ; i < Warior.getWeapons().size() ; i++)
+        {
+            if(Warior.getStamina() > Warior.getWeapons()[i]->getNeededStaminaPerAttack())
+            {
+                check = true;
+            }
+        }
+    }
+    else{
+
+        return true;
+    }
+    
+    return check;
+}
 
 int CalculateHPForHuman(int);
 int CalculateSTForHuman(int);
@@ -254,7 +274,7 @@ Shop* randomShopGenerator(){
     
     while(true)
     {
-        n = new XPpotion(0 , 0 , "XP Potion" , 100, 50);
+        n = new XPpotion(0 , 0 , "XP Potion" , 25, 50);
         if(n != nullptr)
         {
             break;
@@ -267,7 +287,7 @@ Shop* randomShopGenerator(){
 	srand(time(0));
 	vector<Weapon*> outputweapon;
 	vector<UseableItems*> outputusable;
-	for(int i=0;i<4;i++){
+	for(int i=0;i<10;i++){
 		if(rand()%2 == 0){
 			outputweapon.push_back(wp[i]);
 		}	
@@ -275,7 +295,7 @@ Shop* randomShopGenerator(){
             delete wp[i];
         }
 	}
-	for(int i=0;i<2;i++){
+	for(int i=0 ; i<4 ;i++){
 		if(rand()%2 == 0){
 			outputusable.push_back(itms[i]);
 		}	
@@ -297,7 +317,7 @@ void makingNewcharacter()
 	int age;
 	string gender;
 
-	prints("===============Section of making your dream wariror===============");
+	prints("===============Section of making your dreamy wariror===============");
     cout << endl;
     printS("Enter name of the Warior :");
 	getline(cin , name);
@@ -386,7 +406,7 @@ void makingNewcharacter()
         }
         else if(ChosenWeapon == 6)
         {
-        	RocketLauncher* yourrock = new RocketLauncher(75 , 40 , "Rocket Launcher" , 1000);
+        	RocketLauncher* yourrock = new RocketLauncher(110 , 40 , "Rocket Launcher" , 1000);
             Warior.setGold(Warior.getGold()-yourrock->getPrice());
             Warior.addWeapon(yourrock);
 
@@ -408,8 +428,8 @@ void makingNewcharacter()
     printS("========================== GIFT ===========================");
     printS("===== Now we will give you somthing that you can heal yourself with and give your muscular body a litle bit of Energy.So take them and add them to your Inventory");
     printS("The first one is WheyPowder which helps you get Stamina(by 30 ST) and heal your body(by 30 HP) you will have two :");
-    WheyProtein* ptr1WheyPowder = new WheyProtein(30 , 30   , "Whey Protein" , 30, 10);
-    WheyProtein* ptr2WheyPowder = new WheyProtein(30 , 30   , "Whey Protein" , 30, 10);
+    WheyProtein* ptr1WheyPowder = new WheyProtein(30 , 30   , "Whey Protein" , 75, 0);
+    WheyProtein* ptr2WheyPowder = new WheyProtein(30 , 30   , "Whey Protein" , 75, 0);
     Warior.addUseableItems(ptr1WheyPowder);
     Warior.addUseableItems(ptr2WheyPowder);
 
@@ -564,13 +584,13 @@ int main()
                 enemy = Enemyhouse.makeHuman();
             }
 
-            while(Warior.getHP() > 0 && enemy->getEnemyModel()->getHP() > 0)
+            while(Warior.getHP() > 0 && enemy->getEnemyModel()->getHP() > 0 && checkContinue())
             {
 
                 while(true)
                 {
-                    cout << "LEVEL" << Warior.getLevel() << endl;
                     system("cls");
+                    cout << "LEVEL" << Warior.getLevel() << endl;
                     prints("================== Danger ===============");
                     printS("Enemy is against you. What do you want to do?");
                     cout << "Enemy race: ";
@@ -586,7 +606,16 @@ int main()
                     cout << "1.Fight" << endl << "2.use Inventory" << endl;
 
                     cout << "==Warior's HP: " << Warior.getHP() << "     ==Warior's ST: " << Warior.getStamina() << endl;
-                    cout << "==Enemy's HP: " << enemy->getEnemyModel()->getHP() << "         ==Enmey's DMPA: " << enemy->getEnemyModel()->getDamagePerAttack() << "     ==Enemy's ST: " << enemy->getEnemyModel()->getStamina() << endl;
+                    cout << "==Enemy's HP: " << enemy->getEnemyModel()->getHP();
+                    if(enemy->getEnemyModel()->getName() == "Human")
+                    {
+                        cout << "         ==Enmey's DMPA: " << "Depending on Weapon";
+                    }
+                    else{
+
+                        cout << "         ==Enmey's DMPA: " << enemy->getEnemyModel()->getDamagePerAttack();
+                    }
+                    cout <<  "     ==Enemy's ST: " << enemy->getEnemyModel()->getStamina() << endl;
                     int input;
                     cin >> input;
                 
@@ -600,7 +629,7 @@ int main()
                             printS("=========Choose a Weapon========= (0 = exit)");
                             Warior.showCharacterWeapons();
                             cin >> input;
-                            system("cls");
+                            
                             
                             if(input <= Warior.getWeapons().size() && input >= 1)
                             {
@@ -608,6 +637,8 @@ int main()
                                 {
                                     Warior.Attack(enemy , Warior.getWeapons()[input-1]);
                                     enemy->getEnemyController()->Attack(&Warior);
+                                    this_thread::sleep_for(chrono::seconds(10));
+                                    system("cls");
                                     break;
                                 }
 
@@ -649,7 +680,7 @@ int main()
                 
             }
 
-            if(Warior.getHP() < 0)
+            if(Warior.getHP() < 0 || !checkContinue())
             {
             	system("cls");
                 prints("=============================");

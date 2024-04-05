@@ -10,6 +10,14 @@
 #include "grenade.h"
 #include "Egg.h"
 #include "WheyProtein.h"
+#include "EnergyDrink.h"
+#include "shuriken.h"
+#include "KratosBlades.h"
+#include "MiniGun.h"
+#include "XPpotion.h"
+#include "RocketLauncher.h"
+#include "Mjolnir.h"
+#include "Spear.h"
 
 
 using namespace std;

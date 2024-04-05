@@ -49,6 +49,14 @@ using namespace std;
         grenade* d = nullptr;
         WheyProtein* e = nullptr;
         Egg* f = nullptr;
+        KratosBlades* g = nullptr;
+        EnergyDrink* h = nullptr;
+        Mjolnir* I = nullptr;
+        MiniGun* J = nullptr;
+        RocketLauncher* k = nullptr;
+        shuriken* l = nullptr;
+        Spear* m = nullptr;
+        XPpotion* n = nullptr;
 
         vector<Weapon*>weps;
         vector<UseableItems*>item;
@@ -73,7 +81,7 @@ using namespace std;
         {
             while(true)
             {
-                b = new Blaster(17 , 10 , "Blaster" , 50);
+                b = new Blaster(23 , 10 , "Blaster" , 50);
                 if(b != nullptr)
                 {
                     break;
@@ -121,7 +129,7 @@ using namespace std;
         {
              while(true)
             {
-                e = new WheyProtein(15 , 30 , "Whey Protein" , 50 , 10);
+                e = new WheyProtein(15 , 30 , "Whey Protein" , 50 , 0);
                 if(e != nullptr)
                 {
                     break;
@@ -147,7 +155,36 @@ using namespace std;
        
         }
 
+        tedad = rand()%2;
+        for(int i = 0 ; i < tedad ; i++)
+        {
+            while(true)
+            {
+                h = new EnergyDrink(40 , 0 , "Energy Drink" , 40 , 0);
+                if(h != nullptr)
+                {
+                    break;
+                }
+                delete h;
+            }
+            item.push_back(h);
+            
+        }
     
+        tedad = rand() % 2;
+        for(int i = 0 ; i < tedad ; i++)
+        {
+            while(true)
+            {
+                k = new RocketLauncher(100 , 40 , "Rocket Launcher" , 100);
+                if(k != nullptr)
+                {
+                    break;
+                }
+                delete k;
+            }
+            weps.push_back(k);
+        }
         humanmodel->setEnemyWeapons(weps);
         humanmodel->setEnemyUseableItems(item);
         //========================================================================================================================================

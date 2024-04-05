@@ -160,6 +160,9 @@ using namespace std;
     {
         if((Enemymodel->getStamina() - Enemymodel->getNeededStaminaPerAttack()) > 0)
         {
+        prints("===============Enemy Attacks================");
+        cout << "             Zombie is Biting              " << endl;
+        prints("============================================");
         player->setHP(player->getHP() - Enemymodel->getDamagePerAttack());
         Enemymodel->setStamina(Enemymodel->getStamina() - Enemymodel->getNeededStaminaPerAttack());
         }
