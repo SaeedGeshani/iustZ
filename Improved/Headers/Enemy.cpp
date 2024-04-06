@@ -42,11 +42,31 @@ using namespace std;
 //EnemyModel//////////////////////////////////////////////////////////////////////////////////////////////////
 
     //Setter & Getters ==========================
+    void EnemyModel::setEnemyWeapons(vector<Weapon*> enemyweapon)
+    {
+        EnemyWeapons = enemyweapon;
+    }
+
+    vector<Weapon*> EnemyModel::getEnemyWeapons()
+    {
+        return EnemyWeapons;
+    }
+
+    void EnemyModel::setEnemyUseableItems(vector<UseableItems*> enemyuseableitem)
+    {
+        EnemyUseableItems = enemyuseableitem;
+    }
+
+    vector<UseableItems*> EnemyModel:: getEnemyUseableItems()
+    {
+        return EnemyUseableItems;
+    }
+
     void EnemyModel::setNeededStaminaPerAttack(int neededstperattack)
     {
         if(neededstperattack < 0)
         {
-            cout << "The enemy can't attack on player." << endl;
+            cout << "Enemy can't attack the player." << endl;
         }
         else{
             neededStaminaPerAttack = neededstperattack;
@@ -99,13 +119,14 @@ using namespace std;
     //=========================================
     //Constructor==============================
     EnemyModel::EnemyModel() = default;
-    EnemyModel::EnemyModel(string name , int hp , int stamina , int damageperattack , int level)
+    EnemyModel::EnemyModel(string name , int hp , int stamina , int damageperattack , int level , int neededstaminaperattack)
     {
         Name = name;
         HP = hp;
         Stamina = stamina;
         DamagePerAttack = damageperattack;
         Level = level;
+        neededStaminaPerAttack = neededstaminaperattack;
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -155,19 +176,5 @@ using namespace std;
     {
         return Enemymodel;
     }
-    //Functions=========================
-    void EnemyController::Attack(MainCharacter* player)
-    {
-        if((Enemymodel->getStamina() - Enemymodel->getNeededStaminaPerAttack()) > 0)
-        {
-        prints("===============Enemy Attacks================");
-        cout << "             Zombie is Biting              " << endl;
-        prints("============================================");
-        player->setHP(player->getHP() - Enemymodel->getDamagePerAttack());
-        Enemymodel->setStamina(Enemymodel->getStamina() - Enemymodel->getNeededStaminaPerAttack());
-        }
-        else{
-            cout << "Enemy Doesn't have enough Energy to attack" << endl;
-        }
-    }
-
+    //Functions========================
+   
