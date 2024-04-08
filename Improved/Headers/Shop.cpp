@@ -16,7 +16,7 @@ using namespace std;
             for(int i = 0 ; i < s.size() ; i++)
             {
                 cout << s[i];
-                Sleep(7);
+                Sleep(0);
             }
             cout << endl << endl;
         }
@@ -25,7 +25,7 @@ using namespace std;
             for(int i = 0 ; i < s.size() ; i++)
             {
                 cout << s[i];
-                Sleep(2);
+                Sleep(0);
             }
             cout << endl << endl;
         }
