@@ -693,6 +693,7 @@ int main()
                 prints("===========================");
                 cout << "       ENEMY IS DEAD     " << endl;
                 prints("===========================");
+                Sleep(100);
                 Warior.setGold(Warior.getGold() + 50);
                 Warior.setXP(Warior.getXP() + 100);
                 if(enemy->getEnemyModel()->getName() == "Human")
