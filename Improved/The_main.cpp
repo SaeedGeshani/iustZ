@@ -727,7 +727,7 @@ int main()
                 if(Wariors[i]->getHP() > 0)
                 {
                     cout << "=====================================" << endl;
-                    cout << "        Buying Item for player " << i << endl;
+                    cout << "        Buying Item for player " << Wariors[i]->getName() << endl;
                     cout << "=====================================" << endl;
                     Store->BuyItem(Wariors[i]);
                 }
