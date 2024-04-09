@@ -5,6 +5,7 @@
 #include<iomanip>
 #include<algorithm>
 #include<cmath>
+#include<fstream>
 #include<ctime>
 #include<stdlib.h>
 #include "Headers/Items.h"
@@ -70,7 +71,7 @@ using namespace std;
     //     cout << endl << endl;
     // }
 //==========================================================
-
+void leaderboard (int level, int xp);
 int CalculateHPForZombie(int);
 int CalculateSTforZombie(int);
 int CalculateDMPAforZombie(int);
