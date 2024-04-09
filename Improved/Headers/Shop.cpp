@@ -164,7 +164,7 @@ using namespace std;
         	prints("Here are the items you already have in your inventory: ");
             showDetailOfInventory(player);
             cout << "Your Wealth is: " << player->getGold() <<" G"<< endl;
-            this_thread::sleep_for(chrono::seconds(3));
+            // this_thread::sleep_for(chrono::seconds(3));
             prints("And here are available items in this shop: ");
             ShowItems();
             
@@ -198,7 +198,7 @@ using namespace std;
 					else{
 						prints("Not enough gold to afford the item!");
 						rr--;
-						this_thread::sleep_for(chrono::seconds(2));
+						// this_thread::sleep_for(chrono::seconds(2));
 						system("cls");
 						continue;
 					}
@@ -240,7 +240,7 @@ using namespace std;
 					else{
 						prints("Not enough gold to afford the item!");
 						rr--;
-						this_thread::sleep_for(chrono::seconds(2));
+						// this_thread::sleep_for(chrono::seconds(2));
 						system("cls");
 						continue;
 					}

@@ -66,7 +66,7 @@
 using namespace std;
 
 
-//Global Objects And Variables==============================
+//Global Objects And Variables==============================    
     // static MainCharacter Warior;
     Shop* Store;
     
@@ -511,6 +511,8 @@ void makingSomeNewCharacter()
         // system("cls");
 
         MainCharacter* newWarior = new MainCharacter(name , 100 , 0 , 100 , gender , 1000);
+        newWarior->setLevel(1);
+        newWarior->setXP(0);
         printS("==========Here is the section where you should pick one glorious Permanent Weapon ==============");
         cout << endl;
         int ChosenWeapon;
@@ -732,7 +734,7 @@ int main()
     {
        checkStatus = randomShuffle(Difficulty , Wariors[findEnemyLevel()]->getLevel());
 
-       if(checkStatus)
+       if(false && checkStatus)
        {
         Store = randomShopGenerator();
 
@@ -764,7 +766,7 @@ int main()
 
         while(enemy->getEnemyModel()->getHP() > 0 && isAlive() && checkContinue())
         {
-            for(int i = 0 ; i < Wariors.size() ; i++)
+            for(int i = 0 ; i < Wariors.size() && enemy->getEnemyModel()->getHP() > 0 ; i++)
             {
                 if(Wariors[i]->getHP() > 0)
                 {
@@ -885,6 +887,7 @@ int main()
                                 {
                                     Wariors[i]->useItem(input);
                                     Wariors[i]->CalculateLevel();
+                                    i--;
                                     break;
                                 }
                                 else if(input == 0)
@@ -902,43 +905,43 @@ int main()
                 }
             }
             int attackNumber = rand()%Wariors.size();
-            if(enemy->getEnemyModel()->getHP() > 0)
+             if(enemy->getEnemyModel()->getHP() > 0)
             {
                 while(true)
-            {
-                attackNumber = rand()%Wariors.size();
-                if(Wariors[attackNumber]->getHP() > 0)
                 {
-                    enemy->getEnemyController()->Attack(Wariors[attackNumber]);
-                    if(Wariors[attackNumber]->getHP() < 0)
+                    attackNumber = rand()%Wariors.size();
+                    if(Wariors[attackNumber]->getHP() > 0)
                     {
-                        prints("==================================");
-                        cout << "       " << Wariors[attackNumber]->getName() << " is dead" << endl;
-                        prints("==================================");
-                        delete Wariors[attackNumber];
-                        Wariors.erase(Wariors.begin() + attackNumber);
+                        enemy->getEnemyController()->Attack(Wariors[attackNumber]);
+                        if(Wariors[attackNumber]->getHP() < 0)
+                        {
+                            prints("==================================");
+                            cout << "       " << Wariors[attackNumber]->getName() << " is dead" << endl;
+                            prints("==================================");
+                            delete Wariors[attackNumber];
+                            Wariors.erase(Wariors.begin() + attackNumber);
+                        }
+                        break;
                     }
-                    break;
                 }
-            }
             
-            while(true)
-            {
-                attackNumber = rand()%Wariors.size();
-                if(Wariors[attackNumber]->getHP() > 0)
+                while(true)
                 {
-                    enemy->getEnemyController()->Attack(Wariors[attackNumber]);
-                    if(Wariors[attackNumber]->getHP() < 0)
+                    attackNumber = rand()%Wariors.size();
+                    if(Wariors[attackNumber]->getHP() > 0)
                     {
-                        prints("==================================");
-                        cout << "       " << Wariors[attackNumber]->getName() << " is dead" << endl;
-                        prints("==================================");
-                        delete Wariors[attackNumber];
-                        Wariors.erase(Wariors.begin() + attackNumber);
+                        enemy->getEnemyController()->Attack(Wariors[attackNumber]);
+                        if(Wariors[attackNumber]->getHP() < 0)
+                        {
+                            prints("==================================");
+                            cout << "       " << Wariors[attackNumber]->getName() << " is dead" << endl;
+                            prints("==================================");
+                            delete Wariors[attackNumber];
+                            Wariors.erase(Wariors.begin() + attackNumber);
+                        }
+                        break;
                     }
-                    break;
                 }
-            }
             }
             
             
