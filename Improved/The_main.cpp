@@ -131,7 +131,21 @@ bool checkContinue()
     }
     return false;
 }
-
+bool checkContinueForOne(int i)
+{
+    if(Wariors[i]->getUseableItems().size() > 0)
+    {
+        return true;
+    }
+    for(int j = 0 ; j < Wariors[i]->getWeapons().size() ; j++)
+    {
+        if(Wariors[i]->getStamina() > Wariors[i]->getWeapons()[j]->getNeededStaminaPerAttack())
+        {
+            return true;
+        }
+    }
+    return false;
+}
 int CalculateHPForHuman(int);
 int CalculateSTForHuman(int);
 int CalculateHPForZombie(int);
@@ -714,49 +728,47 @@ int main()
 
     bool checkStatus;
     
-    while(isAlive)
+    while(isAlive())
     {
-        checkStatus = randomShuffle(Difficulty , Wariors[0]->getLevel());
+       checkStatus = randomShuffle(Difficulty , Wariors[findEnemyLevel()]->getLevel());
 
-        if(checkStatus)
+       if(checkStatus)
+       {
+        Store = randomShopGenerator();
+
+        for(int i = 0 ; i < Wariors.size() ; i++)
         {
-            Store = randomShopGenerator();
-            // Store->BuyItem(&Warior);
+            if(Wariors[i]->getHP() > 0)
+            {
+                prints("=========================================");
+                cout << "    Buying item for " << Wariors[i]->getName() << endl;
+                prints("=========================================");
+                Store->BuyItem(Wariors[i]);
+            }
+            
+        }
+        delete Store;
+       }
+
+       else
+       {
+        int whichEnemy = rand()%2;
+        if(whichEnemy == 0)
+        {
+            enemy = Enemyhouse.makeZombie();
+        }
+        else if(whichEnemy == 1)
+        {
+            enemy = Enemyhouse.makeHuman();
+        }
+
+        while(enemy->getEnemyModel()->getHP() > 0 && isAlive() && checkContinue())
+        {
             for(int i = 0 ; i < Wariors.size() ; i++)
             {
                 if(Wariors[i]->getHP() > 0)
                 {
-                    cout << "=====================================" << endl;
-                    cout << "        Buying Item for player " << Wariors[i]->getName() << endl;
-                    cout << "=====================================" << endl;
-                    Store->BuyItem(Wariors[i]);
-                }
-                
-            }
-            delete Store;
-        }
-
-        else{
-
-            int Whichenemy = rand()%2;
-
-            if(Whichenemy == 0)
-            {
-                enemy = Enemyhouse.makeZombie();
-            }
-            else if(Whichenemy == 1) 
-            {
-                enemy = Enemyhouse.makeHuman();
-            }
-
-            while(isAlive() && enemy->getEnemyModel()->getHP() > 0 && checkContinue())
-            {
-
-                while(true)
-                {
-                    // system("cls");
-                    
-                    for(int i = 0 ; i < Wariors.size() && enemy->getEnemyModel()->getHP() > 0 && Wariors[i]->getHP() > 0; i++)
+                    if(checkContinueForOne(i))
                     {
                         cout << "LEVEL" << Wariors[findEnemyLevel()]->getLevel() << endl;
                         prints("================== Danger ===============");
@@ -772,7 +784,7 @@ int main()
                         }
 
                         cout << "==============================================" << endl;
-                        cout << "==========Choosing for player " << i << "==============" << endl;
+                        cout << "==========Choosing for " << Wariors[i]->getName() << "==============" << endl;
                         prints("=============================================");
 
                         cout << "1.Fight" << endl << "2.use Inventory" << endl;
@@ -788,22 +800,21 @@ int main()
                             cout << "         ==Enmey's DMPA: " << enemy->getEnemyModel()->getDamagePerAttack();
                         }
                         cout <<  "     ==Enemy's ST: " << enemy->getEnemyModel()->getStamina() << endl;
+
+
                         int input;
                         cin >> input;
 
                         if(input == 1)
                         {
-                        
-                        
                             while(true)
-                            {	
+                            {
                                 // system("cls");
                                 printS("=========Choose a Weapon========= (0 = exit)");
-                                cout << "         Choosing for player " << i << endl;
+                                cout << "         Choosing for " << Wariors[i]->getName() << endl;
                                 prints("============================================");
                                 Wariors[i]->showCharacterWeapons();
                                 cin >> input;
-                            
                             
                                 if(input <= Wariors[i]->getWeapons().size() && input >= 1)
                                 {
@@ -813,7 +824,7 @@ int main()
                                         if(enemy->getEnemyModel()->getHP() < 0)
                                         {
                                             prints("===========================================");
-                                            cout << "    Enemy is dead by player number" << i << endl;
+                                            cout << "    Enemy is dead by " << Wariors[i]->getName() << endl;
                                             prints("===========================================");
                                             Wariors[i]->setGold(Wariors[i]->getGold() + 70);
                                             Wariors[i]->setXP(Wariors[i]->getXP() + 150);
@@ -837,81 +848,110 @@ int main()
                                                 Wariors[i]->getEnemyWeapons(enemy->getEnemyModel()->getEnemyWeapons());
 
                                             }
-
-                                            
+                                            break;
                                         }
 
-                                        enemy->getEnemyController()->Attack(Wariors[i]);
-                                        if(Wariors[i]->getHP() < 0)
-                                        {
-                                            prints("============================================");
-                                            cout << "     Warior number " << i << " is dead" << endl;
-                                            prints("============================================");
-                                        }
-                                        // this_thread::sleep_for(chrono::seconds(10));
-                                        // system("cls");
                                         break;
                                     }
+                                    else
+                                    {
+                                        prints("   Your character doesn't have enough energy to use this weapon");
+                                    }
+                                }
+                                else if(input == 0)
+                                {
+                                    break;
+                                }
 
-                                    prints("Your Warior doesn't have enough stamina to use this weapon");
+                                else
+                                {
+                                    cout << "Invalid input " << endl;
+                                }
+                            }
+                        }
+
+                        else if(input == 2)
+                        {
+                            while(true)
+                            {	
+                        	    // system("cls");
+                                printS("=========Choose Item=========  (0 = exit) ");
+                                cout << "     Choosing for  " << Wariors[i]->getName() << endl;
+                                printS("==========================================");
+                                Wariors[i]->showCharacterUsableItems();
+                                cin >> input;
+
+                                if(input >= 1 && input <= Wariors[i]->getUseableItems().size())
+                                {
+                                    Wariors[i]->useItem(input);
+                                    Wariors[i]->CalculateLevel();
+                                    break;
                                 }
                                 else if(input == 0)
                                 {
                                     break;
                                 }
                             }
-                        
-                        break;
-                        } 
-
-                    else if(input == 2)
-                    {
-                        while(true)
-                        {	
-                        	// system("cls");
-                            printS("=========Choose Item=========  (0 = exit) ");
-                            cout << "     Choosing for player " << i << endl;
-                            printS("==========================================");
-                            Wariors[i]->showCharacterUsableItems();
-                            cin >> input;
-
-                            if(input >= 1 && input <= Wariors[i]->getUseableItems().size())
-                            {
-                                Wariors[i]->useItem(input);
-                                Wariors[i]->CalculateLevel();
-                                break;
-                            }
-                            else if(input == 0)
-                            {
-                                break;
-                            }
                         }
-                        break;
-                    }
 
                     }
-
+                    else
+                    {
+                        cout << Wariors[i]->getName() << " couldn't attack cause lack of stamina" << endl;
+                    }
                 }
-                
-                
             }
-
-            if(Wariors.size() < 0 || !checkContinue())
+            int attackNumber = rand()%Wariors.size();
+            if(enemy->getEnemyModel()->getHP() > 0)
             {
-            	// system("cls");
-                prints("=============================");
-                cout << "         ALL DEAD        " << endl;
-                prints("=============================");
-            }
-            else if(enemy->getEnemyModel()->getHP() < 0)
+                while(true)
             {
-                delete enemy;
+                attackNumber = rand()%Wariors.size();
+                if(Wariors[attackNumber]->getHP() > 0)
+                {
+                    enemy->getEnemyController()->Attack(Wariors[attackNumber]);
+                    if(Wariors[attackNumber]->getHP() < 0)
+                    {
+                        prints("==================================");
+                        cout << "       " << Wariors[attackNumber]->getName() << " is dead" << endl;
+                        prints("==================================");
+                        delete Wariors[attackNumber];
+                        Wariors.erase(Wariors.begin() + attackNumber);
+                    }
+                    break;
+                }
             }
+            
+            while(true)
+            {
+                attackNumber = rand()%Wariors.size();
+                if(Wariors[attackNumber]->getHP() > 0)
+                {
+                    enemy->getEnemyController()->Attack(Wariors[attackNumber]);
+                    if(Wariors[attackNumber]->getHP() < 0)
+                    {
+                        prints("==================================");
+                        cout << "       " << Wariors[attackNumber]->getName() << " is dead" << endl;
+                        prints("==================================");
+                        delete Wariors[attackNumber];
+                        Wariors.erase(Wariors.begin() + attackNumber);
+                    }
+                    break;
+                }
+            }
+            }
+            
+            
         }
+
+       }
     }
 
-    
+    prints("=============================================");
+    cout << "                  All dead                   ";
+    prints("=============================================");
 }
+
 int CalculateHPForHuman(int level)
 {
     return level*8 + 80; 
