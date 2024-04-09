@@ -6,6 +6,7 @@
 #include<algorithm>
 #include<cmath>
 #include<ctime>
+#include<fstream>
 #include<stdlib.h>
 #include <thread>
 #include "Headers/Items.h"
@@ -90,7 +91,7 @@ using namespace std;
     //     cout << endl << endl;
     // }
 //==========================================================
-
+void userSave (string name, int hp, int xp, int level, int stamina, vector<string> weapons);
 bool checkContinue()
 {
     bool check = false;
@@ -740,4 +741,9 @@ int CalculateHPForZombie(int level)
     int HP;
     HP = pow(level , 4/3) * 20 + 50;
     return HP;
+}
+void userSave (string name, int hp, int xp, int level, int stamina, vector<string> weapons) {
+    ofstream save ("data/" + name + ".txt");
+    save << name << endl << hp << endl << xp << endl << level << endl << stamina << endl;
+    
 }
