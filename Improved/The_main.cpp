@@ -6,6 +6,7 @@
 #include<algorithm>
 #include<cmath>
 #include<ctime>
+#include<fstream>
 #include<stdlib.h>
 #include <thread>
 #include "Headers/Items.h"
@@ -64,7 +65,7 @@
 #include "Headers/RocketLauncher.cpp"
 
 using namespace std;
-
+void userSave (string name, string gender, int hp, int xp, int level, int stamina, vector<Weapon*> weapons, vector<UseableItems*> usable);
 
 //Global Objects And Variables==============================    
     // static MainCharacter Warior;
@@ -481,6 +482,7 @@ void makingNewcharacter()
 
 void makingSomeNewCharacter()
 {
+    ofstream user("data/users.txt" , ios::app);
     prints("How many character do you want to have?");
     cin >> numberOfCharacters;
     ZZAARRIIBB = numberOfCharacters;
@@ -495,8 +497,9 @@ void makingSomeNewCharacter()
         cout << endl;
         cout << "Enter the name of " << i+1 << "Warior" << endl;
 
-	   cin >> name;
-
+	    cin >> name;
+        // cout << name;
+        user << name << " ";
 	    system("cls");
 	
 	    printS("Enter gender of the Warior:(male - female) ");
@@ -843,6 +846,11 @@ int main()
                                             prints("===========================================");
                                             cout << "    Enemy is dead by " << Wariors[i]->getName() << "  " << Wariors[i]->getKills() << " kills" <<endl;
                                             prints("===========================================");
+                                            for (int l = 0; l < Wariors.size(); l++)
+                                            {
+                                                userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getLevel(), Wariors[l]->getStamina(), Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
+                                            }
+                                            
                                             Wariors[i]->setGold(Wariors[i]->getGold() + 70);
                                             Wariors[i]->setXP(Wariors[i]->getXP() + 150);
                                             Wariors[i]->CalculateLevel();
@@ -1008,4 +1016,14 @@ int CalculateHPForZombie(int level)
     int HP;
     HP = pow(level , 4/3) * 20 + 50;
     return HP;
+}
+void userSave (string name, string gender, int hp, int xp, int level, int stamina, vector<Weapon*> weapons, vector<UseableItems*> usable) {
+    ofstream save ("data/" + name + ".txt");
+    save << name << endl << hp << endl << xp << endl << level << endl << stamina << endl;
+    save << "weapeons\n";
+    for (int i = 0; i < weapons.size(); i++)
+        save << weapons[i]->getName() << endl;
+    save << "usables\n";
+    for (int i = 0; i < usable.size(); i++)
+        save << usable[i]->getName() << endl;
 }
