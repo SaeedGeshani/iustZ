@@ -24,9 +24,14 @@ protected:
     int Gold;
     vector<UseableItems*> useAbleItems;
     vector<Weapon*>weapons;
+    int Kills;
 
 public:
     //Setter & Getters ================
+    void setKills(int kills);
+
+    int getKills();
+    
     void setGold(int gold);
    
     int getGold();

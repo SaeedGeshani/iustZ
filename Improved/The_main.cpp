@@ -515,6 +515,7 @@ void makingSomeNewCharacter()
         // system("cls");
 
         MainCharacter* newWarior = new MainCharacter(name , 100 , 0 , 100 , gender , 1000);
+        newWarior->setKills(0);
         newWarior->setLevel(1);
         newWarior->setXP(0);
         printS("==========Here is the section where you should pick one glorious Permanent Weapon ==============");
@@ -746,20 +747,22 @@ int main()
 
        if(checkStatus)
        {
-        Store = randomShopGenerator();
+        
 
         for(int i = 0 ; i < Wariors.size() ; i++)
         {
             if(Wariors[i]->getHP() > 0)
             {
+                Store = randomShopGenerator();
                 prints("=========================================");
                 cout << "    Buying item for " << Wariors[i]->getName() << endl;
                 prints("=========================================");
                 Store->BuyItem(Wariors[i]);
+                delete Store;
             }
             
         }
-        delete Store;
+        
        }
 
        else
@@ -835,8 +838,9 @@ int main()
                                         Wariors[i]->Attack(enemy , Wariors[i]->getWeapons()[input-1]);
                                         if(enemy->getEnemyModel()->getHP() < 0)
                                         {
+                                            Wariors[i]->setKills(Wariors[i]->getKills() + 1);
                                             prints("===========================================");
-                                            cout << "    Enemy is dead by " << Wariors[i]->getName() << endl;
+                                            cout << "    Enemy is dead by " << Wariors[i]->getName() << "  " << Wariors[i]->getKills() << " kills" <<endl;
                                             prints("===========================================");
                                             Wariors[i]->setGold(Wariors[i]->getGold() + 70);
                                             Wariors[i]->setXP(Wariors[i]->getXP() + 150);

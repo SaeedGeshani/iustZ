@@ -9,6 +9,16 @@
 using namespace std;
 
     //Setter & Getters ================
+    void MainCharacter::setKills(int kills)
+    {
+        Kills = kills;
+    }
+
+    int MainCharacter::getKills()
+    {
+        return Kills;
+    }
+    
     void MainCharacter::setGold(int gold)
     {
         Gold = gold;
