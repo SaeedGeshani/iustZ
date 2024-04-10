@@ -483,128 +483,201 @@ void makingNewcharacter()
 void makingSomeNewCharacter()
 {
     ofstream user("data/users.txt" , ios::app);
+    int wariorMode;
     prints("How many character do you want to have?");
     cin >> numberOfCharacters;
     ZZAARRIIBB = numberOfCharacters;
-    prints("==========SO make them========");
-    for(int i = 0 ; i < numberOfCharacters ; i++)
+    prints("==========SO make them========\n");
+    for (int w = 0; w < numberOfCharacters; w++)
     {
+        cout << "1. choose from existing wariors\n2. create new warior\n";
+        cin >> wariorMode;
+        if (wariorMode == 1)
+        {
+            cout << "\nlist of users:\n";
+            ifstream userList ("data/users.txt");
+            string username;
+            while (userList >> username)
+            {
+                cout << username << endl;
+            }
+            cout << "Choose your warior:\n";
+            string insideWarior;
+            cin >> insideWarior;
+            ifstream wariorDetail ("data/" + insideWarior + ".txt");
+            string wariorName, wariorGender;
+            int wariorHP, wariorXP, wariorStamina, wariorGold;
+            wariorDetail >> wariorName >> wariorGender >> wariorHP >> wariorXP >> wariorGold >> wariorStamina;
+            MainCharacter* newWarior = new MainCharacter(wariorName , wariorHP , wariorXP , wariorStamina , wariorGender , wariorGold);
+            int o = 1;
+            string weaponTemp;
+            while (getline(wariorDetail, weaponTemp))
+            {
+                if (o > 6)
+                {
+                    while (weaponTemp != "end")
+                    {
+                        if(weaponTemp == "Katana")
+                        {
+                        	Katana* yourkat = new Katana(20 , 15 , "Katana" , 120);
+                            newWarior->addWeapon(yourkat);
+                        }
+                        else if(weaponTemp == "Blaster")
+                        {
+                        	Blaster* yourblast = new Blaster(35 , 10 , "Blaster" , 200);
+                            newWarior->addWeapon(yourblast);
+
+                        }
+                        else if(weaponTemp == "Kratos Blades")
+                        {
+                        	KratosBlades* yourblades = new KratosBlades(25 , 15 , "Kratos Blades" , 150 );
+                            newWarior->addWeapon(yourblades);
+
+                        }
+                        else if(weaponTemp == "MiniGun")
+                        {
+                        	MiniGun* yourmini = new MiniGun(55 , 30 , "MiniGun" , 600 );
+                            newWarior->addWeapon(yourmini);
+
+                        }
+                        else if(weaponTemp == "Mjolnir")
+                        {
+                        	Mjolnir* yourmjo = new Mjolnir(25 , 20 , "Mjolnir" , 130 );
+                            Wariors[w]->addWeapon(yourmjo);
+
+                        }
+                        else if(weaponTemp == "Rocket Launcher")
+                        {
+                        	RocketLauncher* yourrock = new RocketLauncher(110 , 40 , "Rocket Launcher" , 1000);
+                            newWarior->addWeapon(yourrock);
+
+                        }
+                    }
+                }
+                o++;
+            }
+            Wariors.push_back(newWarior);
+        }
+        else if (wariorMode == 2)
+        {
+            int age;
+	        string gender , name;
+
+	        prints("===============making your dreamy wariror===============");
+            cout << endl;
+            cout << "Enter the name of your Warior" << endl;
+
+	        cin >> name;
+            // cout << name;
+            user << name << " ";
+	        system("cls");
+    
+	        printS("Enter gender of the Warior:(male - female) ");
+	        getline(cin , gender);
+	        while(gender != "male" && gender != "female")
+	        {
+                prints("Invalid Input try again: ");
+		        getline(cin , gender);
+	        }
+	        system("cls");
+
+            cout << endl;
+            prints("===============================================");
+            cout << endl;
+            prints("Your Character will have 1000 G at the first");
+            this_thread::sleep_for(chrono::seconds(5));
+            system("cls");
+
+            MainCharacter* newWarior = new MainCharacter(name , 100 , 0 , 100 , gender , 1000);
+            newWarior->setKills(0);
+            newWarior->setLevel(1);
+            newWarior->setXP(0);
+            printS("==========Here is the section where you should pick one glorious Permanent Weapon==============");
+            cout << endl;
+            int ChosenWeapon;
+        do{ 
+            printS("==Now you should pick up a powerful permanent weapon which will be with you till the end of the war :==");
+	        printS("plese pick up one weapon: ");
+            cout << endl;
+
+	        cout << "1.Katana" << endl << "2.Blaster" << endl<<"3.Kratos Blades"<<endl<<"4.MiniGun"<<endl<<"5.Mjiolnir"<<endl<<"6.Rocket Launcher"<<endl;
+
+            printS("Katana(120 G)(Damage : 20) (NeededStamina : 15)");
+            printS("Blaster(200 G) (Damage : 35) (Needed Stamina : 10)");
+            printS("Kratos Blades(150 G) (Damage : 25) (Needed Stamina : 15)");
+            printS("MiniGun(600 G) (Damage : 55) (Needed Stamina : 30)");
+            printS("Mjiolnir(130 G) (Damage : 25) (Needed Stamina : 20)");
+            printS("Rocket Launcher(1000 G) (Damage : 75) (Needed Stamina : 40)");
+
+    
+	        cin >> ChosenWeapon;
+
+            if(ChosenWeapon == 1)
+            {
+            	Katana* yourkat = new Katana(20 , 15 , "Katana" , 120);
+                newWarior->setGold(newWarior->getGold()-yourkat->getPrice());
+                newWarior->addWeapon(yourkat);
+            }
+            else if(ChosenWeapon == 2)
+            {
+            	Blaster* yourblast = new Blaster(35 , 10 , "Blaster" , 200);
+                newWarior->setGold(newWarior->getGold()-yourblast->getPrice());
+                newWarior->addWeapon(yourblast);
+
+            }
+            else if(ChosenWeapon == 3)
+            {
+            	KratosBlades* yourblades = new KratosBlades(25 , 15 , "Kratos Blades" , 150 );
+                newWarior->setGold(newWarior->getGold()-yourblades->getPrice());
+                newWarior->addWeapon(yourblades);
+
+            }
+            else if(ChosenWeapon == 4)
+            {
+            	MiniGun* yourmini = new MiniGun(55 , 30 , "MiniGun" , 600 );
+                newWarior->setGold(newWarior->getGold()-yourmini->getPrice());
+                newWarior->addWeapon(yourmini);
+
+            }
+            else if(ChosenWeapon == 5)
+            {
+            	Mjolnir* yourmjo = new Mjolnir(25 , 20 , "Mjolnir" , 130 );
+                newWarior->setGold(newWarior->getGold()-yourmjo->getPrice());
+                newWarior->addWeapon(yourmjo);
+
+            }
+            else if(ChosenWeapon == 6)
+            {
+            	RocketLauncher* yourrock = new RocketLauncher(110 , 40 , "Rocket Launcher" , 1000);
+                newWarior->setGold(newWarior->getGold()-yourrock->getPrice());
+                newWarior->addWeapon(yourrock);
+
+            }
+
+            else{
+            
+                cout << "You entered an invalid number! So enter a valid input" << endl;
+		    	this_thread::sleep_for(chrono::seconds(3));
+            	system("cls");
+            }
         
-	    int age;
-	    string gender , name;
-
-	    prints("===============Section of making your dreamy wariror===============");
-        cout << endl;
-        cout << "Enter the name of " << i+1 << "Warior" << endl;
-
-	    cin >> name;
-        // cout << name;
-        user << name << " ";
-	    system("cls");
 	
-	    printS("Enter gender of the Warior:(male - female) ");
-	    getline(cin , gender);
-	    while(gender != "male" && gender != "female")
-	    {
-            prints("Invalid Input try again: ");
-		    getline(cin , gender);
-	    }
-	    system("cls");
+            }while(ChosenWeapon != 1 && ChosenWeapon != 2 && ChosenWeapon != 3 && ChosenWeapon != 4 && ChosenWeapon != 5 && ChosenWeapon != 6 );
+	        system("cls");
 
-        cout << endl;
-        prints("===============================================");
-        cout << endl;
-        prints("Your Character will have 1000 G at the first");
-        this_thread::sleep_for(chrono::seconds(5));
-        system("cls");
+            prints("Here is two wheyprotein for you");
 
-        MainCharacter* newWarior = new MainCharacter(name , 100 , 0 , 100 , gender , 1000);
-        newWarior->setKills(0);
-        newWarior->setLevel(1);
-        newWarior->setXP(0);
-        printS("==========Here is the section where you should pick one glorious Permanent Weapon ==============");
-        cout << endl;
-        int ChosenWeapon;
-    do{
-        printS("==Now you should pick up a powerful permanent weapon which will be with you till the end of the war :==");
-	    printS("plese pick up one weapon: ");
-        cout << endl;
-
-	    cout << "1.Katana" << endl << "2.Blaster" << endl<<"3.Kratos Blades"<<endl<<"4.MiniGun"<<endl<<"5.Mjiolnir"<<endl<<"6.Rocket Launcher"<<endl;
-
-        printS("Katana(120 G)(Damage : 20) (NeededStamina : 15)");
-        printS("Blaster(200 G) (Damage : 35) (Needed Stamina : 10)");
-        printS("Kratos Blades(150 G) (Damage : 25) (Needed Stamina : 15)");
-        printS("MiniGun(600 G) (Damage : 55) (Needed Stamina : 30)");
-        printS("Mjiolnir(130 G) (Damage : 25) (Needed Stamina : 20)");
-        printS("Rocket Launcher(1000 G) (Damage : 75) (Needed Stamina : 40)");
-
-	    
-	    cin >> ChosenWeapon;
-
-        if(ChosenWeapon == 1)
-        {
-        	Katana* yourkat = new Katana(20 , 15 , "Katana" , 120);
-            newWarior->setGold(newWarior->getGold()-yourkat->getPrice());
-            newWarior->addWeapon(yourkat);
-        }
-        else if(ChosenWeapon == 2)
-        {
-        	Blaster* yourblast = new Blaster(35 , 10 , "Blaster" , 200);
-            newWarior->setGold(newWarior->getGold()-yourblast->getPrice());
-            newWarior->addWeapon(yourblast);
-
-        }
-        else if(ChosenWeapon == 3)
-        {
-        	KratosBlades* yourblades = new KratosBlades(25 , 15 , "Kratos Blades" , 150 );
-            newWarior->setGold(newWarior->getGold()-yourblades->getPrice());
-            newWarior->addWeapon(yourblades);
-
-        }
-        else if(ChosenWeapon == 4)
-        {
-        	MiniGun* yourmini = new MiniGun(55 , 30 , "MiniGun" , 600 );
-            newWarior->setGold(newWarior->getGold()-yourmini->getPrice());
-            newWarior->addWeapon(yourmini);
-
-        }
-        else if(ChosenWeapon == 5)
-        {
-        	Mjolnir* yourmjo = new Mjolnir(25 , 20 , "Mjolnir" , 130 );
-            newWarior->setGold(newWarior->getGold()-yourmjo->getPrice());
-            newWarior->addWeapon(yourmjo);
-
-        }
-        else if(ChosenWeapon == 6)
-        {
-        	RocketLauncher* yourrock = new RocketLauncher(110 , 40 , "Rocket Launcher" , 1000);
-            newWarior->setGold(newWarior->getGold()-yourrock->getPrice());
-            newWarior->addWeapon(yourrock);
-
-        }
-
-        else{
-        	
-            cout << "You entered an invalid number! So enter a valid input" << endl;
-			this_thread::sleep_for(chrono::seconds(3));
-        	system("cls");
-        }
+            WheyProtein* ptr1WheyPowder = new WheyProtein(30 , 30   , "Whey Protein" , 75, 0);
+            WheyProtein* ptr2WheyPowder = new WheyProtein(30 , 30   , "Whey Protein" , 75, 0);
+            newWarior->addUseableItems(ptr1WheyPowder);
+            newWarior->addUseableItems(ptr2WheyPowder);
+            this_thread::sleep_for(chrono::seconds(4));
+            system("cls");
+            userSave (newWarior->getName(), newWarior->getGender(), newWarior->getHP(), newWarior->getXP(), newWarior->getGold(), newWarior->getStamina(), newWarior->getWeapons(), newWarior->getUseableItems());
+            Wariors.push_back(newWarior);
+                
+                }
         
-	
-    }while(ChosenWeapon != 1 && ChosenWeapon != 2 && ChosenWeapon != 3 && ChosenWeapon != 4 && ChosenWeapon != 5 && ChosenWeapon != 6 );
-	system("cls");
-
-    prints("Here is two wheyprotein for you");
-
-    WheyProtein* ptr1WheyPowder = new WheyProtein(30 , 30   , "Whey Protein" , 75, 0);
-    WheyProtein* ptr2WheyPowder = new WheyProtein(30 , 30   , "Whey Protein" , 75, 0);
-    newWarior->addUseableItems(ptr1WheyPowder);
-    newWarior->addUseableItems(ptr2WheyPowder);
-    this_thread::sleep_for(chrono::seconds(4));
-    system("cls");
-
-    Wariors.push_back(newWarior);
     }
 
 }
@@ -848,7 +921,7 @@ int main()
                                             prints("===========================================");
                                             for (int l = 0; l < Wariors.size(); l++)
                                             {
-                                                userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getLevel(), Wariors[l]->getStamina(), Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
+                                                userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
                                             }
                                             
                                             Wariors[i]->setGold(Wariors[i]->getGold() + 70);
@@ -871,6 +944,10 @@ int main()
                                                 cout << "==========================" << endl;
                                                 Wariors[i]->getEnemyUseableItems(enemy->getEnemyModel()->getEnemyUseableItems());
                                                 Wariors[i]->getEnemyWeapons(enemy->getEnemyModel()->getEnemyWeapons());
+                                                for (int l = 0; l < Wariors.size(); l++)
+                                                {
+                                                    userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
+                                                }
 
                                             }
                                             delete enemy;
@@ -951,6 +1028,10 @@ int main()
                             prints("==================================");
                             cout << "       " << Wariors[attackNumber]->getName() << " is dead" << endl;
                             prints("==================================");
+                            for (int l = 0; l < Wariors.size(); l++)
+                            {
+                                userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
+                            }
                             delete Wariors[attackNumber];
                             Wariors.erase(Wariors.begin() + attackNumber);
                             Wariors.shrink_to_fit();
@@ -970,6 +1051,10 @@ int main()
                             prints("==================================");
                             cout << "       " << Wariors[attackNumber]->getName() << " is dead" << endl;
                             prints("==================================");
+                            for (int l = 0; l < Wariors.size(); l++)
+                            {
+                                userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
+                            }
                             delete Wariors[attackNumber];
                             Wariors.erase(Wariors.begin() + attackNumber);
                             Wariors.shrink_to_fit();
@@ -988,6 +1073,10 @@ int main()
     prints("=============================================");
     cout << "                  All dead                   ";
     prints("=============================================");
+    for (int l = 0; l < Wariors.size(); l++)
+    {
+        userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
+    }
 }
 
 int CalculateHPForHuman(int level)
@@ -1017,13 +1106,12 @@ int CalculateHPForZombie(int level)
     HP = pow(level , 4/3) * 20 + 50;
     return HP;
 }
-void userSave (string name, string gender, int hp, int xp, int level, int stamina, vector<Weapon*> weapons, vector<UseableItems*> usable) {
+void userSave (string name, string gender, int hp, int xp, int gold, int stamina, vector<Weapon*> weapons, vector<UseableItems*> usable) {
     ofstream save ("data/" + name + ".txt");
-    save << name << endl << hp << endl << xp << endl << level << endl << stamina << endl;
-    save << "weapeons\n";
+    save << name << endl << gender << endl<< hp << endl << xp << endl << gold << endl << stamina << endl;
     for (int i = 0; i < weapons.size(); i++)
         save << weapons[i]->getName() << endl;
-    save << "usables\n";
+    save << "end\n";
     for (int i = 0; i < usable.size(); i++)
         save << usable[i]->getName() << endl;
 }
