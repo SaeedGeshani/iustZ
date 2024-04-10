@@ -357,7 +357,7 @@ void makingNewcharacter()
     cout << endl;
     printS("Enter name of the Warior :");
 	getline(cin , name);
-	// system("cls");
+	system("cls");
 	
 	printS("Enter gender of the Warior:(male - female) ");
 	getline(cin , gender);
@@ -366,7 +366,8 @@ void makingNewcharacter()
         prints("Invalid Input try again: ");
 		getline(cin , gender);
 	}
-	// system("cls");
+	system("cls");
+
 
 	// Warior.setName(name);	
 	// Warior.setGender(gender);
@@ -381,8 +382,8 @@ void makingNewcharacter()
     cout << endl << endl;
     printS("Now you have 1000 G");
     // Warior.setGold(1000);
-    // this_thread::sleep_for(chrono::seconds(33));
-    // system("cls");
+    this_thread::sleep_for(chrono::seconds(33));
+    system("cls");
     
     prints("================================================");
 	
@@ -451,13 +452,13 @@ void makingNewcharacter()
         else{
         	
             cout << "You entered an invalid number! So enter a valid input" << endl;
-			// this_thread::sleep_for(chrono::seconds(3));
-        	// system("cls");
+			this_thread::sleep_for(chrono::seconds(3));
+        	system("cls");
         }
         
 	
     }while(ChosenWeapon != 1 && ChosenWeapon != 2 && ChosenWeapon != 3 && ChosenWeapon != 4 && ChosenWeapon != 5 && ChosenWeapon != 6 );
-	// system("cls");
+	system("cls");
     prints("==============================================");
     cout << endl;
 
@@ -473,8 +474,8 @@ void makingNewcharacter()
     // Warior.setHP(100);
     // Warior.setStamina(100);
     // Warior.setXP(0);
-    // this_thread::sleep_for(chrono::seconds(7));
-    // system("cls");
+    this_thread::sleep_for(chrono::seconds(7));
+    system("cls");
     
 }
 
@@ -496,7 +497,7 @@ void makingSomeNewCharacter()
 
 	   cin >> name;
 
-	    // system("cls");
+	    system("cls");
 	
 	    printS("Enter gender of the Warior:(male - female) ");
 	    getline(cin , gender);
@@ -505,14 +506,14 @@ void makingSomeNewCharacter()
             prints("Invalid Input try again: ");
 		    getline(cin , gender);
 	    }
-	    // system("cls");
+	    system("cls");
 
         cout << endl;
         prints("===============================================");
         cout << endl;
         prints("Your Character will have 1000 G at the first");
-        // this_thread::sleep_for(chrono::seconds(5));
-        // system("cls");
+        this_thread::sleep_for(chrono::seconds(5));
+        system("cls");
 
         MainCharacter* newWarior = new MainCharacter(name , 100 , 0 , 100 , gender , 1000);
         newWarior->setKills(0);
@@ -583,13 +584,13 @@ void makingSomeNewCharacter()
         else{
         	
             cout << "You entered an invalid number! So enter a valid input" << endl;
-			// this_thread::sleep_for(chrono::seconds(3));
-        	// system("cls");
+			this_thread::sleep_for(chrono::seconds(3));
+        	system("cls");
         }
         
 	
     }while(ChosenWeapon != 1 && ChosenWeapon != 2 && ChosenWeapon != 3 && ChosenWeapon != 4 && ChosenWeapon != 5 && ChosenWeapon != 6 );
-	// system("cls");
+	system("cls");
 
     prints("Here is two wheyprotein for you");
 
@@ -597,8 +598,8 @@ void makingSomeNewCharacter()
     WheyProtein* ptr2WheyPowder = new WheyProtein(30 , 30   , "Whey Protein" , 75, 0);
     newWarior->addUseableItems(ptr1WheyPowder);
     newWarior->addUseableItems(ptr2WheyPowder);
-    // this_thread::sleep_for(chrono::seconds(4));
-    // system("cls");
+    this_thread::sleep_for(chrono::seconds(4));
+    system("cls");
 
     Wariors.push_back(newWarior);
     }
@@ -731,11 +732,11 @@ int main()
         cin >> Difficulty;
         if(Difficulty == 1 || Difficulty == 2 || Difficulty == 3)
         {
-			// system("cls");
+			system("cls");
             break;
             
         }
-        // system("cls");
+        system("cls");
     }
     
 
@@ -824,7 +825,7 @@ int main()
                         {
                             while(true)
                             {
-                                // system("cls");
+                                system("cls");
                                 printS("=========Choose a Weapon========= (0 = exit)");
                                 cout << "         Choosing for " << Wariors[i]->getName() << endl;
                                 prints("============================================");
@@ -856,7 +857,7 @@ int main()
                                             }
                                             if(enemy->getEnemyModel()->getName() == "Human")
                                             {
-                	                            // system("cls");
+                	                            system("cls");
                                                 cout << "==========================" << endl;
                                                 cout << "Inventory Of Enemy Looted" << endl;
                                                 cout << "==========================" << endl;
@@ -892,7 +893,7 @@ int main()
                         {
                             while(true)
                             {	
-                        	    // system("cls");
+                        	    system("cls");
                                 printS("=========Choose Item=========  (0 = exit) ");
                                 cout << "     Choosing for  " << Wariors[i]->getName() << endl;
                                 printS("==========================================");
@@ -914,11 +915,16 @@ int main()
                                 }
                             }
                         }
+                        else{
+                            system("cls");
+                            i--;
+                        }
 
                     }
                     else
                     {
                         cout << Wariors[i]->getName() << " couldn't attack cause lack of stamina" << endl;
+                        
                         
                     }
                 }
