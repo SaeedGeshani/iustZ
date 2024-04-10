@@ -745,5 +745,8 @@ int CalculateHPForZombie(int level)
 void userSave (string name, int hp, int xp, int level, int stamina, vector<string> weapons) {
     ofstream save ("data/" + name + ".txt");
     save << name << endl << hp << endl << xp << endl << level << endl << stamina << endl;
+    save << "weapeons\n";
+    for (int i = 0; i < weapons.size(); i++)
+        save << weapons[i] << endl;
     
 }
