@@ -1,9 +1,0 @@
-Saeed
-male
-100
-4000
-135
-50
-Katana
-Batrang
-end

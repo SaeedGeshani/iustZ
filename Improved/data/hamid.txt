@@ -1,8 +1,0 @@
-Hamid
-male
-110
-850
-380
-19
-Rocket Launcher
-end
