@@ -1,0 +1,10 @@
+hamidreza
+100
+0
+1
+50
+weapeons
+0x1ef6dd02540
+0x1ef6ddf1ab0
+0x1ef6ddf1af0
+0x1ef6ddf1bd0

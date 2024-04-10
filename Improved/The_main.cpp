@@ -91,7 +91,7 @@ using namespace std;
     //     cout << endl << endl;
     // }
 //==========================================================
-void userSave (string name, int hp, int xp, int level, int stamina, vector<string> weapons);
+void userSave (string name, string gender, int hp, int xp, int level, int stamina, vector<Weapon*> weapons, vector<UseableItems*> usable);
 bool checkContinue()
 {
     bool check = false;
@@ -695,6 +695,7 @@ int main()
                 cout << "       ENEMY IS DEAD     " << endl;
                 prints("===========================");
                 Sleep(100);
+                userSave(Warior.getName(), Warior.getGender(), Warior.getHP(), Warior.getXP(), Warior.getLevel(), Warior.getStamina(), Warior.getWeapons(), Warior.getUseableItems());
                 Warior.setGold(Warior.getGold() + 50);
                 Warior.setXP(Warior.getXP() + 100);
                 if(enemy->getEnemyModel()->getName() == "Human")
@@ -742,11 +743,12 @@ int CalculateHPForZombie(int level)
     HP = pow(level , 4/3) * 20 + 50;
     return HP;
 }
-void userSave (string name, int hp, int xp, int level, int stamina, vector<string> weapons) {
+void userSave (string name, string gender, int hp, int xp, int level, int stamina, vector<Weapon*> weapons, vector<UseableItems*> usable) {
     ofstream save ("data/" + name + ".txt");
     save << name << endl << hp << endl << xp << endl << level << endl << stamina << endl;
     save << "weapeons\n";
     for (int i = 0; i < weapons.size(); i++)
-        save << weapons[i] << endl;
-    
+        save << weapons[i]->getName() << endl;
+    for (int i = 0; i < usable.size(); i++)
+        save << usable[i]->getName() << endl;
 }
