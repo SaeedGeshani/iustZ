@@ -1,8 +1,9 @@
 Saeed
 male
--48
-280
+100
+4000
 135
-5
-Rocket Launcher
+50
+Katana
+Batrang
 end

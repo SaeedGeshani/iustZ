@@ -273,6 +273,7 @@ using namespace std;
         Stamina = stamina;
         Gender = gender;
         Gold = gold;
+        XP = xp;
     }
     
    

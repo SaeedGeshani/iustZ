@@ -510,55 +510,55 @@ void makingSomeNewCharacter()
             wariorDetail >> wariorName >> wariorGender >> wariorHP >> wariorXP >> wariorGold >> wariorStamina;
             MainCharacter* newWarior = new MainCharacter(wariorName , wariorHP , wariorXP , wariorStamina , wariorGender , wariorGold);
             int o = 1;
-            string weaponTemp;
-            while (getline(wariorDetail, weaponTemp))
+            string weaponTemp = "!";
+            while (wariorDetail >> weaponTemp)
             {
-                if (o > 6)
-                {
+                
                     while (weaponTemp != "end")
                     {
                         if(weaponTemp == "Katana")
                         {
                         	Katana* yourkat = new Katana(20 , 15 , "Katana" , 120);
                             newWarior->addWeapon(yourkat);
+                            break;
                         }
                         else if(weaponTemp == "Blaster")
                         {
                         	Blaster* yourblast = new Blaster(35 , 10 , "Blaster" , 200);
                             newWarior->addWeapon(yourblast);
+                            break;
 
                         }
                         else if(weaponTemp == "Kratos Blades")
                         {
                         	KratosBlades* yourblades = new KratosBlades(25 , 15 , "Kratos Blades" , 150 );
                             newWarior->addWeapon(yourblades);
-
+                            break;
                         }
                         else if(weaponTemp == "MiniGun")
                         {
                         	MiniGun* yourmini = new MiniGun(55 , 30 , "MiniGun" , 600 );
                             newWarior->addWeapon(yourmini);
-
+                            break;
                         }
                         else if(weaponTemp == "Mjolnir")
                         {
                         	Mjolnir* yourmjo = new Mjolnir(25 , 20 , "Mjolnir" , 130 );
-                            Wariors[w]->addWeapon(yourmjo);
-
+                            newWarior->addWeapon(yourmjo);
+                            break;
                         }
                         else if(weaponTemp == "Rocket Launcher")
                         {
                         	RocketLauncher* yourrock = new RocketLauncher(110 , 40 , "Rocket Launcher" , 1000);
                             newWarior->addWeapon(yourrock);
-
+                            break;
                         }
                     }
-                }
-                o++;
+            
             }
             Wariors.push_back(newWarior);
         }
-        else if (wariorMode == 2)
+        else if(wariorMode == 2)
         {
             int age;
 	        string gender , name;
