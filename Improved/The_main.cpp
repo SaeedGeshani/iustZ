@@ -1112,6 +1112,6 @@ void userSave (string name, string gender, int hp, int xp, int gold, int stamina
     for (int i = 0; i < weapons.size(); i++)
         save << weapons[i]->getName() << endl;
     save << "end\n";
-    for (int i = 0; i < usable.size(); i++)
+        for (int i = 0; i < usable.size(); i++)
         save << usable[i]->getName() << endl;
 }
