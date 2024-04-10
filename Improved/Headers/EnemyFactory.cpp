@@ -12,9 +12,10 @@ using namespace std;
 //EnemyFactory///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Constructor========================
     EnemyFactory::EnemyFactory() = default;
-    EnemyFactory::EnemyFactory(MainCharacter* player)
+    EnemyFactory::EnemyFactory(MainCharacter* player , int zarib)
     {
         Player = player;
+        Zarib = zarib;
     }
     //Setter and Getters=================
     void EnemyFactory::setEnemy(MainCharacter* player)
@@ -31,7 +32,7 @@ using namespace std;
     //Functions=========================
     Zombie* EnemyFactory::makeZombie()
     {
-        ZombieModel* zombiemodel = new ZombieModel("Zombie", CalculateHPForZombie(Player->getLevel()) , CalculateSTforZombie(Player->getLevel()) , CalculateDMPAforZombie(Player->getLevel()) , Player->getLevel() , Player->getLevel() * 4 + 5); 
+        ZombieModel* zombiemodel = new ZombieModel("Zombie", CalculateHPForZombie(Player->getLevel())*Zarib , CalculateSTforZombie(Player->getLevel())*Zarib , CalculateDMPAforZombie(Player->getLevel())*Zarib , Player->getLevel() , Player->getLevel() * 4 + 5 , Zarib); 
         ZombieView* zombieview = new ZombieView(zombiemodel);      
         ZombieController* zombiecontroller = new ZombieController(zombiemodel);
         Zombie* zombie = new Zombie(zombiemodel , zombieview , zombiecontroller);
@@ -39,9 +40,10 @@ using namespace std;
         
     }
 
+
     HumanEnemy* EnemyFactory::makeHuman()
     {
-        HumanEnemyModel* humanmodel = new HumanEnemyModel("Human" , CalculateHPForHuman(Player->getLevel()) , CalculateSTForHuman(Player->getLevel()) , -1 , Player->getLevel());
+        HumanEnemyModel* humanmodel = new HumanEnemyModel("Human" , CalculateHPForHuman(Player->getLevel()) * Zarib , CalculateSTForHuman(Player->getLevel())*Zarib , -1 , Player->getLevel() , Zarib);
         //Giving him a random Inventory===========================================================================================================
         Katana* a = nullptr;
         Blaster* b = nullptr;

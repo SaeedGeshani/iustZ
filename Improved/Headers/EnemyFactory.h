@@ -29,15 +29,18 @@ int CalculateDMPAforZombie(int);
 class EnemyFactory{
 private:
     MainCharacter* Player;
+    int Zarib;
 public:
     //Constructor========================
     EnemyFactory();
-    EnemyFactory(MainCharacter* player);
+    EnemyFactory(MainCharacter* player , int zarib);
    
     //Setter and Getters=================
     void setEnemy(MainCharacter* player);
    
     MainCharacter* getEnemy();
+
+    int getZarib();
     
     //Algorithm Of Calculating==========
 

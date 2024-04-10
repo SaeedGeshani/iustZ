@@ -16,8 +16,8 @@
 //ZombieModel///////////////////////////////////////////////////////////////////////////////////////////////////
 
     ZombieModel::ZombieModel() = default;
-    ZombieModel::ZombieModel(string name , int hp , int stamina , int damageperattack , int level , int neededstaminaperattack)
-    :EnemyModel(name , hp , stamina , damageperattack , level , neededstaminaperattack)
+    ZombieModel::ZombieModel(string name , int hp , int stamina , int damageperattack , int level , int neededstaminaperattack , int zarib)
+    :EnemyModel(name , hp , stamina , damageperattack , level , neededstaminaperattack , zarib)
     {
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -130,7 +130,7 @@ public:
     //=========================================
     //Constructor==============================
     HumanEnemyModel();
-    HumanEnemyModel(string name , int hp , int stamina , int damageperattack , int level);
+    HumanEnemyModel(string name , int hp , int stamina , int damageperattack , int level , int zarib);
 
 };
 

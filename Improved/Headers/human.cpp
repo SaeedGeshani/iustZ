@@ -129,13 +129,14 @@ int CalculateSTForHuman(int);
     //=========================================
     //Constructor==============================
     HumanEnemyModel::HumanEnemyModel() = default;
-    HumanEnemyModel::HumanEnemyModel(string name , int hp , int stamina , int damageperattack , int level)
+    HumanEnemyModel::HumanEnemyModel(string name , int hp , int stamina , int damageperattack , int level , int zarib)
     {
         Name = name;
         HP = hp;
         Stamina = stamina;
         DamagePerAttack = damageperattack;
         Level = level;
+        Zarib = zarib;
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -188,7 +189,7 @@ int CalculateSTForHuman(int);
     //Functions=========================
     void HumanEnemyController::WeaponAttack(MainCharacter*player , int number)
     {
-        int totalDamage = Enemymodel->getEnemyWeapons()[number]->getDamagePerAttack() + player->getLevel()*4;
+        int totalDamage = (Enemymodel->getEnemyWeapons()[number]->getDamagePerAttack() + player->getLevel()*4) * Enemymodel->getZarib()/2;
         cout << "===================================================" << endl;
         cout << "       Enemy is attacking with: " << Enemymodel->getEnemyWeapons()[number]->getName() << endl;
         cout << "===================================================" << endl;

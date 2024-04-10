@@ -28,7 +28,7 @@ protected:
 
 public:
     ZombieModel();
-    ZombieModel(string name , int hp , int stamina , int damageperattack , int level , int neededdamageperattack);
+    ZombieModel(string name , int hp , int stamina , int damageperattack , int level , int neededdamageperattack , int zarib);
 };
 class Zombie : public Enemy{
 protected:

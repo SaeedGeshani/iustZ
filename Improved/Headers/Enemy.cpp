@@ -42,6 +42,11 @@ using namespace std;
 //EnemyModel//////////////////////////////////////////////////////////////////////////////////////////////////
 
     //Setter & Getters ==========================
+    int EnemyModel::getZarib()
+    {
+        return Zarib;
+    }
+
     void EnemyModel::setEnemyWeapons(vector<Weapon*> enemyweapon)
     {
         EnemyWeapons = enemyweapon;
@@ -116,10 +121,12 @@ using namespace std;
     {
         return Stamina;
     }
+
+    
     //=========================================
     //Constructor==============================
     EnemyModel::EnemyModel() = default;
-    EnemyModel::EnemyModel(string name , int hp , int stamina , int damageperattack , int level , int neededstaminaperattack)
+    EnemyModel::EnemyModel(string name , int hp , int stamina , int damageperattack , int level , int neededstaminaperattack , int zarib)
     {
         Name = name;
         HP = hp;
@@ -127,6 +134,7 @@ using namespace std;
         DamagePerAttack = damageperattack;
         Level = level;
         neededStaminaPerAttack = neededstaminaperattack;
+        Zarib = zarib;
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -161,35 +161,35 @@ using namespace std;
 			else{
 				prints("How about another item?");
 			}
-        	prints("Here are the items you already have in your inventory: ");
+        	// prints("Here are the items you already have in your inventory: ");
             showDetailOfInventory(player);
             cout << "Your Wealth is: " << player->getGold() <<" G"<< endl;
             // this_thread::sleep_for(chrono::seconds(3));
             prints("And here are available items in this shop: ");
             ShowItems();
             
-            prints("===Please enter the number of the Item you wanna buy(Enter zero if you'd like to exit this shop)===");
 
-            cin >> ChosenNumber;
+            prints("===Please enter the number of the Item you wanna buy(Enter zero if you'd like to exit this shop)===");            cin >> ChosenNumber;
             if(ChosenNumber <= availableWeapons.size() && ChosenNumber > 0)
             {
                 if(availableWeapons[ChosenNumber-1] != nullptr)
                 {
-                    if(dynamic_cast<PermenantWeapon*>(availableWeapons[ChosenNumber-1]) != NULL)
-                    {
-                        for(int i = 0 ; i < player->getWeapons().size() ; i++)
-                        {
-                            if(dynamic_cast<PermenantWeapon*>(player->getWeapons()[i]) != NULL)
-                            {
-                                delete player->getWeapons()[i];
-                                player->getWeapons().erase(player->getWeapons().begin() + i);
-                                break;
-                            }
-                        }
-                    }
+                    
                     
                     if(player->getGold() >= availableWeapons[ChosenNumber-1]->getPrice()){
                     	
+                        if(dynamic_cast<PermenantWeapon*>(availableWeapons[ChosenNumber-1]) != NULL)
+                        {
+                            for(int i = 0 ; i < player->getWeapons().size() ; i++)
+                            {
+                                if(dynamic_cast<PermenantWeapon*>(player->getWeapons()[i]) != NULL)
+                                {
+                                    delete player->getWeapons()[i];
+                                    player->getWeapons().erase(player->getWeapons().begin() + i);
+                                    break;
+                                }
+                            }
+                        }
                     	player->addWeapon(availableWeapons[ChosenNumber-1]);
                     	player->setGold(player->getGold() - availableWeapons[ChosenNumber-1]->getPrice());
                     	system("cls");
@@ -211,22 +211,22 @@ using namespace std;
                     availableWeapons.erase(availableWeapons.begin() + ChosenNumber-1);
                 }
 
-                for(int i = ChosenNumber ; i < availableWeapons.size() ; )
-                {
-                    delete availableWeapons[i];
-                    availableWeapons.erase(availableWeapons.begin() + ChosenNumber);
-                }
-                for(int i = 0 , k = 0  ; i < ChosenNumber-1-k ;k++ )
-                {
-                    delete availableWeapons[i];  
-                    availableWeapons.erase(availableWeapons.begin() + 0);
-                }
-                for(int i = 0 ; i < availableUseables.size() ; )
-                {
-                    delete availableUseables[i];
-                    availableUseables.erase(availableUseables.begin() + 0);
+                // for(int i = ChosenNumber ; i < availableWeapons.size() ; )
+                // {
+                //     delete availableWeapons[i];
+                //     availableWeapons.erase(availableWeapons.begin() + ChosenNumber);
+                // }
+                // for(int i = 0 , k = 0  ; i < ChosenNumber-1-k ;k++ )
+                // {
+                //     delete availableWeapons[i];  
+                //     availableWeapons.erase(availableWeapons.begin() + 0);
+                // }
+                // for(int i = 0 ; i < availableUseables.size() ; )
+                // {
+                //     delete availableUseables[i];
+                //     availableUseables.erase(availableUseables.begin() + 0);
                     
-                }
+                // }
                 return;
 			}
 			else if(ChosenNumber > availableWeapons.size() && ChosenNumber <= availableWeapons.size() + availableUseables.size()){
@@ -250,22 +250,22 @@ using namespace std;
                 {
                     cout << "Passing was failed so" << endl; 
                 }
-                for(int i = ChosenNumber-availableWeapons.size() ; i < availableUseables.size() ; )
-                {
-                    delete availableUseables[i];
-                    availableUseables.erase(availableUseables.begin() + ChosenNumber-availableWeapons.size());
-                }
+                // for(int i = ChosenNumber-availableWeapons.size() ; i < availableUseables.size() ; )
+                // {
+                //     delete availableUseables[i];
+                //     availableUseables.erase(availableUseables.begin() + ChosenNumber-availableWeapons.size());
+                // }
                 
-                for(int i = 0 , j = 0  ; i < ChosenNumber - 1 - availableWeapons.size() - j ; j++)
-                {
-                    delete availableUseables[i];
-                    availableUseables.erase(availableUseables.begin() + 0);
-                }
-                for(int i = 0 ; i < availableWeapons.size() ; )
-                {
-                    delete availableWeapons[i];
-                    availableWeapons.erase(availableWeapons.begin() + 0 );
-                }
+                // for(int i = 0 , j = 0  ; i < ChosenNumber - 1 - availableWeapons.size() - j ; j++)
+                // {
+                //     delete availableUseables[i];
+                //     availableUseables.erase(availableUseables.begin() + 0);
+                // }
+                // for(int i = 0 ; i < availableWeapons.size() ; )
+                // {
+                //     delete availableWeapons[i];
+                //     availableWeapons.erase(availableWeapons.begin() + 0 );
+                // }
                 return;
 			}
 			else if(ChosenNumber==0){

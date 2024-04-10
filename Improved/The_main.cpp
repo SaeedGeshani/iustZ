@@ -69,6 +69,7 @@ using namespace std;
 //Global Objects And Variables==============================    
     // static MainCharacter Warior;
     Shop* Store;
+    int ZZAARRIIBB;
     
     int numberOfCharacters;
     static vector<MainCharacter*>Wariors;
@@ -76,14 +77,16 @@ using namespace std;
     {
     int maxLVL;
     maxLVL = 1;
+    int placeOfMaximum = 0;
         for(int i = 0 ; i < Wariors.size() ; i++)
         {
             if(Wariors[i]->getLevel() > maxLVL)
             {
                 maxLVL = Wariors[i]->getLevel();
+                placeOfMaximum = i;
             }
         }
-        return maxLVL;
+        return placeOfMaximum;
     }
 
 //==========================================================
@@ -479,6 +482,7 @@ void makingSomeNewCharacter()
 {
     prints("How many character do you want to have?");
     cin >> numberOfCharacters;
+    ZZAARRIIBB = numberOfCharacters;
     prints("==========SO make them========");
     for(int i = 0 ; i < numberOfCharacters ; i++)
     {
@@ -696,12 +700,18 @@ bool randomShuffle ( int Difficulty , int Level ) {
 
 bool isAlive()
 {
-    for(int i = 0 ; i < Wariors.size() ; i++)
+    // for(int i = 0 ; i < Wariors.size() ; i++)
+    // {
+    //     if(Wariors[i]->getHP() > 0)
+    //     {
+    //         return true;
+    //     }
+    // }
+    // return false;
+
+    if(Wariors.size() > 0)
     {
-        if(Wariors[i]->getHP() > 0)
-        {
-            return true;
-        }
+        return true;
     }
     return false;
 }
@@ -712,7 +722,7 @@ int main()
     Enemy* enemy;
     // makingNewcharacter();
     makingSomeNewCharacter();
-    EnemyFactory Enemyhouse(Wariors[findEnemyLevel()]);
+    EnemyFactory Enemyhouse(Wariors[findEnemyLevel()] , ZZAARRIIBB);
     int Difficulty;
     while(true)
     {
@@ -730,11 +740,11 @@ int main()
 
     bool checkStatus;
     
-    while(isAlive())
+    while(isAlive() && checkContinue())
     {
        checkStatus = randomShuffle(Difficulty , Wariors[findEnemyLevel()]->getLevel());
 
-       if(false && checkStatus)
+       if(checkStatus)
        {
         Store = randomShopGenerator();
 
@@ -850,6 +860,7 @@ int main()
                                                 Wariors[i]->getEnemyWeapons(enemy->getEnemyModel()->getEnemyWeapons());
 
                                             }
+                                            delete enemy;
                                             break;
                                         }
 
@@ -862,6 +873,7 @@ int main()
                                 }
                                 else if(input == 0)
                                 {
+                                    i--;
                                     break;
                                 }
 
@@ -888,10 +900,12 @@ int main()
                                     Wariors[i]->useItem(input);
                                     Wariors[i]->CalculateLevel();
                                     i--;
+
                                     break;
                                 }
                                 else if(input == 0)
                                 {
+                                    i--;
                                     break;
                                 }
                             }
@@ -901,6 +915,7 @@ int main()
                     else
                     {
                         cout << Wariors[i]->getName() << " couldn't attack cause lack of stamina" << endl;
+                        
                     }
                 }
             }
@@ -920,6 +935,7 @@ int main()
                             prints("==================================");
                             delete Wariors[attackNumber];
                             Wariors.erase(Wariors.begin() + attackNumber);
+                            Wariors.shrink_to_fit();
                         }
                         break;
                     }
@@ -938,6 +954,7 @@ int main()
                             prints("==================================");
                             delete Wariors[attackNumber];
                             Wariors.erase(Wariors.begin() + attackNumber);
+                            Wariors.shrink_to_fit();
                         }
                         break;
                     }

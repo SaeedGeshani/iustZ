@@ -13,6 +13,7 @@ using namespace std;
 class EnemyController{
 protected:
     EnemyModel* Enemymodel;
+    
 public:
     //Constructor======================
     EnemyController();
@@ -20,6 +21,8 @@ public:
     
     //Setter and Getters===============
     void setEnemyModel(EnemyModel* enemymodel);
+
+
     
     EnemyModel* getEnemyModel();
     
@@ -62,6 +65,7 @@ protected:
     int Stamina;
     int Level;
     int neededStaminaPerAttack; 
+    int Zarib;
     
 public:
     //Friend classes ==========================
@@ -99,11 +103,15 @@ public:
     void setStamina(int stamina);
    
     int getStamina();
-   
+
+    void setZarib(int zarib);
+
+    int getZarib();
+
     //=========================================
     //Constructor==============================
     EnemyModel();
-    EnemyModel(string name , int hp , int stamina , int damageperattack , int level , int neededstaminaperattack);
+    EnemyModel(string name , int hp , int stamina , int damageperattack , int level , int neededstaminaperattack , int zarib);
     
 };
 class Enemy{
