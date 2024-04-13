@@ -383,7 +383,7 @@ void makingNewcharacter()
     cout << endl << endl;
     printS("Now you have 1000 G");
     // Warior.setGold(1000);
-    this_thread::sleep_for(chrono::seconds(33));
+    // this_thread::sleep_for(chrono::seconds(33));
     system("cls");
     
     prints("================================================");
@@ -482,161 +482,163 @@ void makingNewcharacter()
 
 void makingSomeNewCharacter()
 {
-    ofstream user("data/users.txt" , ios::app);
+    // ofstream user("data/users.txt" , ios::app);
     int wariorMode;
     prints("How many playable character would you like to include in the game?");
     cin >> numberOfCharacters;
     ZZAARRIIBB = numberOfCharacters;
     system("cls");
-    prints("You have two choices: ");
+    
     for (int w = 0; w < numberOfCharacters; w++)
     {
     	while(true){
     	if(numberOfCharacters>1)	
 			cout<<"Player "<<w+1<<"'s turn:"<<endl;
-        cout << "1. choose from existing wariors\n2. create new warior\n";
-        cin >> wariorMode;
-        system("cls");
-        if (wariorMode == 1)
-        {	
-			string hyhy;
-            int n=0;
-            while (userList >> hyhy){
-                n++;
-			}
-			if(n!=0){
-				cout << "\nlist of users:\n";
-            	string username;
-            	while (userList >> username)
-                	cout << username << endl;
-            	prints("Enter the name of the warior you'd like to choose:\n");
-            	string insideWarior;
-            	cin >> insideWarior;
-            	ifstream wariorDetail ("data/" + insideWarior + ".txt");
-            	string wariorName, wariorGender;
-            	int wariorHP, wariorXP, wariorStamina, wariorGold, wariorLevel, wariorKills, weaponNum, usableNum;
-            	wariorDetail >> wariorName >> wariorGender >> wariorHP >> wariorXP >> wariorGold >> wariorStamina >> wariorLevel >> wariorKills >> weaponNum >> usableNum;
-            	MainCharacter* newWarior = new MainCharacter(wariorName , wariorHP , wariorXP , wariorStamina , wariorGender , wariorGold);
-            	newWarior->setKills(wariorKills);
-            	newWarior->setLevel(wariorLevel);
-            	int o = 1;
-            	string itemTemp = "!";
-            	while (wariorDetail >> itemTemp)
-            	{
-                	for (int n = 0; n < weaponNum; n++)
-                	{
-                        if(itemTemp == "Katana")
-                        {
-                        	Katana* yourkat = new Katana(20 , 15 , "Katana" , 120);
-                            newWarior->addWeapon(yourkat);
-                            break;
-                        }
-                        else if(itemTemp == "Blaster")
-                        {
-                        	Blaster* yourblast = new Blaster(35 , 10 , "Blaster" , 200);
-                            newWarior->addWeapon(yourblast);
-                            break;
 
-                        }
-                        else if(itemTemp == "Kratos")
-                        {
-                        	KratosBlades* yourblades = new KratosBlades(25 , 15 , "Kratos Blades" , 150 );
-                            newWarior->addWeapon(yourblades);
-                            break;
-                        }
-                        else if(itemTemp == "MiniGun")
-                        {
-                        	MiniGun* yourmini = new MiniGun(55 , 30 , "MiniGun" , 600 );
-                            newWarior->addWeapon(yourmini);
-                            break;
-                        }
-                        else if(itemTemp == "Mjolnir")
-                        {
-                        	Mjolnir* yourmjo = new Mjolnir(25 , 20 , "Mjolnir" , 130 );
-                            newWarior->addWeapon(yourmjo);
-                            break;
-                        }
-                        else if(itemTemp == "Rocket")
-                        {
-                        	RocketLauncher* yourrock = new RocketLauncher(110 , 40 , "Rocket Launcher" , 1000);
-                            newWarior->addWeapon(yourrock);
-                            break;
-                        }
-                        else if(itemTemp == "Spear")
-                        {
-                        	Spear* yourspear = new Spear(35 , 15 , "Spear" , 75);
-                            newWarior->addWeapon(yourspear);
-                            break;
-                        }
-                        else if(itemTemp == "Batarang")
-                        {
-                        	Batarang* yourbat = new Batarang(20 , 5 , "Batrang" , 50);
-                            newWarior->addWeapon(yourbat);
-                            break;
-                        }
-                        else if(itemTemp == "Grenade")
-                        {
-                        	grenade* yournade = new grenade(75 , 50 , "Grenade" , 150);
-                            newWarior->addWeapon(yournade);
-                            break;
-                        }
-                        else if(itemTemp == "shuriken")
-                        {
-                        	shuriken* yourshur = new shuriken(15 , 1 , "shuriken" , 30);
-                            newWarior->addWeapon(yourshur);
-                            break;
-                        }
-                        else if (itemTemp == "Launcher" || itemTemp == "Blades")
-                        {
-                            continue;
-                        }
+        system("cls");
+        // if (wariorMode == 1)
+        // {	
+		// 	string hyhy;
+        //     int n=0;
+        //     while (userList >> hyhy){
+        //         n++;
+		// 	}
+		// 	if(n!=0){
+		// 		cout << "\nlist of users:\n";
+        //     	string username;
+
+        //         userList.close();
+        //         ifstream userList("data/users.txt");
+        //     	while (userList >> username)
+        //         	cout << username << endl;
+        //     	prints("Enter the name of the warior you'd like to choose:\n");
+        //     	string insideWarior;
+        //     	cin >> insideWarior;
+        //     	ifstream wariorDetail ("data/" + insideWarior + ".txt");
+        //     	string wariorName, wariorGender;
+        //     	int wariorHP, wariorXP, wariorStamina, wariorGold, wariorLevel, wariorKills, weaponNum, usableNum;
+        //     	wariorDetail >> wariorName >> wariorGender >> wariorHP >> wariorXP >> wariorGold >> wariorStamina >> wariorLevel >> wariorKills >> weaponNum >> usableNum;
+        //     	MainCharacter* newWarior = new MainCharacter(wariorName , wariorHP , wariorXP , wariorStamina , wariorGender , wariorGold);
+        //     	newWarior->setKills(wariorKills);
+        //     	newWarior->setLevel(wariorLevel);
+        //     	int o = 1;
+        //     	string itemTemp = "!";
+        //     	while (wariorDetail >> itemTemp)
+        //     	{
+        //         	for (int n = 0; n < weaponNum; n++)
+        //         	{
+        //                 if(itemTemp == "Katana")
+        //                 {
+        //                 	Katana* yourkat = new Katana(20 , 15 , "Katana" , 120);
+        //                     newWarior->addWeapon(yourkat);
+        //                     break;
+        //                 }
+        //                 else if(itemTemp == "Blaster")
+        //                 {
+        //                 	Blaster* yourblast = new Blaster(35 , 10 , "Blaster" , 200);
+        //                     newWarior->addWeapon(yourblast);
+        //                     break;
+
+        //                 }
+        //                 else if(itemTemp == "Kratos")
+        //                 {
+        //                 	KratosBlades* yourblades = new KratosBlades(25 , 15 , "Kratos Blades" , 150 );
+        //                     newWarior->addWeapon(yourblades);
+        //                     break;
+        //                 }
+        //                 else if(itemTemp == "MiniGun")
+        //                 {
+        //                 	MiniGun* yourmini = new MiniGun(55 , 30 , "MiniGun" , 600 );
+        //                     newWarior->addWeapon(yourmini);
+        //                     break;
+        //                 }
+        //                 else if(itemTemp == "Mjolnir")
+        //                 {
+        //                 	Mjolnir* yourmjo = new Mjolnir(25 , 20 , "Mjolnir" , 130 );
+        //                     newWarior->addWeapon(yourmjo);
+        //                     break;
+        //                 }
+        //                 else if(itemTemp == "Rocket")
+        //                 {
+        //                 	RocketLauncher* yourrock = new RocketLauncher(110 , 40 , "Rocket Launcher" , 1000);
+        //                     newWarior->addWeapon(yourrock);
+        //                     break;
+        //                 }
+        //                 else if(itemTemp == "Spear")
+        //                 {
+        //                 	Spear* yourspear = new Spear(35 , 15 , "Spear" , 75);
+        //                     newWarior->addWeapon(yourspear);
+        //                     break;
+        //                 }
+        //                 else if(itemTemp == "Batarang")
+        //                 {
+        //                 	Batarang* yourbat = new Batarang(20 , 5 , "Batrang" , 50);
+        //                     newWarior->addWeapon(yourbat);
+        //                     break;
+        //                 }
+        //                 else if(itemTemp == "Grenade")
+        //                 {
+        //                 	grenade* yournade = new grenade(75 , 50 , "Grenade" , 150);
+        //                     newWarior->addWeapon(yournade);
+        //                     break;
+        //                 }
+        //                 else if(itemTemp == "shuriken")
+        //                 {
+        //                 	shuriken* yourshur = new shuriken(15 , 1 , "shuriken" , 30);
+        //                     newWarior->addWeapon(yourshur);
+        //                     break;
+        //                 }
+        //                 else if (itemTemp == "Launcher" || itemTemp == "Blades")
+        //                 {
+        //                     continue;
+        //                 }
                         
-                        // newWarior->showCharacterWeapons();
-                	}
-                for (int n = 0; n < usableNum; n++)
-                {
-                    if(itemTemp == "Egg")
-                    {
-                    	Egg* youregg = new Egg(10 , 30 , "Egg" , 50 , 0);
-                        newWarior->addUseableItems(youregg);
-                        break;
-                    }
-                    else if(itemTemp == "Whey")
-                    {
-                    	WheyProtein* yourwhey = new WheyProtein(30 , 30 , "Whey Protein" , 75 , 0);
-                        newWarior->addUseableItems(yourwhey);
-                        break;
-                    }
-                    else if(itemTemp == "Energy")
-                    {
-                    	EnergyDrink* yourenergy = new EnergyDrink(60 , 0 , "Energy Drink" , 75 , 0);
-                        newWarior->addUseableItems(yourenergy);
-                        break;
-                    }
-                    else if(itemTemp == "XP")
-                    {
-                    	XPpotion* yourxp = new XPpotion(0 , 0 , "XP Potion" , 25, 50);
-                        newWarior->addUseableItems(yourxp);
-                        break;
-                    }
-                    else if (itemTemp == "Potion" || itemTemp == "Drink" || itemTemp == "Protein")
-                    {
-                        continue;
-                    }
+        //                 // newWarior->showCharacterWeapons();
+        //         	}
+        //         for (int n = 0; n < usableNum; n++)
+        //         {
+        //             if(itemTemp == "Egg")
+        //             {
+        //             	Egg* youregg = new Egg(10 , 30 , "Egg" , 50 , 0);
+        //                 newWarior->addUseableItems(youregg);
+        //                 break;
+        //             }
+        //             else if(itemTemp == "Whey")
+        //             {
+        //             	WheyProtein* yourwhey = new WheyProtein(30 , 30 , "Whey Protein" , 75 , 0);
+        //                 newWarior->addUseableItems(yourwhey);
+        //                 break;
+        //             }
+        //             else if(itemTemp == "Energy")
+        //             {
+        //             	EnergyDrink* yourenergy = new EnergyDrink(60 , 0 , "Energy Drink" , 75 , 0);
+        //                 newWarior->addUseableItems(yourenergy);
+        //                 break;
+        //             }
+        //             else if(itemTemp == "XP")
+        //             {
+        //             	XPpotion* yourxp = new XPpotion(0 , 0 , "XP Potion" , 25, 50);
+        //                 newWarior->addUseableItems(yourxp);
+        //                 break;
+        //             }
+        //             else if (itemTemp == "Potion" || itemTemp == "Drink" || itemTemp == "Protein")
+        //             {
+        //                 continue;
+        //             }
                     
-                }
-               	Wariors.push_back(newWarior);
-            	break; 
-            }
+        //         }
+        //        	Wariors.push_back(newWarior);
+        //     	break; 
+        //     }
             
-			}
-			else{
-				prints("There are no available wariors saved on your memory!\nYou'll have to make one!");
-			}
+		// 	}
+		// 	else{
+		// 		prints("There are no available wariors saved on your memory!\nYou'll have to make one!");
+		// 	}
             
-        }
-        else if(wariorMode == 2)
-        {
+        // }
+
+        
 //        	cout << endl;
 //    		prints("===============================================");
 //    		cout << endl;
@@ -646,13 +648,13 @@ void makingSomeNewCharacter()
             int age;
 	        string gender , name;
 
-	        prints("===============making your dream warrior===============");
+	        prints("===============making your dreamy warrior===============");
             cout << endl;
             cout << "Enter the name of your Warior" << endl;
 
 	        cin >> name;
             // cout << name;
-            user << name << endl;
+            // user << name << endl;
 	        system("cls");
     
 	        printS("Enter gender of the Warior:(male - female) ");
@@ -767,7 +769,7 @@ void makingSomeNewCharacter()
             Wariors.push_back(newWarior);
                 
         	break;
-		}
+		
 		        
 		    
 		}
@@ -891,11 +893,15 @@ bool isAlive()
 
 int main()
 {
+
+    // string tttt;
+    // userList >> tttt;
+    // cout << tttt << endl;
 	cout << endl;
     prints("===============================================");
     cout << endl;
    	prints("The worlds are colliding...parallel realities and dimensions are merging into one,causing a disaster! monsters and evil forces from corrupt universes are invading our realm and wish to conquer it!Even some former allies are taking advantage of the current situation and have joined the dark side in order to take over our world! You and your few comrades are  the empire's last hope...The king needs you to defend the kingdom and save your people from these hellish creatures.    thankfully, you'll have access to different kinds of weapons from all universes which will ease your crusade.");
-   	this_thread::sleep_for(chrono::seconds(33));
+   	// this_thread::sleep_for(chrono::seconds(33));
     system("cls");
     Enemy* enemy;
     // makingNewcharacter();
@@ -936,7 +942,7 @@ int main()
                 cout << "    Buying item for " << Wariors[i]->getName() << endl;
                 prints("=========================================");
                 Store->BuyItem(Wariors[i]);
-                userSave (Wariors[i]->getName(), Wariors[i]->getGender(), Wariors[i]->getHP(), Wariors[i]->getXP(), Wariors[i]->getGold(), Wariors[i]->getStamina(), Wariors[i]->getLevel(), Wariors[i]->getKills(), Wariors[i]->getWeapons().size(), Wariors[i]->getUseableItems().size() , Wariors[i]->getWeapons(), Wariors[i]->getUseableItems());
+                // userSave (Wariors[i]->getName(), Wariors[i]->getGender(), Wariors[i]->getHP(), Wariors[i]->getXP(), Wariors[i]->getGold(), Wariors[i]->getStamina(), Wariors[i]->getLevel(), Wariors[i]->getKills(), Wariors[i]->getWeapons().size(), Wariors[i]->getUseableItems().size() , Wariors[i]->getWeapons(), Wariors[i]->getUseableItems());
                 delete Store;
             }
             
@@ -1026,10 +1032,10 @@ int main()
                                             prints("===========================================");
                                             this_thread::sleep_for(chrono::seconds(3));
         									system("cls");
-                                            for (int l = 0; l < Wariors.size(); l++)
-                                            {
-                                                userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
-                                            }
+                                            // for (int l = 0; l < Wariors.size(); l++)
+                                            // {
+                                            //     userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
+                                            // }
                                             
                                             Wariors[i]->setGold(Wariors[i]->getGold() + 70);
                                             Wariors[i]->setXP(Wariors[i]->getXP() + 150);
@@ -1053,10 +1059,10 @@ int main()
         										system("cls");
                                                 Wariors[i]->getEnemyUseableItems(enemy->getEnemyModel()->getEnemyUseableItems());
                                                 Wariors[i]->getEnemyWeapons(enemy->getEnemyModel()->getEnemyWeapons());
-                                                for (int l = 0; l < Wariors.size(); l++)
-                                            {
-                                                userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
-                                            }
+                                            //     for (int l = 0; l < Wariors.size(); l++)
+                                            // {
+                                            //     userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
+                                            // }
 
                                             }
                                             delete enemy;
@@ -1137,26 +1143,26 @@ int main()
                             prints("==================================");
                             cout << "       " << Wariors[attackNumber]->getName() << " is dead" << endl;
                             prints("==================================");
-                            string username;
-                            ofstream userRewrite("data/users.txt");
-                            ofstream user("data/users.txt" , ios::app);
-                            userRewrite << "";
-                            while (userList >> username)
-                            {
-                                if (username == Wariors[attackNumber]->getName())
-                                {
-                                    continue;
-                                }
-                                else
-                                {
-                                    user << username << endl;
-                                }
-                            }
+                            // string username;
+                            // ofstream userRewrite("data/users.txt");
+                            // ofstream user("data/users.txt" , ios::app);
+                            // userRewrite << "";
+                            // while (userList >> username)
+                            // {
+                            //     if (username == Wariors[attackNumber]->getName())
+                            //     {
+                            //         continue;
+                            //     }
+                            //     else
+                            //     {
+                            //         user << username << endl;
+                            //     }
+                            // }
                             
-                            for (int l = 0; l < Wariors.size(); l++)
-                            {
-                                userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
-                            }
+                            // for (int l = 0; l < Wariors.size(); l++)
+                            // {
+                            //     userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
+                            // }
                             delete Wariors[attackNumber];
                             Wariors.erase(Wariors.begin() + attackNumber);
                             Wariors.shrink_to_fit();
@@ -1176,25 +1182,25 @@ int main()
                             prints("==================================");
                             cout << "       " << Wariors[attackNumber]->getName() << " is dead" << endl;
                             prints("==================================");
-                            string username;
-                            ofstream userRewrite("data/users.txt");
-                            ofstream user("data/users.txt" , ios::app);
-                            userRewrite << "";
-                            while (userList >> username)
-                            {
-                                if (username == Wariors[attackNumber]->getName())
-                                {
-                                    continue;
-                                }
-                                else
-                                {
-                                    user << username << endl;
-                                }
-                            }
-                            for (int l = 0; l < Wariors.size(); l++)
-                            {
-                                userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
-                            }
+                            // string username;
+                            // ofstream userRewrite("data/users.txt");
+                            // ofstream user("data/users.txt" , ios::app);
+                            // userRewrite << "";
+                            // while (userList >> username)
+                            // {
+                            //     if (username == Wariors[attackNumber]->getName())
+                            //     {
+                            //         continue;
+                            //     }
+                            //     else
+                            //     {
+                            //         user << username << endl;
+                            //     }
+                            // }
+                            // for (int l = 0; l < Wariors.size(); l++)
+                            // {
+                            //     userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
+                            // }
                             delete Wariors[attackNumber];
                             Wariors.erase(Wariors.begin() + attackNumber);
                             Wariors.shrink_to_fit();
@@ -1213,10 +1219,10 @@ int main()
     prints("=============================================");
     cout << "                  All dead                   ";
     prints("=============================================");
-    for (int l = 0; l < Wariors.size(); l++)
-    {
-        userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
-    }
+    // for (int l = 0; l < Wariors.size(); l++)
+    // {
+    //     userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
+    // }
 }
 
 int CalculateHPForHuman(int level)
