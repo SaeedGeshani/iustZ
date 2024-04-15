@@ -72,7 +72,6 @@ void userSave (string name, string gender, int hp, int xp, int gold, int stamina
     Shop* Store;
     int ZZAARRIIBB;
     
-    int numberOfCharacters;
     static vector<MainCharacter*>Wariors;
     int findEnemyLevel()
     {
@@ -482,6 +481,7 @@ void makingNewcharacter()
 
 void makingSomeNewCharacter()
 {
+    int numberOfCharacters;
     ofstream user("data/users.txt" , ios::app);
     int wariorMode;
     prints("How many playable character would you like to include in the game?");
@@ -491,9 +491,6 @@ void makingSomeNewCharacter()
     prints("You have two choices: ");
     for (int w = 0; w < numberOfCharacters; w++)
     {
-    	while(true){
-    	if(numberOfCharacters>1)	
-			cout<<"Player "<<w+1<<"'s turn:"<<endl;
         cout << "1. choose from existing wariors\n2. create new warior\n";
         cin >> wariorMode;
         system("cls");
@@ -501,11 +498,11 @@ void makingSomeNewCharacter()
         {	
 			string hyhy;
             int n=0;
-            ifstream userList ("data/users.txt");
-            while (userList >> hyhy){
-                n++;
-			}
-			if(n!=0){
+            // ifstream userList ("data/users.txt");
+            // while (userList >> hyhy){
+            //     n++;
+			// }
+			// if(n!=0){
 				cout << "\nlist of users:\n";
             	string username;
                 ifstream userList ("data/users.txt");
@@ -521,120 +518,105 @@ void makingSomeNewCharacter()
             	MainCharacter* newWarior = new MainCharacter(wariorName , wariorHP , wariorXP , wariorStamina , wariorGender , wariorGold);
             	newWarior->setKills(wariorKills);
             	newWarior->setLevel(wariorLevel);
-            	int o = 1;
             	string itemTemp = "!";
-            	while (wariorDetail >> itemTemp)
-            	{
                 	for (int n = 0; n < weaponNum; n++)
                 	{
+                        wariorDetail >> itemTemp;
                         if(itemTemp == "Katana")
                         {
                         	Katana* yourkat = new Katana(20 , 15 , "Katana" , 120);
                             newWarior->addWeapon(yourkat);
-                            break;
                         }
                         else if(itemTemp == "Blaster")
                         {
                         	Blaster* yourblast = new Blaster(35 , 10 , "Blaster" , 200);
                             newWarior->addWeapon(yourblast);
-                            break;
 
                         }
                         else if(itemTemp == "Kratos")
                         {
                         	KratosBlades* yourblades = new KratosBlades(25 , 15 , "Kratos Blades" , 150 );
                             newWarior->addWeapon(yourblades);
-                            break;
                         }
                         else if(itemTemp == "MiniGun")
                         {
                         	MiniGun* yourmini = new MiniGun(55 , 30 , "MiniGun" , 600 );
                             newWarior->addWeapon(yourmini);
-                            break;
                         }
                         else if(itemTemp == "Mjolnir")
                         {
                         	Mjolnir* yourmjo = new Mjolnir(25 , 20 , "Mjolnir" , 130 );
                             newWarior->addWeapon(yourmjo);
-                            break;
                         }
                         else if(itemTemp == "Rocket")
                         {
                         	RocketLauncher* yourrock = new RocketLauncher(110 , 40 , "Rocket Launcher" , 1000);
                             newWarior->addWeapon(yourrock);
-                            break;
                         }
                         else if(itemTemp == "Spear")
                         {
                         	Spear* yourspear = new Spear(35 , 15 , "Spear" , 75);
                             newWarior->addWeapon(yourspear);
-                            break;
                         }
                         else if(itemTemp == "Batarang")
                         {
                         	Batarang* yourbat = new Batarang(20 , 5 , "Batrang" , 50);
                             newWarior->addWeapon(yourbat);
-                            break;
                         }
                         else if(itemTemp == "Grenade")
                         {
                         	grenade* yournade = new grenade(75 , 50 , "Grenade" , 150);
                             newWarior->addWeapon(yournade);
-                            break;
                         }
                         else if(itemTemp == "shuriken")
                         {
                         	shuriken* yourshur = new shuriken(15 , 1 , "shuriken" , 30);
                             newWarior->addWeapon(yourshur);
-                            break;
                         }
                         else if (itemTemp == "Launcher" || itemTemp == "Blades")
                         {
+                            n--;
                             continue;
                         }
-                        
                         // newWarior->showCharacterWeapons();
                 	}
                 for (int n = 0; n < usableNum; n++)
                 {
+                    wariorDetail >> itemTemp;
                     if(itemTemp == "Egg")
                     {
                     	Egg* youregg = new Egg(10 , 30 , "Egg" , 50 , 0);
                         newWarior->addUseableItems(youregg);
-                        break;
                     }
                     else if(itemTemp == "Whey")
                     {
                     	WheyProtein* yourwhey = new WheyProtein(30 , 30 , "Whey Protein" , 75 , 0);
                         newWarior->addUseableItems(yourwhey);
-                        break;
                     }
                     else if(itemTemp == "Energy")
                     {
                     	EnergyDrink* yourenergy = new EnergyDrink(60 , 0 , "Energy Drink" , 75 , 0);
                         newWarior->addUseableItems(yourenergy);
-                        break;
                     }
                     else if(itemTemp == "XP")
                     {
                     	XPpotion* yourxp = new XPpotion(0 , 0 , "XP Potion" , 25, 50);
                         newWarior->addUseableItems(yourxp);
-                        break;
                     }
                     else if (itemTemp == "Potion" || itemTemp == "Drink" || itemTemp == "Protein")
                     {
+                        n--;
                         continue;
                     }
                     
                 }
                	Wariors.push_back(newWarior);
-            	break; 
-            }
-            
-			}
-			else{
-				prints("There are no available wariors saved on your memory!\nYou'll have to make one!");
-			}
+                cout << endl << newWarior->getName() << endl << newWarior->getGender() << endl << newWarior->getHP() << endl << newWarior->getXP() << endl << newWarior->getGold() << endl << newWarior->getStamina() << endl << newWarior->getLevel() << endl << newWarior->getKills() << endl << newWarior->getWeapons().size() << endl << newWarior->getUseableItems().size();
+
+			// }
+			// else{
+			// 	prints("There are no available wariors saved on your memory!\nYou'll have to make one!");
+			// }
             
         }
         else if(wariorMode == 2)
@@ -767,12 +749,9 @@ void makingSomeNewCharacter()
             system("cls");
             userSave (newWarior->getName(), newWarior->getGender(), newWarior->getHP(), newWarior->getXP(), newWarior->getGold(), newWarior->getStamina(), newWarior->getLevel(), newWarior->getKills(), newWarior->getWeapons().size(), newWarior->getUseableItems().size() , newWarior->getWeapons(), newWarior->getUseableItems());
             Wariors.push_back(newWarior);
-                
-        	break;
 		}
 		        
 		    
-		}
         
     }
 
@@ -1156,10 +1135,10 @@ int main()
                                 }
                             }
                             
-                            for (int l = 0; l < Wariors.size(); l++)
-                            {
-                                userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
-                            }
+                            // for (int l = 0; l < Wariors.size(); l++)
+                            // {
+                            //     userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
+                            // }
                             delete Wariors[attackNumber];
                             Wariors.erase(Wariors.begin() + attackNumber);
                             Wariors.shrink_to_fit();
@@ -1195,10 +1174,10 @@ int main()
                                     user << username << endl;
                                 }
                             }
-                            for (int l = 0; l < Wariors.size(); l++)
-                            {
-                                userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
-                            }
+                            // for (int l = 0; l < Wariors.size(); l++)
+                            // {
+                            //     userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
+                            // }
                             delete Wariors[attackNumber];
                             Wariors.erase(Wariors.begin() + attackNumber);
                             Wariors.shrink_to_fit();
@@ -1217,10 +1196,10 @@ int main()
     prints("=============================================");
     cout << "                  All dead                   ";
     prints("=============================================");
-    for (int l = 0; l < Wariors.size(); l++)
-    {
-        userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
-    }
+    // for (int l = 0; l < Wariors.size(); l++)
+    // {
+    //     userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
+    // }
 }
 
 int CalculateHPForHuman(int level)

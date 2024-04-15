@@ -1,13 +1,13 @@
-soroush
+wwe
 male
 100
 0
+880
+100
+1
 0
-60
-1
-1
 1
 2
-Rocket Launcher
+Katana
 Whey Protein
 Whey Protein
