@@ -66,7 +66,7 @@
 
 using namespace std;
 void userSave (string name, string gender, int hp, int xp, int gold, int stamina, int level, int kills, int weaponsNum, int usablesNum, vector<Weapon*> weapons, vector<UseableItems*> usable);
-ifstream userList ("data/users.txt");
+// ifstream userList ("data/users.txt");
 //Global Objects And Variables==============================    
     // static MainCharacter Warior;
     Shop* Store;
@@ -501,12 +501,14 @@ void makingSomeNewCharacter()
         {	
 			string hyhy;
             int n=0;
+            ifstream userList ("data/users.txt");
             while (userList >> hyhy){
                 n++;
 			}
 			if(n!=0){
 				cout << "\nlist of users:\n";
             	string username;
+                ifstream userList ("data/users.txt");
             	while (userList >> username)
                 	cout << username << endl;
             	prints("Enter the name of the warior you'd like to choose:\n");
@@ -1141,6 +1143,7 @@ int main()
                             ofstream userRewrite("data/users.txt");
                             ofstream user("data/users.txt" , ios::app);
                             userRewrite << "";
+                            ifstream userList ("data/users.txt");
                             while (userList >> username)
                             {
                                 if (username == Wariors[attackNumber]->getName())
@@ -1180,6 +1183,7 @@ int main()
                             ofstream userRewrite("data/users.txt");
                             ofstream user("data/users.txt" , ios::app);
                             userRewrite << "";
+                            ifstream userList ("data/users.txt");
                             while (userList >> username)
                             {
                                 if (username == Wariors[attackNumber]->getName())
