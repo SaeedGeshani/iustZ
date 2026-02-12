@@ -960,6 +960,7 @@ int main()
     
 
     bool checkStatus;
+    int enemyCount = 0;
     
     while(isAlive() && checkContinue())
     {
@@ -997,6 +998,7 @@ int main()
         {
             enemy = Enemyhouse.makeHuman();
         }
+        enemyCount++;
 
         while(enemy->getEnemyModel()->getHP() > 0 && isAlive() && checkContinue())
         {
@@ -1010,7 +1012,7 @@ int main()
         				system("cls");
                         uiSectionTitle("Battlefield");
                         cout << "Level " << Wariors[findEnemyLevel()]->getLevel() << " encounter" << endl;
-                        cout << "Enemy race: ";
+                        cout << "Enemy #" << enemyCount << " race: ";
                         if(enemy->getEnemyModel()->getName() == "Human")
                         {
                             cout << "Human" << endl;
@@ -1023,6 +1025,7 @@ int main()
                         uiSeparator('-');
                         cout << Wariors[i]->getName() << "'s turn" << endl;
                         uiSeparator('-');
+                        cout << "Facing Enemy #" << enemyCount << endl;
                         cout << "1) Fight" << endl << "2) Use inventory" << endl;
                         uiBattleStatus(Wariors[i], enemy);
                         cout << "Your choice: ";
@@ -1053,7 +1056,7 @@ int main()
                                         {
                                             Wariors[i]->setKills(Wariors[i]->getKills() + 1);
                                             prints("===========================================");
-                                            cout << "    Enemy was killed by " << Wariors[i]->getName() << "  " << Wariors[i]->getKills() << " kill(s)" <<endl;
+                                            cout << "    Enemy #" << enemyCount << " was killed by " << Wariors[i]->getName() << "  " << Wariors[i]->getKills() << " kill(s)" <<endl;
                                             prints("===========================================");
                                             this_thread::sleep_for(chrono::seconds(3));
         									system("cls");
@@ -1163,6 +1166,7 @@ int main()
                     attackNumber = rand()%Wariors.size();
                     if(Wariors[attackNumber]->getHP() > 0)
                     {
+                        cout << "Enemy #" << enemyCount << " attacks " << Wariors[attackNumber]->getName() << "!" << endl;
                         enemy->getEnemyController()->Attack(Wariors[attackNumber]);
                         if(Wariors[attackNumber]->getHP() < 0)
                         {
@@ -1202,6 +1206,7 @@ int main()
                     attackNumber = rand()%Wariors.size();
                     if(Wariors[attackNumber]->getHP() > 0)
                     {
+                        cout << "Enemy #" << enemyCount << " attacks " << Wariors[attackNumber]->getName() << "!" << endl;
                         enemy->getEnemyController()->Attack(Wariors[attackNumber]);
                         if(Wariors[attackNumber]->getHP() < 0)
                         {
