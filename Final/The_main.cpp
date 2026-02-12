@@ -67,6 +67,37 @@
 using namespace std;
 void userSave (string name, string gender, int hp, int xp, int gold, int stamina, int level, int kills, int weaponsNum, int usablesNum, vector<Weapon*> weapons, vector<UseableItems*> usable);
 ifstream userList ("data/users.txt");
+
+void uiSeparator(char fill = '=', int width = 54)
+{
+    cout << string(width, fill) << endl;
+}
+
+void uiSectionTitle(const string& title)
+{
+    uiSeparator('=');
+    cout << " " << title << endl;
+    uiSeparator('=');
+}
+
+void uiBattleStatus(MainCharacter* warrior, Enemy* enemy)
+{
+    cout << left
+         << setw(20) << ("Warrior HP: " + to_string(warrior->getHP()))
+         << setw(20) << ("Warrior ST: " + to_string(warrior->getStamina()))
+         << setw(20) << ("Enemy HP: " + to_string(enemy->getEnemyModel()->getHP()))
+         << endl;
+
+    string enemyDamage = enemy->getEnemyModel()->getName() == "Human"
+                             ? "Enemy DMPA: Weapon based"
+                             : "Enemy DMPA: " + to_string(enemy->getEnemyModel()->getDamagePerAttack());
+
+    cout << left
+         << setw(38) << enemyDamage
+         << setw(20) << ("Enemy ST: " + to_string(enemy->getEnemyModel()->getStamina()))
+         << endl;
+    uiSeparator('-');
+}
 //Global Objects And Variables==============================    
     // static MainCharacter Warior;
     Shop* Store;
@@ -911,7 +942,12 @@ int main()
     int Difficulty;
     while(true)
     {
-        printS("Choose your game Difficulty : (1 , 2 , 3)");
+        uiSectionTitle("Difficulty Selection");
+        cout << "  1) Casual" << endl;
+        cout << "  2) Challenger" << endl;
+        cout << "  3) Nightmare" << endl;
+        uiSeparator('-');
+        cout << "Choose difficulty [1-3]: ";
         cin >> Difficulty;
         if(Difficulty == 1 || Difficulty == 2 || Difficulty == 3)
         {
@@ -924,6 +960,7 @@ int main()
     
 
     bool checkStatus;
+    int enemyCount = 0;
     
     while(isAlive() && checkContinue())
     {
@@ -961,6 +998,7 @@ int main()
         {
             enemy = Enemyhouse.makeHuman();
         }
+        enemyCount++;
 
         while(enemy->getEnemyModel()->getHP() > 0 && isAlive() && checkContinue())
         {
@@ -970,12 +1008,11 @@ int main()
                 {
                     if(checkContinueForOne(i))
                     {
-                    	this_thread::sleep_for(chrono::seconds(3));
+					this_thread::sleep_for(chrono::seconds(3));
         				system("cls");
-                        cout << "LEVEL" << Wariors[findEnemyLevel()]->getLevel() << endl;
-                        prints("================== Danger ===============");
-                        printS("Enemy is against you. What do you want to do?");
-                        cout << "Enemy race: ";
+                        uiSectionTitle("Battlefield");
+                        cout << "Level " << Wariors[findEnemyLevel()]->getLevel() << " encounter" << endl;
+                        cout << "Enemy #" << enemyCount << " race: ";
                         if(enemy->getEnemyModel()->getName() == "Human")
                         {
                             cout << "Human" << endl;
@@ -985,23 +1022,13 @@ int main()
                             cout << "Zombie" << endl;       
                         }
 
-                        cout << "==============================================" << endl;
-                        cout << "==========" << Wariors[i]->getName() << "'s turn==============" << endl;
-                        prints("=============================================");
-
-                        cout << "1.Fight" << endl << "2.use Inventory" << endl;
-
-                        cout << "==Warior's HP: " << Wariors[i]->getHP() << "     ==Warior's ST: " << Wariors[i]->getStamina() << endl;
-                        cout << "==Enemy's HP: " << enemy->getEnemyModel()->getHP();
-                        if(enemy->getEnemyModel()->getName() == "Human")
-                        {
-                            cout << "         ==Enmey's DMPA: " << "Depending on Weapon";
-                        }
-                        else{
-
-                            cout << "         ==Enmey's DMPA: " << enemy->getEnemyModel()->getDamagePerAttack();
-                        }
-                        cout <<  "     ==Enemy's ST: " << enemy->getEnemyModel()->getStamina() << endl;
+                        uiSeparator('-');
+                        cout << Wariors[i]->getName() << "'s turn" << endl;
+                        uiSeparator('-');
+                        cout << "Facing Enemy #" << enemyCount << endl;
+                        cout << "1) Fight" << endl << "2) Use inventory" << endl;
+                        uiBattleStatus(Wariors[i], enemy);
+                        cout << "Your choice: ";
 
 
                         int input;
@@ -1013,10 +1040,11 @@ int main()
                             while(true)
                             {
                                 system("cls");
-                                printS("=========Choose a Weapon========= (0 = exit)");
-                                cout << "         Choosing for " << Wariors[i]->getName() << endl;
-                                prints("============================================");
+                                uiSectionTitle("Choose a Weapon");
+                                cout << "For " << Wariors[i]->getName() << " (0 to go back)" << endl;
+                                uiSeparator('-');
                                 Wariors[i]->showCharacterWeapons();
+                                cout << "Weapon number: ";
                                 cin >> input;
                             
                                 if(input <= Wariors[i]->getWeapons().size() && input >= 1)
@@ -1028,7 +1056,7 @@ int main()
                                         {
                                             Wariors[i]->setKills(Wariors[i]->getKills() + 1);
                                             prints("===========================================");
-                                            cout << "    Enemy was killed by " << Wariors[i]->getName() << "  " << Wariors[i]->getKills() << " kill(s)" <<endl;
+                                            cout << "    Enemy #" << enemyCount << " was killed by " << Wariors[i]->getName() << "  " << Wariors[i]->getKills() << " kill(s)" <<endl;
                                             prints("===========================================");
                                             this_thread::sleep_for(chrono::seconds(3));
         									system("cls");
@@ -1093,11 +1121,12 @@ int main()
                         {
                             while(true)
                             {	
-                        	    system("cls");
-                                printS("=========Choose Item=========  (0 = exit) ");
-                                cout << "     Choosing for  " << Wariors[i]->getName() << endl;
-                                printS("==========================================");
+                         	    system("cls");
+                                uiSectionTitle("Use Inventory Item");
+                                cout << "For " << Wariors[i]->getName() << " (0 to go back)" << endl;
+                                uiSeparator('-');
                                 Wariors[i]->showCharacterUsableItems();
+                                cout << "Item number: ";
                                 cin >> input;
 
                                 if(input >= 1 && input <= Wariors[i]->getUseableItems().size())
@@ -1137,6 +1166,7 @@ int main()
                     attackNumber = rand()%Wariors.size();
                     if(Wariors[attackNumber]->getHP() > 0)
                     {
+                        cout << "Enemy #" << enemyCount << " attacks " << Wariors[attackNumber]->getName() << "!" << endl;
                         enemy->getEnemyController()->Attack(Wariors[attackNumber]);
                         if(Wariors[attackNumber]->getHP() < 0)
                         {
@@ -1176,6 +1206,7 @@ int main()
                     attackNumber = rand()%Wariors.size();
                     if(Wariors[attackNumber]->getHP() > 0)
                     {
+                        cout << "Enemy #" << enemyCount << " attacks " << Wariors[attackNumber]->getName() << "!" << endl;
                         enemy->getEnemyController()->Attack(Wariors[attackNumber]);
                         if(Wariors[attackNumber]->getHP() < 0)
                         {
