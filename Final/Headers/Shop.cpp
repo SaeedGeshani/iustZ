@@ -8,36 +8,44 @@
 
 using namespace std;
 
+
+const int SHOP_UI_WIDTH = 92;
+
+string shopCenteredText(const string& text, int width = SHOP_UI_WIDTH)
+{
+    if(static_cast<int>(text.size()) >= width)
+    {
+        return text;
+    }
+    int padding = (width - static_cast<int>(text.size())) / 2;
+    return string(padding, ' ') + text;
+}
+
+void shopCenteredLine(const string& text = "")
+{
+    cout << shopCenteredText(text) << endl;
+}
+
 void shopDivider(char fill = '=', int width = 58)
 {
-    cout << string(width, fill) << endl;
+    shopCenteredLine(string(width, fill));
 }
 
 void shopHeader(const string& title)
 {
     shopDivider();
-    cout << " " << title << endl;
+    shopCenteredLine(" " + title);
     shopDivider();
 }
 
     //Functions for printing
         void printS(string s)
         {
-            for(int i = 0 ; i < s.size() ; i++)
-            {
-                cout << s[i];
-                Sleep(7);
-            }
-            cout << endl << endl;
+            shopCenteredLine(s);
         }
         void prints(string s)
         {
-            for(int i = 0 ; i < s.size() ; i++)
-            {
-                cout << s[i];
-                Sleep(7);
-            }
-            cout << endl << endl;
+            shopCenteredLine(s);
         }
     //=======================
 
@@ -109,7 +117,7 @@ void shopHeader(const string& title)
             if(isFirst(player->getUseableItems()[i]->getName() , player , i))
             {
                 int NUM = numberInInventory(player->getUseableItems()[i]->getName() , player);
-                cout << player->getUseableItems()[i]->getName() << "  x" << NUM << endl;
+                shopCenteredLine(player->getUseableItems()[i]->getName() + "  x" + to_string(NUM));
             }
         }
         shopDivider();
@@ -119,7 +127,7 @@ void shopHeader(const string& title)
             if(isFirst(player->getWeapons()[i]->getName() , player , i))
             {
                 int NUM = numberInInventory(player->getWeapons()[i]->getName() , player);
-                cout << player->getWeapons()[i]->getName() << "  x" << NUM << endl;
+                shopCenteredLine(player->getWeapons()[i]->getName() + "  x" + to_string(NUM));
             }
         }
         shopDivider();
@@ -141,15 +149,13 @@ void shopHeader(const string& title)
 		
 		for(int i = 0 ; i < availableWeapons.size() ; i++)
         {
-			cout<< i+1 << ". " << availableWeapons[i]->getName() << "   Price: " << availableWeapons[i]->getPrice()  << "   Damage: " << availableWeapons[i]->getDamagePerAttack() << "    NeededSTPA: " << availableWeapons[i]->getNeededStaminaPerAttack() << endl;
-            Sleep(10);
+            shopCenteredLine(to_string(i + 1) + ". " + availableWeapons[i]->getName() + " | Price: " + to_string(availableWeapons[i]->getPrice()) + " | Damage: " + to_string(availableWeapons[i]->getDamagePerAttack()) + " | Needed STPA: " + to_string(availableWeapons[i]->getNeededStaminaPerAttack()));
 		}
         shopHeader("Shop Usable Items");
 		
 		for(int i = 0 ; i < availableUseables.size() ; i++)
         {
-			cout << i+1 + availableWeapons.size() << ". " << availableUseables[i]->getName() << "    Price: " << availableUseables[i]->getPrice() << "     HealinPower: " << availableUseables[i]->getHealingPower() << "    Energy:" << availableUseables[i]->getEnergy() << endl;
-            Sleep(10);
+            shopCenteredLine(to_string(i + 1 + static_cast<int>(availableWeapons.size())) + ". " + availableUseables[i]->getName() + " | Price: " + to_string(availableUseables[i]->getPrice()) + " | Heal: " + to_string(availableUseables[i]->getHealingPower()) + " | Energy: " + to_string(availableUseables[i]->getEnergy()));
 		}
          shopDivider();
     }
@@ -172,14 +178,14 @@ void shopHeader(const string& title)
 			}
         	// prints("Here are the items you already have in your inventory: ");
             showDetailOfInventory(player);
-            cout << "Gold: " << player->getGold() <<" G"<< endl;
-            this_thread::sleep_for(chrono::seconds(3));
+            shopCenteredLine("Gold: " + to_string(player->getGold()) + " G");
+            this_thread::sleep_for(chrono::milliseconds(1200));
             printS("Available items in this shop:");
             ShowItems();
             
 
             shopDivider('-');
-            cout << "Select item number (0 to exit): ";
+            cout << shopCenteredText("Select item number (0 to exit): ");
             cin >> ChosenNumber;
             if(ChosenNumber <= availableWeapons.size() && ChosenNumber > 0)
             {
@@ -209,7 +215,7 @@ void shopHeader(const string& title)
 					else{
 						prints("Not enough gold to afford the item!");
 						rr--;
-						this_thread::sleep_for(chrono::seconds(2));
+						this_thread::sleep_for(chrono::milliseconds(900));
 						system("cls");
 						continue;
 					}
@@ -251,7 +257,7 @@ void shopHeader(const string& title)
 					else{
 						prints("Not enough gold to afford the item!");
 						rr--;
-						this_thread::sleep_for(chrono::seconds(2));
+						this_thread::sleep_for(chrono::milliseconds(900));
 						system("cls");
 						continue;
 					}
