@@ -8,7 +8,17 @@
 
 using namespace std;
 
+void shopDivider(char fill = '=', int width = 58)
+{
+    cout << string(width, fill) << endl;
+}
 
+void shopHeader(const string& title)
+{
+    shopDivider();
+    cout << " " << title << endl;
+    shopDivider();
+}
 
     //Functions for printing
         void printS(string s)
@@ -93,7 +103,7 @@ using namespace std;
 
     void Shop::showDetailOfInventory(MainCharacter* player)
     {
-        cout << "====================UsableItems======================" << endl;
+        shopHeader("Inventory: Usable Items");
         for(int i = 0 ; i < player->getUseableItems().size() ; i++)
         {
             if(isFirst(player->getUseableItems()[i]->getName() , player , i))
@@ -102,8 +112,8 @@ using namespace std;
                 cout << player->getUseableItems()[i]->getName() << "  x" << NUM << endl;
             }
         }
-        cout << "=====================================================" << endl;
-        cout << "=======================Weapons=======================" << endl;
+        shopDivider();
+        shopHeader("Inventory: Weapons");
         for(int i = 0 ; i < player->getWeapons().size() ; i++)
         {
             if(isFirst(player->getWeapons()[i]->getName() , player , i))
@@ -112,7 +122,8 @@ using namespace std;
                 cout << player->getWeapons()[i]->getName() << "  x" << NUM << endl;
             }
         }
-        cout << "=====================================================" << endl << endl;
+        shopDivider();
+        cout << endl;
     }
 
     void Shop::ShowItems()
@@ -126,23 +137,21 @@ using namespace std;
 //        cout << "5.Egg" << endl;
 //        cout << "6.Peace Herbal Tea" << endl;
 
-        prints("==========================================================");
-        printS("===================== Weapons ====================");
+        shopHeader("Shop Weapons");
 		
 		for(int i = 0 ; i < availableWeapons.size() ; i++)
         {
 			cout<< i+1 << ". " << availableWeapons[i]->getName() << "   Price: " << availableWeapons[i]->getPrice()  << "   Damage: " << availableWeapons[i]->getDamagePerAttack() << "    NeededSTPA: " << availableWeapons[i]->getNeededStaminaPerAttack() << endl;
             Sleep(10);
 		}
-        prints("==========================================================");
-        printS("===================== Useable Items ====================");
+        shopHeader("Shop Usable Items");
 		
 		for(int i = 0 ; i < availableUseables.size() ; i++)
         {
 			cout << i+1 + availableWeapons.size() << ". " << availableUseables[i]->getName() << "    Price: " << availableUseables[i]->getPrice() << "     HealinPower: " << availableUseables[i]->getHealingPower() << "    Energy:" << availableUseables[i]->getEnergy() << endl;
             Sleep(10);
 		}
-         prints("=========================================================");
+         shopDivider();
     }
 
    
@@ -163,13 +172,15 @@ using namespace std;
 			}
         	// prints("Here are the items you already have in your inventory: ");
             showDetailOfInventory(player);
-            cout << "Your Wealth is: " << player->getGold() <<" G"<< endl;
+            cout << "Gold: " << player->getGold() <<" G"<< endl;
             this_thread::sleep_for(chrono::seconds(3));
-            prints("And here are available items in this shop: ");
+            printS("Available items in this shop:");
             ShowItems();
             
 
-            prints("===Please enter the number of the Item you wanna buy(Enter zero if you'd like to exit this shop)===");            cin >> ChosenNumber;
+            shopDivider('-');
+            cout << "Select item number (0 to exit): ";
+            cin >> ChosenNumber;
             if(ChosenNumber <= availableWeapons.size() && ChosenNumber > 0)
             {
                 if(availableWeapons[ChosenNumber-1] != nullptr)
