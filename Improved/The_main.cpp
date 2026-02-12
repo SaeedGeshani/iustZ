@@ -7,6 +7,7 @@
 #include<cmath>
 #include<ctime>
 #include<stdlib.h>
+#include<limits>
 #include <thread>
 #include "Headers/Items.h"
 #include "Headers/Items.cpp"
@@ -64,6 +65,58 @@
 #include "Headers/RocketLauncher.cpp"
 
 using namespace std;
+
+namespace {
+    void clearScreen()
+    {
+        system("cls");
+    }
+
+    void printDivider(char fill = '=', int width = 62)
+    {
+        cout << string(width, fill) << endl;
+    }
+
+    void printTitle(const string& title)
+    {
+        printDivider('=');
+        cout << " " << title << endl;
+        printDivider('=');
+    }
+
+    int readChoice(const string& prompt, int minValue, int maxValue)
+    {
+        int value;
+        while (true)
+        {
+            cout << prompt;
+            if ((cin >> value) && value >= minValue && value <= maxValue)
+            {
+                return value;
+            }
+
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            prints("Invalid input. Please choose one of the available options.");
+        }
+    }
+
+    void showBattleStats(MainCharacter& warrior, Enemy* enemy)
+    {
+        cout << "Warrior HP: " << warrior.getHP() << "    Warrior ST: " << warrior.getStamina() << endl;
+        cout << "Enemy HP: " << enemy->getEnemyModel()->getHP() << "    Enemy ST: " << enemy->getEnemyModel()->getStamina() << endl;
+
+        if(enemy->getEnemyModel()->getName() == "Human")
+        {
+            cout << "Enemy DMPA: Depends on weapon" << endl;
+        }
+        else
+        {
+            cout << "Enemy DMPA: " << enemy->getEnemyModel()->getDamagePerAttack() << endl;
+        }
+        printDivider('-');
+    }
+}
 
 //Global Objects And Variables==============================
     static MainCharacter Warior;
@@ -314,14 +367,13 @@ Shop* randomShopGenerator(){
 void makingNewcharacter()
 {
 	string name;
-	int age;
 	string gender;
 
-	prints("===============Section of making your dreamy wariror===============");
+	printTitle("Character Creation");
     cout << endl;
     printS("Enter name of the Warior :");
 	getline(cin , name);
-	system("cls");
+	clearScreen();
 	
 	printS("Enter gender of the Warior:(male - female) ");
 	getline(cin , gender);
@@ -330,13 +382,12 @@ void makingNewcharacter()
         prints("Invalid Input try again: ");
 		getline(cin , gender);
 	}
-	system("cls");
+	clearScreen();
 
 	Warior.setName(name);	
 	Warior.setGender(gender);
     cout << endl;
-    prints("===============================================");
-    cout << endl;
+    printTitle("Story Intro");
     prints("The worlds are colliding...parallel realities and dimensions are merging into one,causing a disaster! monsters and evil forces from corrupt universes are invading our realm and wish to conquer it!Even some former allies are taking advantage of the current situation and have joined the dark side in order to take over our world! You and your few comrades are  the empire's last hope...The king needs you to defend the kingdom and save your people from these hellish creatures.    thankfully, you'll have access to different kinds of weapons from all universes which will ease your crusade.");
     printS("KING Summoned you");
     printS("===This gift is given to you by the king to buy your Weapons and continue:===");
@@ -345,30 +396,20 @@ void makingNewcharacter()
     cout << endl << endl;
     printS("Now you have 1000 G");
     Warior.setGold(1000);
-    this_thread::sleep_for(chrono::seconds(33));
-    system("cls");
+    this_thread::sleep_for(chrono::seconds(2));
+    clearScreen();
     
-    prints("================================================");
-	
-    printS("==========Here is the section where you should pick one glorious Permanent Weapon ==============");
-    cout << endl;
-    int ChosenWeapon;
-    do{
-        printS("==Now you should pick up a powerful permanent weapon which will be with you till the end of the war :==");
-	    printS("plese pick up one weapon: ");
-        cout << endl;
+    printTitle("Choose Your Permanent Weapon");
+    printS("Pick one weapon. It will be your core weapon for this run.");
+    cout << "1. Katana          (120 G)  Damage: 20  Needed ST: 15" << endl;
+    cout << "2. Blaster         (200 G)  Damage: 35  Needed ST: 10" << endl;
+    cout << "3. Kratos Blades   (150 G)  Damage: 25  Needed ST: 15" << endl;
+    cout << "4. MiniGun         (600 G)  Damage: 55  Needed ST: 30" << endl;
+    cout << "5. Mjolnir         (130 G)  Damage: 25  Needed ST: 20" << endl;
+    cout << "6. Rocket Launcher (1000 G) Damage: 75  Needed ST: 40" << endl;
+    printDivider('-');
 
-	    cout << "1.Katana" << endl << "2.Blaster" << endl<<"3.Kratos Blades"<<endl<<"4.MiniGun"<<endl<<"5.Mjiolnir"<<endl<<"6.Rocket Launcher"<<endl;
-
-        printS("Katana(120 G)(Damage : 20) (NeededStamina : 15)");
-        printS("Blaster(200 G) (Damage : 35) (Needed Stamina : 10)");
-        printS("Kratos Blades(150 G) (Damage : 25) (Needed Stamina : 15)");
-        printS("MiniGun(600 G) (Damage : 55) (Needed Stamina : 30)");
-        printS("Mjiolnir(130 G) (Damage : 25) (Needed Stamina : 20)");
-        printS("Rocket Launcher(1000 G) (Damage : 75) (Needed Stamina : 40)");
-
-	    
-	    cin >> ChosenWeapon;
+    int ChosenWeapon = readChoice("Select weapon [1-6]: ", 1, 6);
 
         if(ChosenWeapon == 1)
         {
@@ -412,16 +453,7 @@ void makingNewcharacter()
 
         }
 
-        else{
-        	
-            cout << "You entered an invalid number! So enter a valid input" << endl;
-			this_thread::sleep_for(chrono::seconds(3));
-        	system("cls");
-        }
-        
-	
-    }while(ChosenWeapon != 1 && ChosenWeapon != 2 && ChosenWeapon != 3 && ChosenWeapon != 4 && ChosenWeapon != 5 && ChosenWeapon != 6 );
-	system("cls");
+	clearScreen();
     prints("==============================================");
     cout << endl;
 
@@ -437,8 +469,8 @@ void makingNewcharacter()
     Warior.setHP(100);
     Warior.setStamina(100);
     Warior.setXP(0);
-    this_thread::sleep_for(chrono::seconds(7));
-    system("cls");
+    this_thread::sleep_for(chrono::seconds(2));
+    clearScreen();
     
 }
 
@@ -546,15 +578,18 @@ int main()
     int Difficulty;
     while(true)
     {
-        printS("Choose your game Difficulty : (1 , 2 , 3)");
-        cin >> Difficulty;
+        printTitle("Difficulty Selection");
+        cout << "1. Easy   (more shops, fewer battles)" << endl;
+        cout << "2. Normal" << endl;
+        cout << "3. Hard   (fewer shops, more battles)" << endl;
+        Difficulty = readChoice("Choose difficulty [1-3]: ", 1, 3);
         if(Difficulty == 1 || Difficulty == 2 || Difficulty == 3)
         {
-			system("cls");
+			clearScreen();
             break;
             
         }
-        system("cls");
+        clearScreen();
     }
     
 
@@ -589,9 +624,9 @@ int main()
 
                 while(true)
                 {
-                    system("cls");
-                    cout << "LEVEL" << Warior.getLevel() << endl;
-                    prints("================== Danger ===============");
+                    clearScreen();
+                    printTitle("Battle");
+                    cout << "LEVEL " << Warior.getLevel() << endl;
                     printS("Enemy is against you. What do you want to do?");
                     cout << "Enemy race: ";
                     if(enemy->getEnemyModel()->getName() == "Human")
@@ -603,21 +638,9 @@ int main()
                         cout << "Zombie" << endl;       
                     }
 
-                    cout << "1.Fight" << endl << "2.use Inventory" << endl;
-
-                    cout << "==Warior's HP: " << Warior.getHP() << "     ==Warior's ST: " << Warior.getStamina() << endl;
-                    cout << "==Enemy's HP: " << enemy->getEnemyModel()->getHP();
-                    if(enemy->getEnemyModel()->getName() == "Human")
-                    {
-                        cout << "         ==Enmey's DMPA: " << "Depending on Weapon";
-                    }
-                    else{
-
-                        cout << "         ==Enmey's DMPA: " << enemy->getEnemyModel()->getDamagePerAttack();
-                    }
-                    cout <<  "     ==Enemy's ST: " << enemy->getEnemyModel()->getStamina() << endl;
-                    int input;
-                    cin >> input;
+                    cout << "1. Fight" << endl << "2. Use Inventory" << endl;
+                    showBattleStats(Warior, enemy);
+                    int input = readChoice("Action [1-2]: ", 1, 2);
                 
 
                     if(input == 1)
@@ -625,10 +648,10 @@ int main()
                         
                         
                         while(true)
-                        {	system("cls");
+                        {	clearScreen();
                             printS("=========Choose a Weapon========= (0 = exit)");
                             Warior.showCharacterWeapons();
-                            cin >> input;
+                            input = readChoice("Choose weapon [0-" + to_string(Warior.getWeapons().size()) + "]: ", 0, Warior.getWeapons().size());
                             
                             
                             if(input <= Warior.getWeapons().size() && input >= 1)
@@ -637,8 +660,8 @@ int main()
                                 {
                                     Warior.Attack(enemy , Warior.getWeapons()[input-1]);
                                     enemy->getEnemyController()->Attack(&Warior);
-                                    this_thread::sleep_for(chrono::seconds(10));
-                                    system("cls");
+                                    this_thread::sleep_for(chrono::seconds(2));
+                                    clearScreen();
                                     break;
                                 }
 
@@ -657,10 +680,10 @@ int main()
                     {
                         while(true)
                         {	
-                        	system("cls");
+	                        clearScreen();
                             printS("=========Choose Item=========  (0 = exit) ");
                             Warior.showCharacterUsableItems();
-                            cin >> input;
+                            input = readChoice("Choose item [0-" + to_string(Warior.getUseableItems().size()) + "]: ", 0, Warior.getUseableItems().size());
 
                             if(input >= 1 && input <= Warior.getUseableItems().size())
                             {
@@ -682,14 +705,14 @@ int main()
 
             if(Warior.getHP() < 0 || !checkContinue())
             {
-            	system("cls");
+	            clearScreen();
                 prints("=============================");
                 cout << "         YOU ARE DEAD        " << endl;
                 prints("=============================");
             }
             else if(enemy->getEnemyModel()->getHP() < 0)
             {
-            	system("cls");
+	            clearScreen();
                 prints("===========================");
                 cout << "       ENEMY IS DEAD     " << endl;
                 prints("===========================");
@@ -697,7 +720,7 @@ int main()
                 Warior.setXP(Warior.getXP() + 100);
                 if(enemy->getEnemyModel()->getName() == "Human")
                 {
-                	system("cls");
+	                clearScreen();
                     cout << "==========================" << endl;
                     cout << "Inventory Of Enemy Looted" << endl;
                     cout << "==========================" << endl;
