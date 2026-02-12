@@ -371,30 +371,30 @@ void makingNewcharacter()
 
 	printTitle("Character Creation");
     cout << endl;
-    printS("Enter name of the Warior :");
+    printS("Enter your warrior name:");
 	getline(cin , name);
 	clearScreen();
 	
-	printS("Enter gender of the Warior:(male - female) ");
+	printS("Enter your warrior gender (male/female):");
 	getline(cin , gender);
 	while(gender != "male" && gender != "female")
 	{
-        prints("Invalid Input try again: ");
+        prints("Invalid input. Please type male or female:");
 		getline(cin , gender);
 	}
 	clearScreen();
 
 	Warior.setName(name);	
-	Warior.setGender(gender);
+    Warior.setGender(gender);
     cout << endl;
     printTitle("Story Intro");
-    prints("The worlds are colliding...parallel realities and dimensions are merging into one,causing a disaster! monsters and evil forces from corrupt universes are invading our realm and wish to conquer it!Even some former allies are taking advantage of the current situation and have joined the dark side in order to take over our world! You and your few comrades are  the empire's last hope...The king needs you to defend the kingdom and save your people from these hellish creatures.    thankfully, you'll have access to different kinds of weapons from all universes which will ease your crusade.");
-    printS("KING Summoned you");
-    printS("===This gift is given to you by the king to buy your Weapons and continue:===");
+    prints("The worlds are colliding. Parallel realities and dimensions are merging into one disaster. Monsters and corrupted warriors are invading the kingdom, and even former allies have betrayed us. You and your comrades are the final line of defense.");
+    printS("The king has summoned you.");
+    printS("He grants you a royal fund to buy your first weapon.");
     cout << endl;
-    printS("===== Here you are:" );
+    printS("Your starting gold:");
     cout << endl << endl;
-    printS("Now you have 1000 G");
+    printS("1000 G added to your inventory.");
     Warior.setGold(1000);
     this_thread::sleep_for(chrono::seconds(2));
     clearScreen();
@@ -457,9 +457,9 @@ void makingNewcharacter()
     prints("==============================================");
     cout << endl;
 
-    printS("========================== GIFT ===========================");
-    printS("===== Now we will give you somthing that you can heal yourself with and give your muscular body a litle bit of Energy.So take them and add them to your Inventory");
-    printS("The first one is WheyPowder which helps you get Stamina(by 30 ST) and heal your body(by 30 HP) you will have two :");
+    printS("===================== STARTER SUPPLY =====================");
+    printS("You receive two healing items to begin your journey.");
+    printS("Whey Protein: +30 ST and +30 HP (x2)");
     WheyProtein* ptr1WheyPowder = new WheyProtein(30 , 30   , "Whey Protein" , 75, 0);
     WheyProtein* ptr2WheyPowder = new WheyProtein(30 , 30   , "Whey Protein" , 75, 0);
     Warior.addUseableItems(ptr1WheyPowder);
@@ -574,6 +574,7 @@ bool randomShuffle ( int Difficulty , int Level ) {
 int main()
 {
     Enemy* enemy;
+    int enemyCounter = 0;
     makingNewcharacter();
     int Difficulty;
     while(true)
@@ -613,10 +614,12 @@ int main()
             if(Whichenemy == 0)
             {
                 enemy = Enemyhouse.makeZombie();
+                enemyCounter++;
             }
             else if(Whichenemy == 1) 
             {
                 enemy = Enemyhouse.makeHuman();
+                enemyCounter++;
             }
 
             while(Warior.getHP() > 0 && enemy->getEnemyModel()->getHP() > 0 && checkContinue())
@@ -627,7 +630,8 @@ int main()
                     clearScreen();
                     printTitle("Battle");
                     cout << "LEVEL " << Warior.getLevel() << endl;
-                    printS("Enemy is against you. What do you want to do?");
+                    cout << "Enemy No. " << enemyCounter << endl;
+                    printS("An enemy blocks your path. Choose your action:");
                     cout << "Enemy race: ";
                     if(enemy->getEnemyModel()->getName() == "Human")
                     {
