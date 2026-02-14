@@ -1,7 +1,5 @@
 #pragma once
 #include <string>
-#include "MainCharacter.h"
-#include "Weapon.h"
 #include "Items.h"
 
 using namespace std; 

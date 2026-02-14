@@ -2,10 +2,6 @@
 #include<string>
 #include<iostream>
 #include<vector>
-#include "Enemy.h"
-#include "Weapon.h"
-#include "ThrowableWeapon.h"
-#include "UseableItems.h"
 #include<cmath>
 
 using namespace std;

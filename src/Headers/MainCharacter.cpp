@@ -5,6 +5,9 @@
 #include "UseableItems.h"
 #include "Weapon.h"
 #include "Enemy.h"
+#include "ThrowableWeapon.h"
+#include <thread>
+#include <chrono>
 
 using namespace std;
 
