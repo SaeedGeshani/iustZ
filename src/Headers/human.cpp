@@ -1,12 +1,14 @@
 #include<string>
 #include<iostream>
 #include<vector>
-#include<windows.h>
 #include<iomanip>
 #include<algorithm>
 #include<cmath>
 #include<ctime>
 #include "human.h"
+#include "ThrowableWeapon.h"
+#include <thread>
+#include <chrono>
 #include<cstdlib>
 using namespace std;
 

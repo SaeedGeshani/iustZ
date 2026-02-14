@@ -18,11 +18,11 @@ public:
 
     Shop();
 
-    bool isFirst(string , MainCharacter* , int);
+    bool isFirst(const string& , MainCharacter* , int);
 
     void showDetailOfInventory(MainCharacter* player);
     
-    int numberInInventory(string , MainCharacter*);
+    int numberInInventory(const string& , MainCharacter*);
 
     void ShowItems();
 
@@ -32,9 +32,9 @@ public:
 
     vector<Weapon*> &getWeapon();
 
-    void setWeapon(vector<Weapon*> wep);
+    void setWeapon(const vector<Weapon*>& wep);
 
-    void setUsableItems(vector<UseableItems*> usa);
+    void setUsableItems(const vector<UseableItems*>& usa);
 
     
 

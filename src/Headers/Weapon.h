@@ -1,8 +1,6 @@
 #pragma once
 #include<vector>
 #include<string>
-#include "MainCharacter.h"
-#include "Enemy.h"
 #include "Items.h"
 using namespace std;
 

@@ -2,8 +2,8 @@
 #include<string>
 #include<iostream>
 #include<vector>
-#include "MainCharacter.h"
 #include "Weapon.h"
+#include "UseableItems.h"
 using namespace std;
     class EnemyView;
     class EnemyModel;
@@ -72,11 +72,11 @@ public:
     vector<Weapon*>EnemyWeapons;
     vector<UseableItems*>EnemyUseableItems;
     //Setter & Getters ==========================
-    virtual void setEnemyWeapons(vector<Weapon*>enemyweapon);
+    virtual void setEnemyWeapons(const vector<Weapon*>& enemyweapon);
 
     virtual vector<Weapon*> getEnemyWeapons();
 
-    virtual void setEnemyUseableItems(vector<UseableItems*>enemyuseableitems);
+    virtual void setEnemyUseableItems(const vector<UseableItems*>& enemyuseableitems);
 
     virtual vector<UseableItems*> getEnemyUseableItems();
 
@@ -88,7 +88,7 @@ public:
   
     int getLevel();
     
-    void setName(string name);
+    void setName(const string& name);
     
     string getName();
    
@@ -111,7 +111,7 @@ public:
     //=========================================
     //Constructor==============================
     EnemyModel();
-    EnemyModel(string name , int hp , int stamina , int damageperattack , int level , int neededstaminaperattack , int zarib);
+    EnemyModel(const string& name , int hp , int stamina , int damageperattack , int level , int neededstaminaperattack , int zarib);
     
 };
 class Enemy{
@@ -139,4 +139,3 @@ public:
     Enemy(EnemyModel* enemymodel , EnemyView* enemyview , EnemyController* enemycontroller);
    
 };
-
