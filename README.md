@@ -2,60 +2,87 @@
 
 IUSTZ Ranking Core is a C++ text-based RPG focused on turn-based combat, inventory strategy, and character progression.
 
-## Why this repository is structured this way
-
-This repo was cleaned to separate the **active game source** from **legacy snapshots** and **documentation assets**.
-
 ## Repository layout
 
 ```text
 .
 ├── src/                  # Active playable codebase
-│   ├── Headers/
-│   ├── data/
-│   └── The_main.cpp
-├── archive/              # Legacy/experimental snapshots kept for reference
-│   ├── APfirstproject/
-│   ├── Improved/
-│   └── experiments/
-├── docs/
-│   └── reports/          # PDF reports and project docs
-├── .gitignore
-├── CONTRIBUTING.md
-├── LICENSE
+│   ├── Headers/          # Gameplay classes and UI helpers
+│   ├── SaveSystem.*      # JSON save/load implementation
+│   ├── data/             # Legacy text data still used by older flows
+│   └── The_main.cpp      # Game entrypoint
+├── external/             # Third-party headers (nlohmann/json)
+├── archive/              # Legacy/experimental snapshots
+├── docs/                 # Reports and project docs
+├── CMakeLists.txt
 └── README.md
 ```
 
 ## Features
 
-- Single-player and local multiplayer mode.
-- Character create/load flow with persisted save data.
-- Enemy encounters, shop events, and progression loop.
-- Weapon/item classes with stamina and HP mechanics.
+- Single-player and local multiplayer game loop.
+- Turn-based combat with stamina, damage, XP, and level progression.
+- Shop and inventory systems (weapons + usable items).
+- Slot-based save/load using validated JSON save files.
 
 ## Build and run
 
-> Current game code uses `windows.h`, so native compilation is intended for Windows (MSYS2/MinGW or Visual Studio environments).
+> The game depends on `windows.h`, so native builds are intended for Windows environments (Visual Studio or MinGW).
 
-### g++ (MinGW)
+### CMake (recommended)
 
 ```bash
-g++ -std=c++17 -O2 -o The_main.exe src/The_main.cpp
-./The_main.exe
+cmake -S . -B build
+cmake --build build
+./build/iustz_game
 ```
 
-## Save files
+### g++ (single command, MinGW)
 
-Runtime save data is stored in:
+```bash
+g++ -std=c++17 -O2 -Iexternal -Isrc -Isrc/Headers src/*.cpp -o iustz_game.exe
+./iustz_game.exe
+```
 
-- `src/data/users.txt`
-- `src/data/*.txt`
+## Save and load system (updated)
+
+The game now stores saves in **JSON slot files** instead of the old `src/data/<name>.txt` character files.
+
+### Save location
+
+- Directory: `saves/`
+- One file per slot: `saves/<slotName>.json`
+
+The save directory is created automatically when saving for the first time.
+
+### Save format
+
+Each save contains:
+
+- `version` (currently `1`)
+- `player` object: `name`, `gender`, `hp`, `xp`, `lvl`, `coins`, `dm`, `stamina`, `kills`
+- `inventory` object:
+  - `weapons`: array of weapon names
+  - `items`: array of usable-item names
+- `equippedWeapon`: equipped weapon name
+
+### Load behavior
+
+- The load menu lists all `*.json` files in `saves/`.
+- Files are validated before loading.
+- Corrupt files, unsupported versions, or missing required fields are rejected with an error message.
+- Unknown inventory entries are skipped when reconstructing runtime objects.
+
+### Important compatibility note
+
+- Old text save files in `src/data/` are **not** used by the new slot-based JSON loader.
+- Existing JSON save files must match `version: 1`.
 
 ## Development notes
 
-- Work on `src/` for current gameplay changes.
-- Keep `archive/` untouched unless you are intentionally curating historical versions.
-- See `CONTRIBUTING.md` for contribution standards.
+- Make gameplay changes in `src/`.
+- Keep `archive/` unchanged unless intentionally curating historical snapshots.
+- See `CONTRIBUTING.md` for contribution guidelines.
 
 ## License
 
