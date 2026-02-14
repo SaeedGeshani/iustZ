@@ -2,10 +2,6 @@
 #include<string>
 #include<iostream>
 #include<vector>
-#include "Enemy.h"
-#include "Weapon.h"
-#include "ThrowableWeapon.h"
-#include "UseableItems.h"
 #include<cmath>
 
 using namespace std;
@@ -36,7 +32,7 @@ public:
    
     int getGold();
 
-    void setName(string name);
+    void setName(const string& name);
   
     string getName();
     
@@ -52,7 +48,7 @@ public:
    
     int getXP();
     
-    void setGender(string gender);
+    void setGender(const string& gender);
    
     string getGender();
     
@@ -80,13 +76,13 @@ public:
     //Attack func==========================
     void Attack(Enemy* enemy, Weapon* weapon);
 
-    void getEnemyWeapons(vector<Weapon*> enemyweps);
+    void getEnemyWeapons(const vector<Weapon*>& enemyweps);
 
-    void getEnemyUseableItems(vector<UseableItems*> enemyuseableitems);
+    void getEnemyUseableItems(const vector<UseableItems*>& enemyuseableitems);
 
     //Constructors=========================
     MainCharacter();
-    MainCharacter(string name , int hp , int xp , int stamina , string gender , int gold);
+    MainCharacter(const string& name , int hp , int xp , int stamina , const string& gender , int gold);
     
     //=====================================
 };

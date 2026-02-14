@@ -1,17 +1,62 @@
-# IUSTZ-RankingCore-
-Hi there!
+# IUSTZ Ranking Core
 
-You are about to experience a horrifying apocalypse in which you serve as your world's savior.
-IUSTZ is basically a text-based RPG and the instructions are as follows:
+IUSTZ Ranking Core is a C++ text-based RPG focused on turn-based combat, inventory strategy, and character progression.
 
-1.First you get to choose how many characters you'd like to play as. (the section where you choose whether you want to play solo or with your friends.)
+## Why this repository is structured this way
 
-2.Then you are provided with two options : 1.to create a new warrior of your own / 2.to pick one of the existing characters in the save file. If you choose option 1, you'll be asked to set a name and a gender for your custom warrior. But in case of option 2, you should type in the name of the character on the list which you'd like to pick.
+This repo was cleaned to separate the **active game source** from **legacy snapshots** and **documentation assets**.
 
-3.You'll get 1000 G for starters and then you should purchase a permanent weapon which you'll carry for the rest of the game (that doesn't mean you can't add other permanent weapons to your inventory!). You will also be granted two whey powders at the begining of the game so you won't be empty handed.
+## Repository layout
 
-4.Afterwards, you set a difficulty before getting started.
+```text
+.
+├── src/                  # Active playable codebase
+│   ├── Headers/
+│   ├── data/
+│   └── The_main.cpp
+├── archive/              # Legacy/experimental snapshots kept for reference
+│   ├── APfirstproject/
+│   ├── Improved/
+│   └── experiments/
+├── docs/
+│   └── reports/          # PDF reports and project docs
+├── .gitignore
+├── CONTRIBUTING.md
+├── LICENSE
+└── README.md
+```
 
-5.Now the actual game begins. You'll eighter encounter an enemy or find a shop on your way; in case of enemy, you have the option to attack the enemy or use the items in your inventory first (you get to use your inventory before attacking for as many times as you want). In case of shop, you can buy items from random stores you enter as long as you can afford them.
+## Features
 
-(In multiplayer mode, you do everything side by side with your comrade through taking turns (that includes shopping, fighting, making characters and etc...))
+- Single-player and local multiplayer mode.
+- Character create/load flow with persisted save data.
+- Enemy encounters, shop events, and progression loop.
+- Weapon/item classes with stamina and HP mechanics.
+
+## Build and run
+
+> Current game code uses `windows.h`, so native compilation is intended for Windows (MSYS2/MinGW or Visual Studio environments).
+
+### g++ (MinGW)
+
+```bash
+g++ -std=c++17 -O2 -o The_main.exe src/The_main.cpp
+./The_main.exe
+```
+
+## Save files
+
+Runtime save data is stored in:
+
+- `src/data/users.txt`
+- `src/data/*.txt`
+
+## Development notes
+
+- Work on `src/` for current gameplay changes.
+- Keep `archive/` untouched unless you are intentionally curating historical versions.
+- See `CONTRIBUTING.md` for contribution standards.
+
+## License
+
+MIT License. See [LICENSE](LICENSE).

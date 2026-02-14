@@ -1,45 +1,26 @@
 #include<string>
-#include<windows.h>
 #include "MainCharacter.h"
 #include "Weapon.h"
 #include "Shop.h"
 #include <vector>
 #include <thread>
+#include "ConsoleUI.h"
 
 using namespace std;
 
-void shopDivider(char fill = '=', int width = 58)
-{
-    cout << string(width, fill) << endl;
-}
 
-void shopHeader(const string& title)
-{
-    shopDivider();
-    cout << " " << title << endl;
-    shopDivider();
-}
-
-    //Functions for printing
-        void printS(string s)
+namespace {
+//Functions for printing
+        void printS(const string& s)
         {
-            for(int i = 0 ; i < s.size() ; i++)
-            {
-                cout << s[i];
-                Sleep(7);
-            }
-            cout << endl << endl;
+            ui::centeredLine(s);
         }
-        void prints(string s)
+        void prints(const string& s)
         {
-            for(int i = 0 ; i < s.size() ; i++)
-            {
-                cout << s[i];
-                Sleep(7);
-            }
-            cout << endl << endl;
+            ui::centeredLine(s);
         }
     //=======================
+}
 
     Shop::Shop() = default;
     //Setter & Getters=================
@@ -52,7 +33,7 @@ void shopHeader(const string& title)
         return availableWeapons;
     }
 
-    bool Shop::isFirst(string name , MainCharacter* player , int place)
+    bool Shop::isFirst(const string& name , MainCharacter* player , int place)
     {
         if(place < player->getUseableItems().size())
         {
@@ -80,7 +61,7 @@ void shopHeader(const string& title)
     }
     
   
-    int Shop::numberInInventory(string name , MainCharacter* player)
+    int Shop::numberInInventory(const string& name , MainCharacter* player)
     {
         int counter = 0;
         for(int i = 0 ; i < player->getUseableItems().size() ; i++)
@@ -103,26 +84,26 @@ void shopHeader(const string& title)
 
     void Shop::showDetailOfInventory(MainCharacter* player)
     {
-        shopHeader("Inventory: Usable Items");
+        ui::drawHeader("Inventory: Usable Items");
         for(int i = 0 ; i < player->getUseableItems().size() ; i++)
         {
             if(isFirst(player->getUseableItems()[i]->getName() , player , i))
             {
                 int NUM = numberInInventory(player->getUseableItems()[i]->getName() , player);
-                cout << player->getUseableItems()[i]->getName() << "  x" << NUM << endl;
+                ui::centeredLine(player->getUseableItems()[i]->getName() + "  x" + to_string(NUM));
             }
         }
-        shopDivider();
-        shopHeader("Inventory: Weapons");
+        ui::drawDivider();
+        ui::drawHeader("Inventory: Weapons");
         for(int i = 0 ; i < player->getWeapons().size() ; i++)
         {
             if(isFirst(player->getWeapons()[i]->getName() , player , i))
             {
                 int NUM = numberInInventory(player->getWeapons()[i]->getName() , player);
-                cout << player->getWeapons()[i]->getName() << "  x" << NUM << endl;
+                ui::centeredLine(player->getWeapons()[i]->getName() + "  x" + to_string(NUM));
             }
         }
-        shopDivider();
+        ui::drawDivider();
         cout << endl;
     }
 
@@ -137,21 +118,19 @@ void shopHeader(const string& title)
 //        cout << "5.Egg" << endl;
 //        cout << "6.Peace Herbal Tea" << endl;
 
-        shopHeader("Shop Weapons");
+        ui::drawHeader("Shop Weapons");
 		
 		for(int i = 0 ; i < availableWeapons.size() ; i++)
         {
-			cout<< i+1 << ". " << availableWeapons[i]->getName() << "   Price: " << availableWeapons[i]->getPrice()  << "   Damage: " << availableWeapons[i]->getDamagePerAttack() << "    NeededSTPA: " << availableWeapons[i]->getNeededStaminaPerAttack() << endl;
-            Sleep(10);
+            ui::centeredLine(to_string(i + 1) + ". " + availableWeapons[i]->getName() + " | Price: " + to_string(availableWeapons[i]->getPrice()) + " | Damage: " + to_string(availableWeapons[i]->getDamagePerAttack()) + " | Needed STPA: " + to_string(availableWeapons[i]->getNeededStaminaPerAttack()));
 		}
-        shopHeader("Shop Usable Items");
+        ui::drawHeader("Shop Usable Items");
 		
 		for(int i = 0 ; i < availableUseables.size() ; i++)
         {
-			cout << i+1 + availableWeapons.size() << ". " << availableUseables[i]->getName() << "    Price: " << availableUseables[i]->getPrice() << "     HealinPower: " << availableUseables[i]->getHealingPower() << "    Energy:" << availableUseables[i]->getEnergy() << endl;
-            Sleep(10);
+            ui::centeredLine(to_string(i + 1 + static_cast<int>(availableWeapons.size())) + ". " + availableUseables[i]->getName() + " | Price: " + to_string(availableUseables[i]->getPrice()) + " | Heal: " + to_string(availableUseables[i]->getHealingPower()) + " | Energy: " + to_string(availableUseables[i]->getEnergy()));
 		}
-         shopDivider();
+         ui::drawDivider();
     }
 
    
@@ -172,15 +151,14 @@ void shopHeader(const string& title)
 			}
         	// prints("Here are the items you already have in your inventory: ");
             showDetailOfInventory(player);
-            cout << "Gold: " << player->getGold() <<" G"<< endl;
-            this_thread::sleep_for(chrono::seconds(3));
+            ui::centeredLine("Gold: " + to_string(player->getGold()) + " G");
+            this_thread::sleep_for(chrono::milliseconds(1200));
             printS("Available items in this shop:");
             ShowItems();
             
 
-            shopDivider('-');
-            cout << "Select item number (0 to exit): ";
-            cin >> ChosenNumber;
+            ui::drawFooter("Select an item number (0 to exit)");
+            ChosenNumber = ui::readIntInRange(ui::centeredText("> "), 0, static_cast<int>(availableWeapons.size() + availableUseables.size()));
             if(ChosenNumber <= availableWeapons.size() && ChosenNumber > 0)
             {
                 if(availableWeapons[ChosenNumber-1] != nullptr)
@@ -203,14 +181,14 @@ void shopHeader(const string& title)
                         }
                     	player->addWeapon(availableWeapons[ChosenNumber-1]);
                     	player->setGold(player->getGold() - availableWeapons[ChosenNumber-1]->getPrice());
-                    	system("cls");
+                    	ui::clearScreen();
                     	
 					}
 					else{
 						prints("Not enough gold to afford the item!");
 						rr--;
-						this_thread::sleep_for(chrono::seconds(2));
-						system("cls");
+						this_thread::sleep_for(chrono::milliseconds(900));
+						ui::clearScreen();
 						continue;
 					}
                     
@@ -246,13 +224,13 @@ void shopHeader(const string& title)
                 	if(player->getGold() >= availableUseables[ChosenNumber-1-availableWeapons.size()]->getPrice()){
                 		player->addUseableItems(availableUseables[ChosenNumber-1-availableWeapons.size()]);
                     	player->setGold(player->getGold() - availableUseables[ChosenNumber-1-availableWeapons.size()]->getPrice());
-                    	system("cls");
+                    	ui::clearScreen();
 					}
 					else{
 						prints("Not enough gold to afford the item!");
 						rr--;
-						this_thread::sleep_for(chrono::seconds(2));
-						system("cls");
+						this_thread::sleep_for(chrono::milliseconds(900));
+						ui::clearScreen();
 						continue;
 					}
                     
@@ -280,7 +258,7 @@ void shopHeader(const string& title)
                 return;
 			}
 			else if(ChosenNumber==0){
-				system("cls");
+				ui::clearScreen();
                 return;
                 
 			}
@@ -289,12 +267,12 @@ void shopHeader(const string& title)
 
     }
 
-    void Shop::setWeapon(vector<Weapon*> wep)
+    void Shop::setWeapon(const vector<Weapon*>& wep)
     {
         availableWeapons = wep;
     }
 
-    void Shop::setUsableItems(vector<UseableItems*> usa)
+    void Shop::setUsableItems(const vector<UseableItems*>& usa)
     {
        availableUseables = usa; 
     }

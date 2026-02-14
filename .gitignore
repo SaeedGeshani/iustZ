@@ -1,0 +1,50 @@
+# ---- Compiled binaries / objects ----
+*.exe
+*.out
+*.app
+*.dll
+*.so
+*.dylib
+*.o
+*.obj
+*.a
+*.lib
+*.class
+
+# ---- Build folders ----
+build/
+dist/
+out/
+cmake-build-*/
+
+# ---- CMake / Make ----
+CMakeCache.txt
+CMakeFiles/
+Makefile
+compile_commands.json
+
+# ---- Visual Studio / VS Code / JetBrains ----
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+
+# ---- Editor / OS junk ----
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ---- Runtime / logs ----
+*.log
+*.tmp
+
+# ---- Optional local game state ----
+# Uncomment if you do not want local save progress tracked.
+# src/data/*.txt
