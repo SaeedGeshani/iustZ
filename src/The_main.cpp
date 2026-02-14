@@ -5,11 +5,15 @@
 #include<cmath>
 #include<ctime>
 #include<fstream>
+#include<filesystem>
+#include<limits>
+#include<memory>
 #include<stdlib.h>
 #include <thread>
 #include <random>
 #include <algorithm>
 #include <random>
+#include "SaveSystem.h"
 #include "Headers/ConsoleUI.h"
 #include "Headers/Items.h"
 #include "Headers/Items.h"
@@ -65,9 +69,9 @@
 #include "Headers/MiniGun.h"
 #include "Headers/RocketLauncher.h"
 #include "Headers/RocketLauncher.h"
+#include "Headers/InventoryFactory.h"
 
 using namespace std;
-void userSave (const string& name, const string& gender, int hp, int xp, int gold, int stamina, int level, int kills, int weaponsNum, int usablesNum, const vector<Weapon*>& weapons, const vector<UseableItems*>& usable);
 ifstream userList ("data/users.txt");
 
 const int NORMAL_PAUSE_MS = 1200;
@@ -104,6 +108,56 @@ void prints(const string& s)
     cout << s << endl << endl;
 }
 
+GameState BuildGameStateFromWarrior(MainCharacter* warrior)
+{
+    GameState state;
+    state.playerName = warrior->getName();
+    state.gender = warrior->getGender();
+    state.hp = warrior->getHP();
+    state.xp = warrior->getXP();
+    state.lvl = warrior->getLevel();
+    state.coins = warrior->getGold();
+    state.stamina = warrior->getStamina();
+    state.kills = warrior->getKills();
+
+    const vector<Weapon*>& weapons = warrior->getWeapons();
+    for (Weapon* weapon : weapons)
+    {
+        state.weaponsOwnedNames.push_back(weapon->getName());
+    }
+    if (!state.weaponsOwnedNames.empty())
+    {
+        state.equippedWeapon = state.weaponsOwnedNames.front();
+        state.dm = weapons.front()->getDamagePerAttack();
+    }
+
+    const vector<UseableItems*>& items = warrior->getUseableItems();
+    for (UseableItems* item : items)
+    {
+        state.usableItemsOwnedNames.push_back(item->getName());
+    }
+
+    return state;
+}
+
+bool SaveWarriorToSlot(MainCharacter* warrior, const string& slotName)
+{
+    string err;
+    const GameState state = BuildGameStateFromWarrior(warrior);
+    if (!SaveGame(state, slotName, &err))
+    {
+        ui::drawHeader("Save Failed");
+        ui::centeredLine("Could not save game for: " + warrior->getName());
+        ui::centeredLine(err);
+        ui::drawFooter("Press enter to continue");
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return false;
+    }
+
+    ui::centeredLine("Game saved to slot: " + slotName);
+    return true;
+}
+
 //Global Objects And Variables==============================
     // static MainCharacter Warior;
     Shop* Store;
@@ -111,21 +165,163 @@ void prints(const string& s)
 
     int numberOfCharacters;
     static vector<MainCharacter*>Wariors;
-    int findEnemyLevel()
+
+vector<string> ListSaveSlots()
+{
+    vector<string> slots;
+    std::error_code ec;
+    const std::filesystem::path saveDir("saves");
+    if (!std::filesystem::exists(saveDir, ec) || ec)
     {
+        return slots;
+    }
+
+    for (const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(saveDir, ec))
+    {
+        if (ec)
+        {
+            break;
+        }
+
+        if (!entry.is_regular_file())
+        {
+            continue;
+        }
+
+        const std::filesystem::path path = entry.path();
+        if (path.extension() == ".json")
+        {
+            slots.push_back(path.stem().string());
+        }
+    }
+
+    sort(slots.begin(), slots.end());
+    return slots;
+}
+
+bool LoadWarriorFromSlot(const string& slotName)
+{
+    GameState loadedState;
+    string err;
+    if (!LoadGame(loadedState, slotName, &err))
+    {
+        ui::drawHeader("Load Failed");
+        ui::centeredLine(err);
+        ui::drawFooter("Press enter to continue");
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return false;
+    }
+
+    MainCharacter* loadedWarrior = new MainCharacter(
+        loadedState.playerName,
+        loadedState.hp,
+        loadedState.xp,
+        loadedState.stamina,
+        loadedState.gender,
+        loadedState.coins);
+
+    loadedWarrior->setLevel(loadedState.lvl);
+    loadedWarrior->setHP(loadedState.hp);
+    loadedWarrior->setXP(loadedState.xp);
+    loadedWarrior->setStamina(loadedState.stamina);
+    loadedWarrior->setKills(loadedState.kills);
+
+    for (const string& weaponName : loadedState.weaponsOwnedNames)
+    {
+        std::unique_ptr<Weapon> weapon = CreateWeaponByName(weaponName);
+        if (!weapon)
+        {
+            cout << "Unknown weapon in save: " << weaponName << endl;
+            continue;
+        }
+        loadedWarrior->addWeapon(weapon.release());
+    }
+
+    for (const string& itemName : loadedState.usableItemsOwnedNames)
+    {
+        std::unique_ptr<UseableItems> item = CreateItemByName(itemName);
+        if (!item)
+        {
+            cout << "Unknown item in save: " << itemName << endl;
+            continue;
+        }
+        loadedWarrior->addUseableItems(item.release());
+    }
+
+    if (!loadedState.equippedWeapon.empty())
+    {
+        vector<Weapon*>& weapons = loadedWarrior->getWeapons();
+        auto equippedIt = find_if(weapons.begin(), weapons.end(),
+                                  [&](Weapon* weapon) { return weapon->getName() == loadedState.equippedWeapon; });
+
+        if (equippedIt == weapons.end())
+        {
+            std::unique_ptr<Weapon> equippedWeapon = CreateWeaponByName(loadedState.equippedWeapon);
+            if (!equippedWeapon)
+            {
+                cout << "Unknown weapon in save: " << loadedState.equippedWeapon << endl;
+            }
+            else
+            {
+                weapons.insert(weapons.begin(), equippedWeapon.release());
+            }
+        }
+        else if (equippedIt != weapons.begin())
+        {
+            iter_swap(weapons.begin(), equippedIt);
+        }
+    }
+
+    Wariors.push_back(loadedWarrior);
+    numberOfCharacters = 1;
+    ZZAARRIIBB = 1;
+
+    ui::drawHeader("Load Complete");
+    ui::centeredLine("Loaded slot: " + slotName);
+    ui::centeredLine("Player: " + loadedWarrior->getName());
+    ui::drawFooter("Press enter to continue");
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    return true;
+}
+
+bool ShowLoadGameMenu()
+{
+    const vector<string> slots = ListSaveSlots();
+    if (slots.empty())
+    {
+        ui::drawHeader("Load Game");
+        ui::centeredLine("Save not found");
+        ui::drawFooter("Press enter to continue");
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return false;
+    }
+
+    ui::drawHeader("Load Game");
+    for (std::size_t i = 0; i < slots.size(); ++i)
+    {
+        ui::centeredLine(to_string(i + 1) + ") " + slots[i]);
+    }
+    ui::drawFooter("Select a slot");
+
+    int choice = ui::readIntInRange(ui::centeredText("Slot [1-" + to_string(slots.size()) + "]: "), 1, static_cast<int>(slots.size()));
+    return LoadWarriorFromSlot(slots[static_cast<std::size_t>(choice - 1)]);
+}
+
+int findEnemyLevel()
+{
     int maxLVL;
     maxLVL = 1;
     int placeOfMaximum = 0;
-        for(int i = 0 ; i < Wariors.size() ; i++)
+    for(int i = 0 ; i < Wariors.size() ; i++)
+    {
+        if(Wariors[i]->getLevel() > maxLVL)
         {
-            if(Wariors[i]->getLevel() > maxLVL)
-            {
-                maxLVL = Wariors[i]->getLevel();
-                placeOfMaximum = i;
-            }
+            maxLVL = Wariors[i]->getLevel();
+            placeOfMaximum = i;
         }
-        return placeOfMaximum;
     }
+    return placeOfMaximum;
+}
 
 //==========================================================
 //=====Function for cout slowly=============================
@@ -656,7 +852,7 @@ void makingSomeNewCharacter()
             newWarior->addUseableItems(ptr2WheyPowder);
             pauseForReadability(900);
             ui::clearScreen();
-            userSave (newWarior->getName(), newWarior->getGender(), newWarior->getHP(), newWarior->getXP(), newWarior->getGold(), newWarior->getStamina(), newWarior->getLevel(), newWarior->getKills(), newWarior->getWeapons().size(), newWarior->getUseableItems().size() , newWarior->getWeapons(), newWarior->getUseableItems());
+            SaveWarriorToSlot(newWarior, newWarior->getName());
             Wariors.push_back(newWarior);
 
            break;
@@ -801,8 +997,29 @@ int main()
       // this_thread::sleep_for(chrono::seconds(33));
     ui::clearScreen();
     Enemy* enemy;
-    // makingNewcharacter();
-    makingSomeNewCharacter();
+
+    ui::drawHeader("Main Menu");
+    ui::centeredLine("1) New Game");
+    ui::centeredLine("2) Load Game");
+    ui::drawFooter("Choose option [1-2]");
+    int mainMenuChoice = ui::readIntInRange(ui::centeredText("> "), 1, 2);
+    ui::clearScreen();
+
+    if (mainMenuChoice == 2)
+    {
+        if (!ShowLoadGameMenu())
+        {
+            ui::drawHeader("Fallback to New Game");
+            ui::centeredLine("Starting a new game setup.");
+            ui::drawFooter("Press enter to continue");
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            makingSomeNewCharacter();
+        }
+    }
+    else
+    {
+        makingSomeNewCharacter();
+    }
 
     EnemyFactory Enemyhouse(Wariors[findEnemyLevel()] , ZZAARRIIBB);
     ui::drawHeader("Difficulty Selection");
@@ -883,10 +1100,11 @@ int main()
                         ui::centeredLine("Facing Enemy #" + to_string(enemyCount));
                         ui::centeredLine("1) Fight");
                         ui::centeredLine("2) Use inventory");
+                        ui::centeredLine("3) Save game");
                         uiBattleStatus(Wariors[i], enemy);
                         ui::drawFooter("Choose action");
 
-                        int input = ui::readIntInRange(ui::centeredText("Your choice [1-2]: "), 1, 2);
+                        int input = ui::readIntInRange(ui::centeredText("Your choice [1-3]: "), 1, 3);
 
                         if(input == 1)
                         {
@@ -992,6 +1210,11 @@ int main()
                                     break;
                                 }
                             }
+                        }
+                        else if (input == 3)
+                        {
+                            SaveWarriorToSlot(Wariors[i], Wariors[i]->getName());
+                            continue;
                         }
 
                     }
@@ -1127,12 +1350,4 @@ int CalculateHPForZombie(int level)
     int HP;
     HP = static_cast<int>(pow(level , 4.0 / 3.0) * 20 + 50);
     return HP;
-}
-void userSave (const string& name, const string& gender, int hp, int xp, int gold, int stamina, int level, int kills, int weaponsNum, int usablesNum, const vector<Weapon*>& weapons, const vector<UseableItems*>& usable) {
-    ofstream save ("data/" + name + ".txt");
-    save << name << endl << gender << endl<< hp << endl << xp << endl << gold << endl << stamina << endl << level << endl << kills << endl << weaponsNum << endl << usablesNum << endl;
-    for (int i = 0; i < weapons.size(); i++)
-        save << weapons[i]->getName() << endl;
-    for (int i = 0; i < usable.size(); i++)
-        save << usable[i]->getName() << endl;
 }

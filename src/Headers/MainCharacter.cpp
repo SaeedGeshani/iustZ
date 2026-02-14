@@ -280,5 +280,20 @@ using namespace std;
         Gold = gold;
         XP = xp;
     }
+
+    MainCharacter::~MainCharacter()
+    {
+        for (Weapon* weapon : weapons)
+        {
+            delete weapon;
+        }
+        weapons.clear();
+
+        for (UseableItems* item : useAbleItems)
+        {
+            delete item;
+        }
+        useAbleItems.clear();
+    }
     
    
