@@ -47,7 +47,7 @@ using namespace std;
         return Zarib;
     }
 
-    void EnemyModel::setEnemyWeapons(vector<Weapon*> enemyweapon)
+    void EnemyModel::setEnemyWeapons(const vector<Weapon*>& enemyweapon)
     {
         EnemyWeapons = enemyweapon;
     }
@@ -57,7 +57,7 @@ using namespace std;
         return EnemyWeapons;
     }
 
-    void EnemyModel::setEnemyUseableItems(vector<UseableItems*> enemyuseableitem)
+    void EnemyModel::setEnemyUseableItems(const vector<UseableItems*>& enemyuseableitem)
     {
         EnemyUseableItems = enemyuseableitem;
     }
@@ -89,7 +89,7 @@ using namespace std;
     {
         return Level;
     }
-    void EnemyModel::setName(std::string name)
+    void EnemyModel::setName(const std::string& name)
     {
         Name = name;
     }
@@ -126,7 +126,7 @@ using namespace std;
     //=========================================
     //Constructor==============================
     EnemyModel::EnemyModel() = default;
-    EnemyModel::EnemyModel(string name , int hp , int stamina , int damageperattack , int level , int neededstaminaperattack , int zarib)
+    EnemyModel::EnemyModel(const string& name , int hp , int stamina , int damageperattack , int level , int neededstaminaperattack , int zarib)
     {
         Name = name;
         HP = hp;

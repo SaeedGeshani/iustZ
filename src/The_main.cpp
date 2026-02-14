@@ -64,7 +64,7 @@
 #include "Headers/RocketLauncher.h"
 
 using namespace std;
-void userSave (string name, string gender, int hp, int xp, int gold, int stamina, int level, int kills, int weaponsNum, int usablesNum, vector<Weapon*> weapons, vector<UseableItems*> usable);
+void userSave (const string& name, const string& gender, int hp, int xp, int gold, int stamina, int level, int kills, int weaponsNum, int usablesNum, const vector<Weapon*>& weapons, const vector<UseableItems*>& usable);
 ifstream userList ("data/users.txt");
 
 const int UI_WIDTH = 92;
@@ -236,151 +236,21 @@ Shop* randomShopGenerator(){
     Spear* m = nullptr;
     XPpotion* n = nullptr;
 
-
-
-    while(true)
-    {
-        randomStore = new Shop;
-        if(randomStore != nullptr)
-        {
-            break;
-        }
-    }
-    while(true)
-    {
-        a = new Batarang(20 , 5 , "Batrang" , 50);
-        if(a != nullptr)
-        {
-            break;
-        }
-        delete a;
-    }
-
-    while(true)
-    {
-        b = new Blaster(35 , 10 , "Blaster" , 200);
-        if(b != nullptr)
-        {
-            break;
-        }
-        delete b;
-    }
-
-    while(true)
-    {
-        c = new Katana(20 , 15 , "Katana" , 120);
-        if(c != nullptr)
-        {
-            break;
-        }
-        delete c;
-    }
-
-
-    while(true)
-    {
-        d = new grenade(75 , 50 , "Grenade" , 150);
-        if(d != nullptr)
-        {
-            break;
-        }
-        delete d;
-    }
-
-    while(true)
-    {
-        e = new Egg(10 , 30 , "Egg" , 50 , 0);
-        if(e != nullptr)
-        {
-            break;
-        }
-        delete e;
-    }
-
-    while(true)
-    {
-        f = new WheyProtein(30 , 30 , "Whey Protein" , 75 , 0);
-        if(f != nullptr)
-        {
-            break;
-        }
-        delete f;
-    }
-    while(true)
-    {
-        g = new KratosBlades(25 , 15 , "Kratos Blades" , 150 );
-        if(g != nullptr)
-        {
-            break;
-        }
-        delete g;
-    }
-    while(true)
-    {
-        h = new EnergyDrink(60 , 0 , "Energy Drink" , 75 , 0);
-        if(h != nullptr)
-        {
-            break;
-        }
-        delete h;
-    }
-    while(true)
-    {
-        I = new Mjolnir(25 , 20 , "Mjolnir" , 130 );
-        if(I != nullptr)
-        {
-            break;
-        }
-        delete I;
-    }
-    while(true)
-    {
-        J = new MiniGun(55 , 30 , "MiniGun" , 600 );
-        if(J != nullptr)
-        {
-            break;
-        }
-        delete J;
-    }
-    while(true)
-    {
-        k = new RocketLauncher(75 , 40 , "Rocket Launcher" , 1000);
-        if(k != nullptr)
-        {
-            break;
-        }
-        delete k;
-    }
-
-    while(true)
-    {
-        l = new shuriken(15 , 1 , "shuriken" , 30);
-        if(l != nullptr)
-        {
-            break;
-        }
-        delete l;
-    }
-
-    while(true)
-    {
-        m = new Spear(35 , 15 , "Spear" , 75);
-        if(m != nullptr)
-        {
-            break;
-        }
-        delete m;
-    }
-
-    while(true)
-    {
-        n = new XPpotion(0 , 0 , "XP Potion" , 25, 50);
-        if(n != nullptr)
-        {
-            break;
-        }
-        delete n;
-    }
+    randomStore = new Shop;
+    a = new Batarang(20 , 5 , "Batrang" , 50);
+    b = new Blaster(35 , 10 , "Blaster" , 200);
+    c = new Katana(20 , 15 , "Katana" , 120);
+    d = new grenade(75 , 50 , "Grenade" , 150);
+    e = new Egg(10 , 30 , "Egg" , 50 , 0);
+    f = new WheyProtein(30 , 30 , "Whey Protein" , 75 , 0);
+    g = new KratosBlades(25 , 15 , "Kratos Blades" , 150 );
+    h = new EnergyDrink(60 , 0 , "Energy Drink" , 75 , 0);
+    I = new Mjolnir(25 , 20 , "Mjolnir" , 130 );
+    J = new MiniGun(55 , 30 , "MiniGun" , 600 );
+    k = new RocketLauncher(75 , 40 , "Rocket Launcher" , 1000);
+    l = new shuriken(15 , 1 , "shuriken" , 30);
+    m = new Spear(35 , 15 , "Spear" , 75);
+    n = new XPpotion(0 , 0 , "XP Potion" , 25, 50);
 
     vector<Weapon*> wp{a, b, c, d,g, I, J, k, l, m};
     vector<UseableItems*> itms{e, f,h,n};
@@ -1302,7 +1172,7 @@ int CalculateSTForHuman(int level)
 int CalculateDMPAforZombie(int level)
 {
     int DMPA;
-    DMPA = pow(level , 10/7) + 10;
+    DMPA = static_cast<int>(pow(level , 10.0 / 7.0) + 10);
     return DMPA;
 }
 int CalculateSTforZombie(int level)
@@ -1314,10 +1184,10 @@ int CalculateSTforZombie(int level)
 int CalculateHPForZombie(int level)
 {
     int HP;
-    HP = pow(level , 4/3) * 20 + 50;
+    HP = static_cast<int>(pow(level , 4.0 / 3.0) * 20 + 50);
     return HP;
 }
-void userSave (string name, string gender, int hp, int xp, int gold, int stamina, int level, int kills, int weaponsNum, int usablesNum, vector<Weapon*> weapons, vector<UseableItems*> usable) {
+void userSave (const string& name, const string& gender, int hp, int xp, int gold, int stamina, int level, int kills, int weaponsNum, int usablesNum, const vector<Weapon*>& weapons, const vector<UseableItems*>& usable) {
     ofstream save ("data/" + name + ".txt");
     save << name << endl << gender << endl<< hp << endl << xp << endl << gold << endl << stamina << endl << level << endl << kills << endl << weaponsNum << endl << usablesNum << endl;
     for (int i = 0; i < weapons.size(); i++)

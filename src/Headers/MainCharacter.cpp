@@ -30,7 +30,7 @@ using namespace std;
     {
         return Gold;
     }
-    void MainCharacter::setName(string name)
+    void MainCharacter::setName(const string& name)
     {
         Name = name;
     }
@@ -69,7 +69,7 @@ using namespace std;
     {
         return XP;
     }
-    void MainCharacter::setGender(string gender)
+    void MainCharacter::setGender(const string& gender)
     {
         Gender = gender;
     }
@@ -250,7 +250,7 @@ using namespace std;
 		
 	}
 
-    void MainCharacter::getEnemyWeapons(vector<Weapon*> enemyweps)
+    void MainCharacter::getEnemyWeapons(const vector<Weapon*>& enemyweps)
     {
         for(int i = 0 ; i < enemyweps.size() ; i++)
         {
@@ -261,7 +261,7 @@ using namespace std;
         }
     }
 
-    void MainCharacter::getEnemyUseableItems(vector<UseableItems*> enemyuseableitems)
+    void MainCharacter::getEnemyUseableItems(const vector<UseableItems*>& enemyuseableitems)
     {
         for(int i = 0 ; i < enemyuseableitems.size() ; i++)
         {
@@ -271,7 +271,7 @@ using namespace std;
 
      //Constructors=====================
     MainCharacter::MainCharacter() = default;
-    MainCharacter::MainCharacter(string name , int hp , int xp , int stamina , string gender , int gold)
+    MainCharacter::MainCharacter(const string& name , int hp , int xp , int stamina , const string& gender , int gold)
     {
         Name = name;
         HP = hp;

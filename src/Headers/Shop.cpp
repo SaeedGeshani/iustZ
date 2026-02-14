@@ -38,11 +38,11 @@ void shopHeader(const string& title)
 }
 
     //Functions for printing
-        void printS(string s)
+        void printS(const string& s)
         {
             shopCenteredLine(s);
         }
-        void prints(string s)
+        void prints(const string& s)
         {
             shopCenteredLine(s);
         }
@@ -59,7 +59,7 @@ void shopHeader(const string& title)
         return availableWeapons;
     }
 
-    bool Shop::isFirst(string name , MainCharacter* player , int place)
+    bool Shop::isFirst(const string& name , MainCharacter* player , int place)
     {
         if(place < player->getUseableItems().size())
         {
@@ -87,7 +87,7 @@ void shopHeader(const string& title)
     }
     
   
-    int Shop::numberInInventory(string name , MainCharacter* player)
+    int Shop::numberInInventory(const string& name , MainCharacter* player)
     {
         int counter = 0;
         for(int i = 0 ; i < player->getUseableItems().size() ; i++)
@@ -294,12 +294,12 @@ void shopHeader(const string& title)
 
     }
 
-    void Shop::setWeapon(vector<Weapon*> wep)
+    void Shop::setWeapon(const vector<Weapon*>& wep)
     {
         availableWeapons = wep;
     }
 
-    void Shop::setUsableItems(vector<UseableItems*> usa)
+    void Shop::setUsableItems(const vector<UseableItems*>& usa)
     {
        availableUseables = usa; 
     }
