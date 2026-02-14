@@ -1,7 +1,6 @@
 #include<string>
 #include<iostream>
 #include<vector>
-#include<windows.h>
 #include<iomanip>
 #include<algorithm>
 #include<cmath>
@@ -10,59 +9,59 @@
 #include<stdlib.h>
 #include <thread>
 #include "Headers/Items.h"
-#include "Headers/Items.cpp"
+#include "Headers/Items.h"
 #include "Headers/EnemyFactory.h"
-#include "Headers/EnemyFactory.cpp"
+#include "Headers/EnemyFactory.h"
 #include "Headers/Zombie.h"
-#include "Headers/Zombie.cpp"
+#include "Headers/Zombie.h"
 #include "Headers/Enemy.h"
-#include "Headers/Enemy.cpp"
+#include "Headers/Enemy.h"
 #include "Headers/MainCharacter.h"
-#include "Headers/MainCharacter.cpp"
+#include "Headers/MainCharacter.h"
 #include "Headers/Shop.h"
-#include "Headers/Shop.cpp"
+#include "Headers/Shop.h"
 #include "Headers/UseableItems.h"
-#include "Headers/UseableItems.cpp"
+#include "Headers/UseableItems.h"
 #include "Headers/PermenantWeapon.h"
-#include "Headers/PermenantWeapon.cpp"
+#include "Headers/PermenantWeapon.h"
 #include "Headers/ThrowableWeapon.h"
-#include "Headers/ThrowableWeapon.cpp"
+#include "Headers/ThrowableWeapon.h"
 #include "Headers/Weapon.h"
-#include "Headers/Weapon.cpp"
+#include "Headers/Weapon.h"
 #include "Headers/ColdWeapon.h"
-#include "Headers/ColdWeapon.cpp"
+#include "Headers/ColdWeapon.h"
 #include "Headers/HotWeapon.h"
-#include "Headers/HotWeapon.cpp"
+#include "Headers/HotWeapon.h"
 #include "Headers/Batarang.h"
-#include "Headers/Batarang.cpp"
+#include "Headers/Batarang.h"
 #include "Headers/Katana.h"
-#include "Headers/Katana.cpp"
+#include "Headers/Katana.h"
 #include "Headers/grenade.h"
-#include "Headers/grenade.cpp"
+#include "Headers/grenade.h"
 #include "Headers/Egg.h"
-#include "Headers/Egg.cpp"
+#include "Headers/Egg.h"
 #include "Headers/WheyProtein.h"
-#include "Headers/WheyProtein.cpp"
+#include "Headers/WheyProtein.h"
 #include "Headers/Blaster.h"
-#include "Headers/Blaster.cpp"
+#include "Headers/Blaster.h"
 #include "Headers/human.h"
-#include "Headers/human.cpp"
+#include "Headers/human.h"
 #include "Headers/KratosBlades.h"
-#include "Headers/KratosBlades.cpp"
+#include "Headers/KratosBlades.h"
 #include "Headers/EnergyDrink.h"
-#include "Headers/EnergyDrink.cpp"
+#include "Headers/EnergyDrink.h"
 #include "Headers/shuriken.h"
-#include "Headers/shuriken.cpp"
+#include "Headers/shuriken.h"
 #include "Headers/Spear.h"
-#include "Headers/Spear.cpp"
+#include "Headers/Spear.h"
 #include "Headers/XPpotion.h"
-#include "Headers/XPpotion.cpp"
+#include "Headers/XPpotion.h"
 #include "Headers/Mjolnir.h"
-#include "Headers/Mjolnir.cpp"
+#include "Headers/Mjolnir.h"
 #include "Headers/MiniGun.h"
-#include "Headers/MiniGun.cpp"
+#include "Headers/MiniGun.h"
 #include "Headers/RocketLauncher.h"
-#include "Headers/RocketLauncher.cpp"
+#include "Headers/RocketLauncher.h"
 
 using namespace std;
 void userSave (string name, string gender, int hp, int xp, int gold, int stamina, int level, int kills, int weaponsNum, int usablesNum, vector<Weapon*> weapons, vector<UseableItems*> usable);
@@ -121,6 +120,16 @@ void pauseForReadability(int ms = NORMAL_PAUSE_MS)
 {
     this_thread::sleep_for(chrono::milliseconds(ms));
 }
+void printS(const string& s)
+{
+    cout << s << endl << endl;
+}
+
+void prints(const string& s)
+{
+    cout << s << endl << endl;
+}
+
 //Global Objects And Variables==============================
     // static MainCharacter Warior;
     Shop* Store;

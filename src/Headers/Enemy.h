@@ -2,8 +2,8 @@
 #include<string>
 #include<iostream>
 #include<vector>
-#include "MainCharacter.h"
 #include "Weapon.h"
+#include "UseableItems.h"
 using namespace std;
     class EnemyView;
     class EnemyModel;
@@ -139,4 +139,3 @@ public:
     Enemy(EnemyModel* enemymodel , EnemyView* enemyview , EnemyController* enemycontroller);
    
 };
-
