@@ -8,6 +8,7 @@
 #include<fstream>
 #include<stdlib.h>
 #include <thread>
+#include "Headers/ConsoleUI.h"
 #include "Headers/Items.h"
 #include "Headers/Items.h"
 #include "Headers/EnemyFactory.h"
@@ -67,36 +68,7 @@ using namespace std;
 void userSave (const string& name, const string& gender, int hp, int xp, int gold, int stamina, int level, int kills, int weaponsNum, int usablesNum, const vector<Weapon*>& weapons, const vector<UseableItems*>& usable);
 ifstream userList ("data/users.txt");
 
-const int UI_WIDTH = 92;
 const int NORMAL_PAUSE_MS = 1200;
-
-string centeredText(const string& text, int width = UI_WIDTH)
-{
-    if(static_cast<int>(text.size()) >= width)
-    {
-        return text;
-    }
-
-    int padding = (width - static_cast<int>(text.size())) / 2;
-    return string(padding, ' ') + text;
-}
-
-void centeredLine(const string& text = "")
-{
-    cout << centeredText(text) << endl;
-}
-
-void uiSeparator(char fill = '=', int width = 54)
-{
-    centeredLine(string(width, fill));
-}
-
-void uiSectionTitle(const string& title)
-{
-    uiSeparator('=', 64);
-    centeredLine(" " + title);
-    uiSeparator('=', 64);
-}
 
 void uiBattleStatus(MainCharacter* warrior, Enemy* enemy)
 {
@@ -111,9 +83,9 @@ void uiBattleStatus(MainCharacter* warrior, Enemy* enemy)
 
     string lineTwo = enemyDamage + " | Enemy ST: " + to_string(enemy->getEnemyModel()->getStamina());
 
-    centeredLine(lineOne);
-    centeredLine(lineTwo);
-    uiSeparator('-', 64);
+    ui::centeredLine(lineOne);
+    ui::centeredLine(lineTwo);
+    ui::drawDivider('-', 64);
 }
 
 void pauseForReadability(int ms = NORMAL_PAUSE_MS)
@@ -291,7 +263,7 @@ void makingNewcharacter()
     cout << endl;
     printS("Enter name of the Warior :");
     getline(cin , name);
-    system("cls");
+    ui::clearScreen();
 
     printS("Enter gender of the Warior:(male - female) ");
     getline(cin , gender);
@@ -300,7 +272,7 @@ void makingNewcharacter()
         prints("Invalid Input try again: ");
         getline(cin , gender);
     }
-    system("cls");
+    ui::clearScreen();
 
 
     // Warior.setName(name);
@@ -317,14 +289,14 @@ void makingNewcharacter()
     printS("Now you have 1000 G");
     // Warior.setGold(1000);
     // this_thread::sleep_for(chrono::seconds(33));
-    system("cls");
+    ui::clearScreen();
 
     prints("================================================");
 
     printS("==========Here is the section where you should pick one glorious Permanent Weapon ==============");
     cout << endl;
     int ChosenWeapon;
-    do{
+    {
         printS("==Now you should pick up a powerful permanent weapon which will be with you till the end of the war :==");
         printS("plese pick up one weapon: ");
         cout << endl;
@@ -339,7 +311,7 @@ void makingNewcharacter()
         printS("Rocket Launcher(1000 G) (Damage : 75) (Needed Stamina : 40)");
 
 
-        cin >> ChosenWeapon;
+        ChosenWeapon = ui::readIntInRange(ui::centeredText("Select weapon [1-6]: "), 1, 6);
 
         if(ChosenWeapon == 1)
         {
@@ -383,16 +355,8 @@ void makingNewcharacter()
 
         }
 
-        else{
-
-            cout << "You entered an invalid number! So enter a valid input" << endl;
-            pauseForReadability();
-           system("cls");
-        }
-
-
-    }while(ChosenWeapon != 1 && ChosenWeapon != 2 && ChosenWeapon != 3 && ChosenWeapon != 4 && ChosenWeapon != 5 && ChosenWeapon != 6 );
-    system("cls");
+    }
+    ui::clearScreen();
     prints("==============================================");
     cout << endl;
 
@@ -409,7 +373,7 @@ void makingNewcharacter()
     // Warior.setStamina(100);
     // Warior.setXP(0);
     pauseForReadability(1500);
-    system("cls");
+    ui::clearScreen();
 
 }
 
@@ -418,9 +382,9 @@ void makingSomeNewCharacter()
     // ofstream user("data/users.txt" , ios::app);
     int wariorMode;
     prints("How many playable character would you like to include in the game?");
-    cin >> numberOfCharacters;
+    numberOfCharacters = ui::readIntInRange(ui::centeredText("How many playable characters? [1-4]: "), 1, 4);
     ZZAARRIIBB = numberOfCharacters;
-    system("cls");
+    ui::clearScreen();
 
     for (int w = 0; w < numberOfCharacters; w++)
     {
@@ -428,7 +392,7 @@ void makingSomeNewCharacter()
        if(numberOfCharacters>1)
             cout<<"Player "<<w+1<<"'s turn:"<<endl;
 
-        system("cls");
+        ui::clearScreen();
         // if (wariorMode == 1)
         // {
         //    string hyhy;
@@ -577,7 +541,7 @@ void makingSomeNewCharacter()
 //       	cout << endl;
 //       	prints("The worlds are colliding...parallel realities and dimensions are merging into one,causing a disaster! monsters and evil forces from corrupt universes are invading our realm and wish to conquer it!Even some former allies are taking advantage of the current situation and have joined the dark side in order to take over our world! You and your few comrades are  the empire's last hope...The king needs you to defend the kingdom and save your people from these hellish creatures.    thankfully, you'll have access to different kinds of weapons from all universes which will ease your crusade.");
 //       	this_thread::sleep_for(chrono::seconds(33));
-//       	system("cls");
+//       	ui::clearScreen();
             int age;
             string gender , name;
 
@@ -588,7 +552,7 @@ void makingSomeNewCharacter()
             cin >> name;
             // cout << name;
             // user << name << endl;
-            system("cls");
+            ui::clearScreen();
 
             printS("Enter gender of the Warior:(male - female) ");
             getline(cin >>ws, gender);
@@ -597,7 +561,7 @@ void makingSomeNewCharacter()
                 prints("Invalid Input try again: ");
                 getline(cin>>ws , gender);
             }
-            system("cls");
+            ui::clearScreen();
 
             cout << endl;
             prints("===============================================");
@@ -608,7 +572,7 @@ void makingSomeNewCharacter()
            printS("===== Here you are:" );
             prints("Your Character will have 1000 G at the begining");
             pauseForReadability(1000);
-            system("cls");
+            ui::clearScreen();
 
             MainCharacter* newWarior = new MainCharacter(name , 100 , 0 , 100 , gender , 1000);
             newWarior->setKills(0);
@@ -617,7 +581,7 @@ void makingSomeNewCharacter()
             printS("==========Here is the section where you should pick one glorious Permanent Weapon==============");
             cout << endl;
             int ChosenWeapon;
-        do{
+        {
             printS("==Now you should pick up a powerful permanent weapon which will be with you till the end of the war :==");
             printS("plese pick up one weapon: ");
             cout << endl;
@@ -632,7 +596,7 @@ void makingSomeNewCharacter()
             printS("Rocket Launcher(1000 G) (Damage : 75) (Needed Stamina : 40)");
 
 
-            cin >> ChosenWeapon;
+            ChosenWeapon = ui::readIntInRange(ui::centeredText("Select weapon [1-6]: "), 1, 6);
 
             if(ChosenWeapon == 1)
             {
@@ -676,16 +640,8 @@ void makingSomeNewCharacter()
 
             }
 
-            else{
-
-                cout << "You entered an invalid number! So enter a valid input" << endl;
-               pauseForReadability();
-               system("cls");
             }
-
-
-            }while(ChosenWeapon != 1 && ChosenWeapon != 2 && ChosenWeapon != 3 && ChosenWeapon != 4 && ChosenWeapon != 5 && ChosenWeapon != 6 );
-            system("cls");
+            ui::clearScreen();
 
             printS("========================== GIFT ===========================");
            printS("===== Now we will give you somthing that you can heal yourself with and give your muscular body a litle bit of Energy.So take them and add them to your Inventory");
@@ -697,7 +653,7 @@ void makingSomeNewCharacter()
             newWarior->addUseableItems(ptr1WheyPowder);
             newWarior->addUseableItems(ptr2WheyPowder);
             pauseForReadability(900);
-            system("cls");
+            ui::clearScreen();
             userSave (newWarior->getName(), newWarior->getGender(), newWarior->getHP(), newWarior->getXP(), newWarior->getGold(), newWarior->getStamina(), newWarior->getLevel(), newWarior->getKills(), newWarior->getWeapons().size(), newWarior->getUseableItems().size() , newWarior->getWeapons(), newWarior->getUseableItems());
             Wariors.push_back(newWarior);
 
@@ -835,31 +791,19 @@ int main()
     cout << endl;
       prints("The worlds are colliding...parallel realities and dimensions are merging into one,causing a disaster! monsters and evil forces from corrupt universes are invading our realm and wish to conquer it!Even some former allies are taking advantage of the current situation and have joined the dark side in order to take over our world! You and your few comrades are  the empire's last hope...The king needs you to defend the kingdom and save your people from these hellish creatures.    thankfully, you'll have access to different kinds of weapons from all universes which will ease your crusade.");
       // this_thread::sleep_for(chrono::seconds(33));
-    system("cls");
+    ui::clearScreen();
     Enemy* enemy;
     // makingNewcharacter();
     makingSomeNewCharacter();
 
     EnemyFactory Enemyhouse(Wariors[findEnemyLevel()] , ZZAARRIIBB);
-    int Difficulty;
-    while(true)
-    {
-        uiSectionTitle("Difficulty Selection");
-        centeredLine("  1) Casual");
-        centeredLine("  2) Challenger");
-        centeredLine("  3) Nightmare");
-        uiSeparator('-');
-        centeredLine("Choose difficulty [1-3]:");
-        cout << centeredText("> ");
-        cin >> Difficulty;
-        if(Difficulty == 1 || Difficulty == 2 || Difficulty == 3)
-        {
-            system("cls");
-            break;
-
-        }
-        system("cls");
-    }
+    ui::drawHeader("Difficulty Selection");
+    ui::centeredLine("  1) Casual");
+    ui::centeredLine("  2) Challenger");
+    ui::centeredLine("  3) Nightmare");
+    ui::drawFooter("Choose difficulty [1-3]");
+    int Difficulty = ui::readIntInRange(ui::centeredText("> "), 1, 3);
+    ui::clearScreen();
 
 
     bool checkStatus;
@@ -879,7 +823,7 @@ int main()
             {
                 Store = randomShopGenerator();
                 prints("=========================================");
-                centeredLine("Buying item for " + Wariors[i]->getName());
+                ui::centeredLine("Buying item for " + Wariors[i]->getName());
                 prints("=========================================");
                 Store->BuyItem(Wariors[i]);
                 // userSave (Wariors[i]->getName(), Wariors[i]->getGender(), Wariors[i]->getHP(), Wariors[i]->getXP(), Wariors[i]->getGold(), Wariors[i]->getStamina(), Wariors[i]->getLevel(), Wariors[i]->getKills(), Wariors[i]->getWeapons().size(), Wariors[i]->getUseableItems().size() , Wariors[i]->getWeapons(), Wariors[i]->getUseableItems());
@@ -912,44 +856,41 @@ int main()
                     if(checkContinueForOne(i))
                     {
                 pauseForReadability();
-                       system("cls");
-                        uiSectionTitle("Battlefield");
-                        centeredLine("Level " + to_string(Wariors[findEnemyLevel()]->getLevel()) + " encounter");
-                        centeredLine("Enemy #" + to_string(enemyCount) + " race:");
+                       ui::clearScreen();
+                        ui::drawHeader("Battlefield");
+                        ui::centeredLine("Level " + to_string(Wariors[findEnemyLevel()]->getLevel()) + " encounter");
+                        ui::centeredLine("Enemy #" + to_string(enemyCount) + " race:");
                         if(enemy->getEnemyModel()->getName() == "Human")
                         {
-                            centeredLine("Human");
+                            ui::centeredLine("Human");
                         }
                         else if(enemy->getEnemyModel()->getName() == "Zombie")
                         {
-                            centeredLine("Zombie");
+                            ui::centeredLine("Zombie");
                         }
 
-                        uiSeparator('-');
-                        centeredLine(Wariors[i]->getName() + "'s turn");
-                        uiSeparator('-');
-                        centeredLine("Facing Enemy #" + to_string(enemyCount));
-                        centeredLine("1) Fight");
-                        centeredLine("2) Use inventory");
+                        ui::drawDivider('-');
+                        ui::centeredLine(Wariors[i]->getName() + "'s turn");
+                        ui::drawDivider('-');
+                        ui::centeredLine("Facing Enemy #" + to_string(enemyCount));
+                        ui::centeredLine("1) Fight");
+                        ui::centeredLine("2) Use inventory");
                         uiBattleStatus(Wariors[i], enemy);
-                        cout << centeredText("Your choice: ");
+                        ui::drawFooter("Choose action");
 
-
-                        int input;
-                        cin >> input;
-                        system("cls");
+                        int input = ui::readIntInRange(ui::centeredText("Your choice [1-2]: "), 1, 2);
 
                         if(input == 1)
                         {
+                            ui::clearScreen();
                             while(true)
                             {
-                                system("cls");
-                                uiSectionTitle("Choose a Weapon");
-                                centeredLine("For " + Wariors[i]->getName() + " (0 to go back)");
-                                uiSeparator('-');
+                                ui::drawHeader("Choose a Weapon");
+                                ui::centeredLine("For " + Wariors[i]->getName() + " (0 to go back)");
+                                ui::drawDivider('-');
                                 Wariors[i]->showCharacterWeapons();
-                                cout << centeredText("Weapon number: ");
-                                cin >> input;
+                                ui::drawFooter("Select weapon number (0 to go back)");
+                                input = ui::readIntInRange(ui::centeredText("Weapon number: "), 0, static_cast<int>(Wariors[i]->getWeapons().size()));
 
                                 if(input <= Wariors[i]->getWeapons().size() && input >= 1)
                                 {
@@ -960,10 +901,10 @@ int main()
                                         {
                                             Wariors[i]->setKills(Wariors[i]->getKills() + 1);
                                             prints("===========================================");
-                                            centeredLine("Enemy #" + to_string(enemyCount) + " was killed by " + Wariors[i]->getName() + " | " + to_string(Wariors[i]->getKills()) + " total kill(s)");
+                                            ui::centeredLine("Enemy #" + to_string(enemyCount) + " was killed by " + Wariors[i]->getName() + " | " + to_string(Wariors[i]->getKills()) + " total kill(s)");
                                             prints("===========================================");
                                             pauseForReadability();
-                                           system("cls");
+                                           ui::clearScreen();
                                             // for (int l = 0; l < Wariors.size(); l++)
                                             // {
                                             //     userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
@@ -983,12 +924,12 @@ int main()
                                             }
                                             if(enemy->getEnemyModel()->getName() == "Human")
                                             {
-                                               system("cls");
+                                               ui::clearScreen();
                                                 cout << "==========================" << endl;
                                                 cout << "Inventory Of Enemy Looted" << endl;
                                                 cout << "==========================" << endl;
                                                 pauseForReadability(1000);
-                                               system("cls");
+                                               ui::clearScreen();
                                                 Wariors[i]->getEnemyUseableItems(enemy->getEnemyModel()->getEnemyUseableItems());
                                                 Wariors[i]->getEnemyWeapons(enemy->getEnemyModel()->getEnemyWeapons());
                                             //     for (int l = 0; l < Wariors.size(); l++)
@@ -1014,24 +955,20 @@ int main()
                                     break;
                                 }
 
-                                else
-                                {
-                                    cout << "Invalid input " << endl;
-                                }
                             }
                         }
 
                         else if(input == 2)
                         {
+                            ui::clearScreen();
                             while(true)
                             {
-                                system("cls");
-                                uiSectionTitle("Use Inventory Item");
-                                centeredLine("For " + Wariors[i]->getName() + " (0 to go back)");
-                                uiSeparator('-');
+                                ui::drawHeader("Use Inventory Item");
+                                ui::centeredLine("For " + Wariors[i]->getName() + " (0 to go back)");
+                                ui::drawDivider('-');
                                 Wariors[i]->showCharacterUsableItems();
-                                cout << centeredText("Item number: ");
-                                cin >> input;
+                                ui::drawFooter("Select item number (0 to go back)");
+                                input = ui::readIntInRange(ui::centeredText("Item number: "), 0, static_cast<int>(Wariors[i]->getUseableItems().size()));
 
                                 if(input >= 1 && input <= Wariors[i]->getUseableItems().size())
                                 {
@@ -1048,15 +985,11 @@ int main()
                                 }
                             }
                         }
-                        else{
-                            system("cls");
-                            i--;
-                        }
 
                     }
                     else
                     {
-                        centeredLine(Wariors[i]->getName() + " couldn't attack due to lack of stamina");
+                        ui::centeredLine(Wariors[i]->getName() + " couldn't attack due to lack of stamina");
 
 
                     }
@@ -1070,7 +1003,7 @@ int main()
                     attackNumber = rand()%Wariors.size();
                     if(Wariors[attackNumber]->getHP() > 0)
                     {
-                        centeredLine("Enemy #" + to_string(enemyCount) + " attacks " + Wariors[attackNumber]->getName() + "!");
+                        ui::centeredLine("Enemy #" + to_string(enemyCount) + " attacks " + Wariors[attackNumber]->getName() + "!");
                         enemy->getEnemyController()->Attack(Wariors[attackNumber]);
                         if(Wariors[attackNumber]->getHP() < 0)
                         {
@@ -1110,7 +1043,7 @@ int main()
                     attackNumber = rand()%Wariors.size();
                     if(Wariors[attackNumber]->getHP() > 0)
                     {
-                        centeredLine("Enemy #" + to_string(enemyCount) + " attacks " + Wariors[attackNumber]->getName() + "!");
+                        ui::centeredLine("Enemy #" + to_string(enemyCount) + " attacks " + Wariors[attackNumber]->getName() + "!");
                         enemy->getEnemyController()->Attack(Wariors[attackNumber]);
                         if(Wariors[attackNumber]->getHP() < 0)
                         {
@@ -1152,7 +1085,7 @@ int main()
     }
 
     prints("=============================================");
-    centeredLine("All warriors have fallen.");
+    ui::centeredLine("All warriors have fallen.");
     prints("=============================================");
     // for (int l = 0; l < Wariors.size(); l++)
     // {
