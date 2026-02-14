@@ -2,12 +2,14 @@
 #include<iostream>
 #include<vector>
 #include<iomanip>
-#include<algorithm>
 #include<cmath>
 #include<ctime>
 #include<fstream>
 #include<stdlib.h>
 #include <thread>
+#include <random>
+#include <algorithm>
+#include <random>
 #include "Headers/ConsoleUI.h"
 #include "Headers/Items.h"
 #include "Headers/Items.h"
@@ -694,7 +696,9 @@ bool randomShuffle ( int Difficulty , int Level ) {
         for (int i=0 ; i<100-shuffle.size() ; ++i){
             shuffle.push_back(0);
         }
-        random_shuffle(shuffle.begin() , shuffle.end());
+        static std::mt19937 rng(std::random_device{}());
+        std::shuffle(shuffle.begin(), shuffle.end(), rng);
+        // random_shuffle(shuffle.begin() , shuffle.end());
         if (shuffle[0] == 1){
             cout << "Go to shop" << endl ;
             return 1 ;
@@ -720,7 +724,9 @@ bool randomShuffle ( int Difficulty , int Level ) {
         for (int i=0 ; i<100-shuffle.size() ; ++i){
             shuffle.push_back(0);
         }
-        random_shuffle(shuffle.begin() , shuffle.end());
+        static std::mt19937 rng(std::random_device{}());
+        std::shuffle(shuffle.begin(), shuffle.end(), rng);
+        // random_shuffle(shuffle.begin() , shuffle.end());
         if (shuffle[0] == 1){
             cout << "go to shop" << endl ;
             return 1 ;
@@ -746,7 +752,9 @@ bool randomShuffle ( int Difficulty , int Level ) {
         for (int i=0 ; i<100-shuffle.size() ; ++i){
             shuffle.push_back(0);
         }
-        random_shuffle(shuffle.begin() , shuffle.end());
+        static std::mt19937 rng(std::random_device{}());
+        std::shuffle(shuffle.begin(), shuffle.end(), rng);
+        // random_shuffle(shuffle.begin() , shuffle.end());
         if (shuffle[0] == 1){
             //cout << "go to shop" << endl ;
             return 1 ;
