@@ -13,4 +13,5 @@ add_executable(iustz_game ${GAME_SOURCES})
 target_include_directories(iustz_game PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/Headers"
+    "${CMAKE_CURRENT_SOURCE_DIR}/external"
 )
