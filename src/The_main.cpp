@@ -8,6 +8,7 @@
 #include<fstream>
 #include<filesystem>
 #include<limits>
+#include<memory>
 #include<stdlib.h>
 #include <thread>
 #include "SaveSystem.h"
@@ -66,6 +67,7 @@
 #include "Headers/MiniGun.h"
 #include "Headers/RocketLauncher.h"
 #include "Headers/RocketLauncher.h"
+#include "Headers/InventoryFactory.h"
 
 using namespace std;
 ifstream userList ("data/users.txt");
@@ -161,8 +163,6 @@ bool SaveWarriorToSlot(MainCharacter* warrior, const string& slotName)
 
     int numberOfCharacters;
     static vector<MainCharacter*>Wariors;
-    vector<string> gLoadedWeaponNames;
-    vector<string> gLoadedItemNames;
 
 vector<string> ListSaveSlots()
 {
@@ -224,8 +224,51 @@ bool LoadWarriorFromSlot(const string& slotName)
     loadedWarrior->setStamina(loadedState.stamina);
     loadedWarrior->setKills(loadedState.kills);
 
-    gLoadedWeaponNames = loadedState.weaponsOwnedNames;
-    gLoadedItemNames = loadedState.usableItemsOwnedNames;
+    for (const string& weaponName : loadedState.weaponsOwnedNames)
+    {
+        std::unique_ptr<Weapon> weapon = CreateWeaponByName(weaponName);
+        if (!weapon)
+        {
+            cout << "Unknown weapon in save: " << weaponName << endl;
+            continue;
+        }
+        loadedWarrior->addWeapon(weapon.release());
+    }
+
+    for (const string& itemName : loadedState.usableItemsOwnedNames)
+    {
+        std::unique_ptr<UseableItems> item = CreateItemByName(itemName);
+        if (!item)
+        {
+            cout << "Unknown item in save: " << itemName << endl;
+            continue;
+        }
+        loadedWarrior->addUseableItems(item.release());
+    }
+
+    if (!loadedState.equippedWeapon.empty())
+    {
+        vector<Weapon*>& weapons = loadedWarrior->getWeapons();
+        auto equippedIt = find_if(weapons.begin(), weapons.end(),
+                                  [&](Weapon* weapon) { return weapon->getName() == loadedState.equippedWeapon; });
+
+        if (equippedIt == weapons.end())
+        {
+            std::unique_ptr<Weapon> equippedWeapon = CreateWeaponByName(loadedState.equippedWeapon);
+            if (!equippedWeapon)
+            {
+                cout << "Unknown weapon in save: " << loadedState.equippedWeapon << endl;
+            }
+            else
+            {
+                weapons.insert(weapons.begin(), equippedWeapon.release());
+            }
+        }
+        else if (equippedIt != weapons.begin())
+        {
+            iter_swap(weapons.begin(), equippedIt);
+        }
+    }
 
     Wariors.push_back(loadedWarrior);
     numberOfCharacters = 1;

@@ -83,6 +83,7 @@ public:
     //Constructors=========================
     MainCharacter();
     MainCharacter(const string& name , int hp , int xp , int stamina , const string& gender , int gold);
+    ~MainCharacter();
     
     //=====================================
 };
