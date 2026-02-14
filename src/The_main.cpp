@@ -6,6 +6,7 @@
 #include<cmath>
 #include<ctime>
 #include<fstream>
+#include<filesystem>
 #include<limits>
 #include<stdlib.h>
 #include <thread>
@@ -160,21 +161,122 @@ bool SaveWarriorToSlot(MainCharacter* warrior, const string& slotName)
 
     int numberOfCharacters;
     static vector<MainCharacter*>Wariors;
-    int findEnemyLevel()
+    vector<string> gLoadedWeaponNames;
+    vector<string> gLoadedItemNames;
+
+vector<string> ListSaveSlots()
+{
+    vector<string> slots;
+    std::error_code ec;
+    const std::filesystem::path saveDir("saves");
+    if (!std::filesystem::exists(saveDir, ec) || ec)
     {
+        return slots;
+    }
+
+    for (const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(saveDir, ec))
+    {
+        if (ec)
+        {
+            break;
+        }
+
+        if (!entry.is_regular_file())
+        {
+            continue;
+        }
+
+        const std::filesystem::path path = entry.path();
+        if (path.extension() == ".json")
+        {
+            slots.push_back(path.stem().string());
+        }
+    }
+
+    sort(slots.begin(), slots.end());
+    return slots;
+}
+
+bool LoadWarriorFromSlot(const string& slotName)
+{
+    GameState loadedState;
+    string err;
+    if (!LoadGame(loadedState, slotName, &err))
+    {
+        ui::drawHeader("Load Failed");
+        ui::centeredLine(err);
+        ui::drawFooter("Press enter to continue");
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return false;
+    }
+
+    MainCharacter* loadedWarrior = new MainCharacter(
+        loadedState.playerName,
+        loadedState.hp,
+        loadedState.xp,
+        loadedState.stamina,
+        loadedState.gender,
+        loadedState.coins);
+
+    loadedWarrior->setLevel(loadedState.lvl);
+    loadedWarrior->setHP(loadedState.hp);
+    loadedWarrior->setXP(loadedState.xp);
+    loadedWarrior->setStamina(loadedState.stamina);
+    loadedWarrior->setKills(loadedState.kills);
+
+    gLoadedWeaponNames = loadedState.weaponsOwnedNames;
+    gLoadedItemNames = loadedState.usableItemsOwnedNames;
+
+    Wariors.push_back(loadedWarrior);
+    numberOfCharacters = 1;
+    ZZAARRIIBB = 1;
+
+    ui::drawHeader("Load Complete");
+    ui::centeredLine("Loaded slot: " + slotName);
+    ui::centeredLine("Player: " + loadedWarrior->getName());
+    ui::drawFooter("Press enter to continue");
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    return true;
+}
+
+bool ShowLoadGameMenu()
+{
+    const vector<string> slots = ListSaveSlots();
+    if (slots.empty())
+    {
+        ui::drawHeader("Load Game");
+        ui::centeredLine("Save not found");
+        ui::drawFooter("Press enter to continue");
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return false;
+    }
+
+    ui::drawHeader("Load Game");
+    for (std::size_t i = 0; i < slots.size(); ++i)
+    {
+        ui::centeredLine(to_string(i + 1) + ") " + slots[i]);
+    }
+    ui::drawFooter("Select a slot");
+
+    int choice = ui::readIntInRange(ui::centeredText("Slot [1-" + to_string(slots.size()) + "]: "), 1, static_cast<int>(slots.size()));
+    return LoadWarriorFromSlot(slots[static_cast<std::size_t>(choice - 1)]);
+}
+
+int findEnemyLevel()
+{
     int maxLVL;
     maxLVL = 1;
     int placeOfMaximum = 0;
-        for(int i = 0 ; i < Wariors.size() ; i++)
+    for(int i = 0 ; i < Wariors.size() ; i++)
+    {
+        if(Wariors[i]->getLevel() > maxLVL)
         {
-            if(Wariors[i]->getLevel() > maxLVL)
-            {
-                maxLVL = Wariors[i]->getLevel();
-                placeOfMaximum = i;
-            }
+            maxLVL = Wariors[i]->getLevel();
+            placeOfMaximum = i;
         }
-        return placeOfMaximum;
     }
+    return placeOfMaximum;
+}
 
 //==========================================================
 //=====Function for cout slowly=============================
@@ -844,8 +946,29 @@ int main()
       // this_thread::sleep_for(chrono::seconds(33));
     ui::clearScreen();
     Enemy* enemy;
-    // makingNewcharacter();
-    makingSomeNewCharacter();
+
+    ui::drawHeader("Main Menu");
+    ui::centeredLine("1) New Game");
+    ui::centeredLine("2) Load Game");
+    ui::drawFooter("Choose option [1-2]");
+    int mainMenuChoice = ui::readIntInRange(ui::centeredText("> "), 1, 2);
+    ui::clearScreen();
+
+    if (mainMenuChoice == 2)
+    {
+        if (!ShowLoadGameMenu())
+        {
+            ui::drawHeader("Fallback to New Game");
+            ui::centeredLine("Starting a new game setup.");
+            ui::drawFooter("Press enter to continue");
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            makingSomeNewCharacter();
+        }
+    }
+    else
+    {
+        makingSomeNewCharacter();
+    }
 
     EnemyFactory Enemyhouse(Wariors[findEnemyLevel()] , ZZAARRIIBB);
     ui::drawHeader("Difficulty Selection");
