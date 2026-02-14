@@ -6,8 +6,10 @@
 #include<cmath>
 #include<ctime>
 #include<fstream>
+#include<limits>
 #include<stdlib.h>
 #include <thread>
+#include "SaveSystem.h"
 #include "Headers/ConsoleUI.h"
 #include "Headers/Items.h"
 #include "Headers/Items.h"
@@ -65,7 +67,6 @@
 #include "Headers/RocketLauncher.h"
 
 using namespace std;
-void userSave (const string& name, const string& gender, int hp, int xp, int gold, int stamina, int level, int kills, int weaponsNum, int usablesNum, const vector<Weapon*>& weapons, const vector<UseableItems*>& usable);
 ifstream userList ("data/users.txt");
 
 const int NORMAL_PAUSE_MS = 1200;
@@ -100,6 +101,56 @@ void printS(const string& s)
 void prints(const string& s)
 {
     cout << s << endl << endl;
+}
+
+GameState BuildGameStateFromWarrior(MainCharacter* warrior)
+{
+    GameState state;
+    state.playerName = warrior->getName();
+    state.gender = warrior->getGender();
+    state.hp = warrior->getHP();
+    state.xp = warrior->getXP();
+    state.lvl = warrior->getLevel();
+    state.coins = warrior->getGold();
+    state.stamina = warrior->getStamina();
+    state.kills = warrior->getKills();
+
+    const vector<Weapon*>& weapons = warrior->getWeapons();
+    for (Weapon* weapon : weapons)
+    {
+        state.weaponsOwnedNames.push_back(weapon->getName());
+    }
+    if (!state.weaponsOwnedNames.empty())
+    {
+        state.equippedWeapon = state.weaponsOwnedNames.front();
+        state.dm = weapons.front()->getDamagePerAttack();
+    }
+
+    const vector<UseableItems*>& items = warrior->getUseableItems();
+    for (UseableItems* item : items)
+    {
+        state.usableItemsOwnedNames.push_back(item->getName());
+    }
+
+    return state;
+}
+
+bool SaveWarriorToSlot(MainCharacter* warrior, const string& slotName)
+{
+    string err;
+    const GameState state = BuildGameStateFromWarrior(warrior);
+    if (!SaveGame(state, slotName, &err))
+    {
+        ui::drawHeader("Save Failed");
+        ui::centeredLine("Could not save game for: " + warrior->getName());
+        ui::centeredLine(err);
+        ui::drawFooter("Press enter to continue");
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return false;
+    }
+
+    ui::centeredLine("Game saved to slot: " + slotName);
+    return true;
 }
 
 //Global Objects And Variables==============================
@@ -654,7 +705,7 @@ void makingSomeNewCharacter()
             newWarior->addUseableItems(ptr2WheyPowder);
             pauseForReadability(900);
             ui::clearScreen();
-            userSave (newWarior->getName(), newWarior->getGender(), newWarior->getHP(), newWarior->getXP(), newWarior->getGold(), newWarior->getStamina(), newWarior->getLevel(), newWarior->getKills(), newWarior->getWeapons().size(), newWarior->getUseableItems().size() , newWarior->getWeapons(), newWarior->getUseableItems());
+            SaveWarriorToSlot(newWarior, newWarior->getName());
             Wariors.push_back(newWarior);
 
            break;
@@ -875,10 +926,11 @@ int main()
                         ui::centeredLine("Facing Enemy #" + to_string(enemyCount));
                         ui::centeredLine("1) Fight");
                         ui::centeredLine("2) Use inventory");
+                        ui::centeredLine("3) Save game");
                         uiBattleStatus(Wariors[i], enemy);
                         ui::drawFooter("Choose action");
 
-                        int input = ui::readIntInRange(ui::centeredText("Your choice [1-2]: "), 1, 2);
+                        int input = ui::readIntInRange(ui::centeredText("Your choice [1-3]: "), 1, 3);
 
                         if(input == 1)
                         {
@@ -984,6 +1036,11 @@ int main()
                                     break;
                                 }
                             }
+                        }
+                        else if (input == 3)
+                        {
+                            SaveWarriorToSlot(Wariors[i], Wariors[i]->getName());
+                            continue;
                         }
 
                     }
@@ -1119,12 +1176,4 @@ int CalculateHPForZombie(int level)
     int HP;
     HP = static_cast<int>(pow(level , 4.0 / 3.0) * 20 + 50);
     return HP;
-}
-void userSave (const string& name, const string& gender, int hp, int xp, int gold, int stamina, int level, int kills, int weaponsNum, int usablesNum, const vector<Weapon*>& weapons, const vector<UseableItems*>& usable) {
-    ofstream save ("data/" + name + ".txt");
-    save << name << endl << gender << endl<< hp << endl << xp << endl << gold << endl << stamina << endl << level << endl << kills << endl << weaponsNum << endl << usablesNum << endl;
-    for (int i = 0; i < weapons.size(); i++)
-        save << weapons[i]->getName() << endl;
-    for (int i = 0; i < usable.size(); i++)
-        save << usable[i]->getName() << endl;
 }
