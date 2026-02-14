@@ -42,8 +42,4 @@ using namespace std;
         HealingPower = healingpower;
         addedXP=addedxp;
     }
-    UseableItems::~UseableItems()
-    {
-        int a;
-        a++;
-    }
+    UseableItems::~UseableItems() = default;
