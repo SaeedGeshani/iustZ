@@ -996,7 +996,7 @@ int main()
       prints("The worlds are colliding...parallel realities and dimensions are merging into one,causing a disaster! monsters and evil forces from corrupt universes are invading our realm and wish to conquer it!Even some former allies are taking advantage of the current situation and have joined the dark side in order to take over our world! You and your few comrades are  the empire's last hope...The king needs you to defend the kingdom and save your people from these hellish creatures.    thankfully, you'll have access to different kinds of weapons from all universes which will ease your crusade.");
       // this_thread::sleep_for(chrono::seconds(33));
     ui::clearScreen();
-    Enemy* enemy;
+    Enemy* enemy = nullptr;
 
     ui::drawHeader("Main Menu");
     ui::centeredLine("1) New Game");
@@ -1071,10 +1071,11 @@ int main()
             enemy = Enemyhouse.makeHuman();
         }
         enemyCount++;
+        bool enemyDefeated = false;
 
-        while(enemy->getEnemyModel()->getHP() > 0 && isAlive() && checkContinue())
+        while(!enemyDefeated && enemy->getEnemyModel()->getHP() > 0 && isAlive() && checkContinue())
         {
-            for(int i = 0 ; i < Wariors.size() && enemy->getEnemyModel()->getHP() > 0 ; i++)
+            for(int i = 0 ; i < Wariors.size() && !enemyDefeated && enemy->getEnemyModel()->getHP() > 0 ; i++)
             {
                 if(Wariors[i]->getHP() > 0)
                 {
@@ -1164,7 +1165,7 @@ int main()
                                             // }
 
                                             }
-                                            delete enemy;
+                                            enemyDefeated = true;
                                             break;
                                         }
 
@@ -1217,6 +1218,11 @@ int main()
                             continue;
                         }
 
+                        if(enemyDefeated)
+                        {
+                            break;
+                        }
+
                     }
                     else
                     {
@@ -1226,6 +1232,12 @@ int main()
                     }
                 }
             }
+
+            if(enemyDefeated)
+            {
+                break;
+            }
+
             int attackNumber = rand()%Wariors.size();
              if(enemy->getEnemyModel()->getHP() > 0)
             {
@@ -1311,6 +1323,9 @@ int main()
 
 
         }
+
+        delete enemy;
+        enemy = nullptr;
 
        }
     }
