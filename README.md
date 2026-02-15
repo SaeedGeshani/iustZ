@@ -39,6 +39,15 @@ cmake -S . -B build
 cmake --build build --config Release
 ```
 
+By default, CMake also builds the Dear ImGui frontend (`iustz_gui`) and fetches GUI dependencies (`glfw`, `imgui`, `glad`) from GitHub via `FetchContent`.
+
+If you only want the console build (or are building in an offline environment), disable GUI targets:
+
+```bash
+cmake -S . -B build -DIUSTZ_ENABLE_GUI=OFF
+cmake --build build --config Release
+```
+
 Run either executable:
 
 ```bash
@@ -50,6 +59,14 @@ build/Release/iustz_gui.exe
 build/iustz_game
 build/iustz_gui
 ```
+
+## GUI quick start
+
+- Launch `iustz_gui` and use the **Main Menu** window.
+- **New Game** supports single-player and multiplayer party setup.
+- **Load Game** lists save slots from `saves/*.json`.
+- During battles, select a party member and choose actions (`Attack`, `Use Item`, `Switch Weapon`, etc.).
+- The separate **Combat Log** window streams turn-by-turn results.
 
 ### g++ (console only, single command, MinGW)
 
