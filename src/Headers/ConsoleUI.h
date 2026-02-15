@@ -13,4 +13,16 @@ void drawHeader(const std::string& title);
 void drawFooter(const std::string& hint);
 int readIntInRange(const std::string& prompt, int lo, int hi);
 void clearScreen();
+void WaitForKey(const std::string& prompt = "Press Enter to continue...");
+void LogAttack(
+    const std::string& attackerName,
+    const std::string& defenderName,
+    const std::string& attackLabel,
+    int baseDamage,
+    int defenseValue,
+    int finalDamage,
+    int hpBefore,
+    int hpAfter);
+void ResetCombatLogState();
+bool DidLogAttackThisTurn();
 }

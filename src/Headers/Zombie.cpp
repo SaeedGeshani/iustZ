@@ -3,6 +3,7 @@
 #include "Enemy.h"
 #include "MainCharacter.h"
 #include "Zombie.h"
+#include "ConsoleUI.h"
 
 //Zombie////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Constructor===================
@@ -45,15 +46,21 @@
 
     void ZombieController::Attack(MainCharacter* player)
     {
-        
         if((Enemymodel->getStamina() - Enemymodel->getNeededStaminaPerAttack()) > 0 && Enemymodel->getHP() > 0)
         {
-        player->setHP(player->getHP() - Enemymodel->getDamagePerAttack());
-        Enemymodel->setStamina(Enemymodel->getStamina() - Enemymodel->getNeededStaminaPerAttack());
+            const int hpBefore = player->getHP();
+            const int baseDamage = Enemymodel->getDamagePerAttack();
+            const int defenseValue = 0;
+            const int finalDamage = baseDamage;
+
+            player->setHP(player->getHP() - finalDamage);
+            Enemymodel->setStamina(Enemymodel->getStamina() - Enemymodel->getNeededStaminaPerAttack());
+
+            ui::LogAttack(Enemymodel->getName(), player->getName(), "Claws", baseDamage, defenseValue, finalDamage, hpBefore, player->getHP());
         }
-        else if(Enemymodel->getStamina() - Enemymodel->getNeededStaminaPerAttack() < 0 )
+        else
         {
-            cout << "Enemy Doesn't have enough Energy to attack" << endl;
+            ui::centeredLine(Enemymodel->getName() + " cannot attack (not enough stamina or defeated).");
         }
 
     }

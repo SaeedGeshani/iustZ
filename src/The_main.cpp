@@ -1298,8 +1298,26 @@ int main()
                         break;
                     }
 
-                    ui::centeredLine("Enemy #" + to_string(enemyCount) + " attacks " + Wariors[attackNumber]->getName() + "!");
+                    ui::ResetCombatLogState();
+                    const int hpBeforeAttack = Wariors[attackNumber]->getHP();
                     enemy->getEnemyController()->Attack(Wariors[attackNumber]);
+
+                    if(!ui::DidLogAttackThisTurn())
+                    {
+                        const int hpAfterAttack = Wariors[attackNumber]->getHP();
+                        ui::LogAttack(
+                            enemy->getEnemyModel()->getName(),
+                            Wariors[attackNumber]->getName(),
+                            "Enemy Attack",
+                            0,
+                            0,
+                            0,
+                            hpBeforeAttack,
+                            hpAfterAttack);
+                        ui::centeredLine("Enemy action could not deal damage this turn.");
+                    }
+
+                    ui::WaitForKey("Press Enter to continue...");
 
                     if(Wariors[attackNumber]->getHP() <= 0)
                     {
