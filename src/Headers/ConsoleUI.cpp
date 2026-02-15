@@ -63,6 +63,11 @@ int readIntInRange(const std::string& prompt, int lo, int hi)
         }
         else
         {
+            if(std::cin.eof())
+            {
+                throw std::runtime_error("Input stream closed while waiting for numeric input");
+            }
+
             centeredLine("Please enter a valid number.");
             std::cin.clear();
         }
