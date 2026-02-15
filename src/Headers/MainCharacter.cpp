@@ -190,8 +190,9 @@ using namespace std;
 
     void MainCharacter::CalculateLevel()
     {
-        int exLevel = Level;
-        Level = floor((double)sqrt(((double)(XP/10)+((1.0)*81/4))) - 0.5) - 3; 
+        const int exLevel = Level;
+        const int computedLevel = floor((double)sqrt(((double)(XP/10)+((1.0)*81/4))) - 0.5) - 3;
+        Level = std::max(exLevel, std::max(1, computedLevel));
         if(Level > exLevel)
         {
             cout << "===============================" << endl;
@@ -206,9 +207,9 @@ using namespace std;
     {
         if(numberOfItemInInventory <= useAbleItems.size() && numberOfItemInInventory >= 1)
         {
-            HP = HP + useAbleItems[numberOfItemInInventory-1]->getHealingPower();   
-            Stamina = Stamina + useAbleItems[numberOfItemInInventory-1]->getEnergy();
-            XP = XP + useAbleItems[numberOfItemInInventory-1]->getAddedXP();
+            setHP(HP + useAbleItems[numberOfItemInInventory-1]->getHealingPower());
+            setStamina(Stamina + useAbleItems[numberOfItemInInventory-1]->getEnergy());
+            setXP(XP + useAbleItems[numberOfItemInInventory-1]->getAddedXP());
             delete useAbleItems[numberOfItemInInventory-1];
             useAbleItems.erase(useAbleItems.begin() + numberOfItemInInventory-1);
             useAbleItems.shrink_to_fit();
@@ -279,6 +280,8 @@ using namespace std;
         Gender = gender;
         Gold = gold;
         XP = xp;
+        Level = 1;
+        Kills = 0;
     }
 
     MainCharacter::~MainCharacter()

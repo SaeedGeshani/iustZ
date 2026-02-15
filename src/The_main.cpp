@@ -74,6 +74,12 @@
 using namespace std;
 ifstream userList ("data/users.txt");
 
+#ifdef DEBUG_LOG
+#define DBG_LOG(msg) do { std::clog << "[DEBUG] " << msg << std::endl; } while(false)
+#else
+#define DBG_LOG(msg) do {} while(false)
+#endif
+
 const int NORMAL_PAUSE_MS = 1200;
 
 void uiBattleStatus(MainCharacter* warrior, Enemy* enemy)
@@ -101,6 +107,15 @@ void pauseForReadability(int ms = NORMAL_PAUSE_MS)
 void printS(const string& s)
 {
     cout << s << endl << endl;
+}
+
+void waitForEnterToContinue()
+{
+    if (cin.fail())
+    {
+        cin.clear();
+    }
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
 void prints(const string& s)
@@ -150,7 +165,7 @@ bool SaveWarriorToSlot(MainCharacter* warrior, const string& slotName)
         ui::centeredLine("Could not save game for: " + warrior->getName());
         ui::centeredLine(err);
         ui::drawFooter("Press enter to continue");
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        waitForEnterToContinue();
         return false;
     }
 
@@ -208,7 +223,7 @@ bool LoadWarriorFromSlot(const string& slotName)
         ui::drawHeader("Load Failed");
         ui::centeredLine(err);
         ui::drawFooter("Press enter to continue");
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        waitForEnterToContinue();
         return false;
     }
 
@@ -280,7 +295,7 @@ bool LoadWarriorFromSlot(const string& slotName)
     ui::centeredLine("Loaded slot: " + slotName);
     ui::centeredLine("Player: " + loadedWarrior->getName());
     ui::drawFooter("Press enter to continue");
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    waitForEnterToContinue();
     return true;
 }
 
@@ -292,7 +307,7 @@ bool ShowLoadGameMenu()
         ui::drawHeader("Load Game");
         ui::centeredLine("Save not found");
         ui::drawFooter("Press enter to continue");
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        waitForEnterToContinue();
         return false;
     }
 
@@ -1029,7 +1044,7 @@ int main()
             ui::drawHeader("Fallback to New Game");
             ui::centeredLine("Starting a new game setup.");
             ui::drawFooter("Press enter to continue");
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            waitForEnterToContinue();
             makingSomeNewCharacter();
         }
     }
@@ -1057,6 +1072,7 @@ int main()
 
        if(checkStatus)
        {
+        DBG_LOG("Menu transition: battle -> shop");
 
 
         for(int i = 0 ; i < Wariors.size() ; i++)
@@ -1087,8 +1103,11 @@ int main()
         {
             enemy = Enemyhouse.makeHuman();
         }
+        DBG_LOG("Enemy created: " << enemy->getEnemyModel()->getName() << " hp=" << enemy->getEnemyModel()->getHP() << " st=" << enemy->getEnemyModel()->getStamina());
         enemyCount++;
         bool enemyDefeated = false;
+
+        DBG_LOG("Entering battle loop for enemy #" << enemyCount);
 
         while(!enemyDefeated && enemy->getEnemyModel()->getHP() > 0 && isAlive() && checkContinue())
         {
@@ -1156,14 +1175,18 @@ int main()
 
                                             Wariors[i]->setGold(Wariors[i]->getGold() + 70);
                                             Wariors[i]->setXP(Wariors[i]->getXP() + 150);
+                                            const int beforeLevel = Wariors[i]->getLevel();
                                             Wariors[i]->CalculateLevel();
+                                            DBG_LOG("XP gained: " << Wariors[i]->getName() << " +150 xp=" << Wariors[i]->getXP() << " level " << beforeLevel << "->" << Wariors[i]->getLevel());
                                             for(int j = 0 ; j < Wariors.size() ; j++)
                                             {
                                                 if(j != i)
                                                 {
                                                     Wariors[j]->setXP(Wariors[j]->getXP() + 40);
                                                     Wariors[j]->setGold(Wariors[j]->getGold() + 30);
+                                                    const int allyBeforeLevel = Wariors[j]->getLevel();
                                                     Wariors[j]->CalculateLevel();
+                                                    DBG_LOG("XP gained: " << Wariors[j]->getName() << " +40 xp=" << Wariors[j]->getXP() << " level " << allyBeforeLevel << "->" << Wariors[j]->getLevel());
                                                 }
                                             }
                                             if(enemy->getEnemyModel()->getName() == "Human")
@@ -1183,6 +1206,7 @@ int main()
 
                                             }
                                             enemyDefeated = true;
+                                            DBG_LOG("Enemy defeated: #" << enemyCount << ", transitioning to post-battle menu");
                                             break;
                                         }
 
@@ -1217,7 +1241,7 @@ int main()
                                 if(input >= 1 && input <= Wariors[i]->getUseableItems().size())
                                 {
                                     Wariors[i]->useItem(input);
-                                    Wariors[i]->CalculateLevel();
+                                    DBG_LOG("Inventory used by " << Wariors[i]->getName() << " | hp=" << Wariors[i]->getHP() << " st=" << Wariors[i]->getStamina() << " xp=" << Wariors[i]->getXP() << " lvl=" << Wariors[i]->getLevel());
                                     i--;
 
                                     break;
@@ -1232,6 +1256,7 @@ int main()
                         else if (input == 3)
                         {
                             SaveWarriorToSlot(Wariors[i], Wariors[i]->getName());
+                            DBG_LOG("Menu transition: battle -> save");
                             continue;
                         }
 
@@ -1282,6 +1307,9 @@ int main()
 
 
         }
+
+        DBG_LOG("Exiting battle loop for enemy #" << enemyCount);
+        DBG_LOG("Enemy deleted: #" << enemyCount);
 
         delete enemy;
         enemy = nullptr;
