@@ -21,7 +21,11 @@ struct GameState
 
 struct SessionState
 {
-    int version = 2;
+    int version = 3;
+    std::string slotId;
+    std::string slotLabel;
+    std::string createdAt;
+    std::string updatedAt;
     std::string mode = "singleplayer";
     int partySize = 0;
     std::vector<GameState> party;
@@ -32,10 +36,15 @@ struct SessionState
 
 struct SessionSlotPreview
 {
-    std::string slotName;
-    bool isSessionV2 = false;
-    bool isLegacySinglePlayer = false;
-    std::vector<std::string> partyNames;
+    std::string slotId;
+    std::string slotLabel;
+    std::string createdAt;
+    std::string updatedAt;
+    std::string mode;
+    std::vector<std::string> partyPreview;
+    bool isCurrentSlot = false;
+    bool isLegacy = false;
+    bool isCorrupt = false;
 };
 
 bool SaveGame(const GameState& state, const std::string& slotName, std::string* err);

@@ -267,19 +267,8 @@ string JoinNames(const vector<string>& names)
     return output;
 }
 
-string AskForSessionSlotName()
+string GetIsoTimestampNow()
 {
-    ui::drawHeader("Save Session");
-    ui::centeredLine("Enter slot name (blank = auto generated)");
-    ui::drawFooter("Slot name");
-
-    string slotName;
-    getline(cin, slotName);
-    if (!slotName.empty())
-    {
-        return slotName;
-    }
-
     const time_t now = time(nullptr);
     tm timeInfo{};
 #ifdef _WIN32
@@ -288,9 +277,38 @@ string AskForSessionSlotName()
     localtime_r(&now, &timeInfo);
 #endif
 
-    ostringstream generated;
-    generated << "party_" << put_time(&timeInfo, "%Y%m%d_%H%M%S");
-    return generated.str();
+    ostringstream out;
+    out << put_time(&timeInfo, "%Y-%m-%dT%H:%M:%S");
+    return out.str();
+}
+
+string BuildSlotIdFromNow()
+{
+    const time_t now = time(nullptr);
+    tm timeInfo{};
+#ifdef _WIN32
+    localtime_s(&timeInfo, &now);
+#else
+    localtime_r(&now, &timeInfo);
+#endif
+
+    ostringstream out;
+    out << "save_" << put_time(&timeInfo, "%Y%m%d_%H%M%S");
+    return out.str();
+}
+
+string MakeDefaultSlotLabel(const string& isoTime)
+{
+    return "Save " + isoTime;
+}
+
+string FormatDisplayTime(const string& isoTime)
+{
+    if (isoTime.size() >= 16)
+    {
+        return isoTime.substr(0, 10) + " " + isoTime.substr(11, 5);
+    }
+    return isoTime;
 }
 
 SessionState BuildSessionStateFromParty(const int difficulty, const int battleIndex)
@@ -307,11 +325,15 @@ SessionState BuildSessionStateFromParty(const int difficulty, const int battleIn
     return state;
 }
 
-bool SaveSessionSlot(const string& slotName, const int difficulty, const int battleIndex)
+bool SaveSessionSlot(const string& slotId, const string& slotLabel, const string& createdAt, const int difficulty, const int battleIndex)
 {
     string err;
-    const SessionState state = BuildSessionStateFromParty(difficulty, battleIndex);
-    if (!SaveSession(state, slotName, &err))
+    SessionState state = BuildSessionStateFromParty(difficulty, battleIndex);
+    state.slotId = slotId;
+    state.slotLabel = slotLabel.empty() ? MakeDefaultSlotLabel(GetIsoTimestampNow()) : slotLabel;
+    state.createdAt = createdAt.empty() ? GetIsoTimestampNow() : createdAt;
+    state.updatedAt = GetIsoTimestampNow();
+    if (!SaveSession(state, slotId, &err))
     {
         ui::drawHeader("Save Failed");
         ui::centeredLine(err);
@@ -320,7 +342,7 @@ bool SaveSessionSlot(const string& slotName, const int difficulty, const int bat
         return false;
     }
 
-    ui::centeredLine("Session saved to slot: " + slotName);
+    ui::centeredLine("Session saved to slot: " + state.slotLabel + " (" + slotId + ")");
     return true;
 }
 
@@ -353,15 +375,31 @@ vector<string> ListSaveSlots()
         }
     }
 
-    sort(slots.begin(), slots.end());
     return slots;
 }
 
-bool LoadSessionFromSlot(const string& slotName)
+bool IsNewSlotIdUnique(const string& slotId, const vector<string>& slots)
+{
+    return std::find(slots.begin(), slots.end(), slotId) == slots.end();
+}
+
+string GenerateUniqueSlotId()
+{
+    const vector<string> existingSlots = ListSaveSlots();
+    string slotId = BuildSlotIdFromNow();
+    int suffix = 1;
+    while (!IsNewSlotIdUnique(slotId, existingSlots))
+    {
+        slotId = BuildSlotIdFromNow() + "_" + to_string(suffix++);
+    }
+    return slotId;
+}
+
+bool LoadSessionFromSlot(const string& slotId)
 {
     SessionState loadedSession;
     string err;
-    if (!LoadSession(loadedSession, slotName, &err))
+    if (!LoadSession(loadedSession, slotId, &err))
     {
         ui::drawHeader("Load Failed");
         ui::centeredLine(err);
@@ -388,7 +426,7 @@ bool LoadSessionFromSlot(const string& slotName)
     }
 
     ui::drawHeader("Load Complete");
-    ui::centeredLine("Loaded session slot: " + slotName);
+    ui::centeredLine("Loaded session slot: " + loadedSession.slotLabel + " (" + loadedSession.slotId + ")");
     vector<string> loadedNames;
     for (MainCharacter* warrior : Wariors)
     {
@@ -414,34 +452,40 @@ bool ShowLoadGameMenu()
     }
 
     vector<SessionSlotPreview> sessionSlots;
-    int legacyCount = 0;
+    vector<SessionSlotPreview> legacySlots;
+    vector<SessionSlotPreview> corruptSlots;
 
     for (const string& slotName : slots)
     {
         SessionSlotPreview preview;
         string err;
-        if (!LoadSessionPreview(preview, slotName, &err))
-        {
-            continue;
-        }
+        LoadSessionPreview(preview, slotName, &err);
 
-        if (preview.isSessionV2)
+        if (preview.isCurrentSlot)
         {
             sessionSlots.push_back(preview);
         }
-        else if (preview.isLegacySinglePlayer)
+        else if (preview.isLegacy)
         {
-            legacyCount++;
+            legacySlots.push_back(preview);
+        }
+        else if (preview.isCorrupt)
+        {
+            corruptSlots.push_back(preview);
         }
     }
 
-    if (sessionSlots.empty())
+    sort(sessionSlots.begin(), sessionSlots.end(), [](const SessionSlotPreview& a, const SessionSlotPreview& b) {
+        return a.updatedAt > b.updatedAt;
+    });
+
+    if (sessionSlots.empty() && legacySlots.empty())
     {
         ui::drawHeader("Load Game");
-        ui::centeredLine("No v2 session saves found");
-        if (legacyCount > 0)
+        ui::centeredLine("No loadable saves found");
+        for (const SessionSlotPreview& corrupt : corruptSlots)
         {
-            ui::centeredLine(to_string(legacyCount) + " legacy single-player save(s) hidden");
+            ui::centeredLine(corrupt.slotId + " (corrupt save)");
         }
         ui::drawFooter("Press enter to continue");
         waitForEnterToContinue();
@@ -451,16 +495,134 @@ bool ShowLoadGameMenu()
     ui::drawHeader("Load Game");
     for (std::size_t i = 0; i < sessionSlots.size(); ++i)
     {
-        ui::centeredLine(to_string(i + 1) + ") " + sessionSlots[i].slotName + " [" + JoinNames(sessionSlots[i].partyNames) + "]");
+        ui::centeredLine("[" + to_string(i + 1) + "] " + sessionSlots[i].slotLabel + "  (updated: " + FormatDisplayTime(sessionSlots[i].updatedAt) + ")  Party: " + JoinNames(sessionSlots[i].partyPreview));
     }
-    if (legacyCount > 0)
+    if (!legacySlots.empty())
     {
-        ui::centeredLine("Legacy single-player saves hidden: " + to_string(legacyCount));
+        ui::drawDivider('-');
+        ui::centeredLine("Legacy saves");
+        for (std::size_t i = 0; i < legacySlots.size(); ++i)
+        {
+            ui::centeredLine("[" + to_string(sessionSlots.size() + i + 1) + "] " + legacySlots[i].slotId + " (migrate)");
+        }
     }
-    ui::drawFooter("Select a session slot");
+    if (!corruptSlots.empty())
+    {
+        ui::drawDivider('-');
+        for (const SessionSlotPreview& corrupt : corruptSlots)
+        {
+            ui::centeredLine(corrupt.slotId + " (corrupt save)");
+        }
+    }
+    ui::drawFooter("Select a save slot");
 
-    int choice = ui::readIntInRange(ui::centeredText("Slot [1-" + to_string(sessionSlots.size()) + "]: "), 1, static_cast<int>(sessionSlots.size()));
-    return LoadSessionFromSlot(sessionSlots[static_cast<std::size_t>(choice - 1)].slotName);
+    const int maxChoice = static_cast<int>(sessionSlots.size() + legacySlots.size());
+    int choice = ui::readIntInRange(ui::centeredText("Slot [1-" + to_string(maxChoice) + "]: "), 1, maxChoice);
+    if (choice <= static_cast<int>(sessionSlots.size()))
+    {
+        return LoadSessionFromSlot(sessionSlots[static_cast<std::size_t>(choice - 1)].slotId);
+    }
+
+    const SessionSlotPreview& legacyChoice = legacySlots[static_cast<std::size_t>(choice - static_cast<int>(sessionSlots.size()) - 1)];
+    const string newSlotId = GenerateUniqueSlotId();
+    const string createdAt = GetIsoTimestampNow();
+    SessionState migrated;
+    string loadErr;
+    if (LoadSession(migrated, legacyChoice.slotId, &loadErr))
+    {
+        // no-op
+    }
+    else
+    {
+        GameState legacyGame;
+        if (!LoadGame(legacyGame, legacyChoice.slotId, &loadErr))
+        {
+            ui::drawHeader("Migration Failed");
+            ui::centeredLine(loadErr);
+            ui::drawFooter("Press enter to continue");
+            waitForEnterToContinue();
+            return false;
+        }
+
+        migrated.party.push_back(legacyGame);
+        migrated.partySize = 1;
+        migrated.mode = "singleplayer";
+    }
+
+    migrated.version = 3;
+    migrated.slotId = newSlotId;
+    migrated.slotLabel = legacyChoice.slotId + " (migrated)";
+    migrated.createdAt = createdAt;
+    migrated.updatedAt = createdAt;
+    string saveErr;
+    if (!SaveSession(migrated, newSlotId, &saveErr))
+    {
+        ui::drawHeader("Migration Failed");
+        ui::centeredLine(saveErr);
+        ui::drawFooter("Press enter to continue");
+        waitForEnterToContinue();
+        return false;
+    }
+
+    return LoadSessionFromSlot(newSlotId);
+}
+
+bool ShowSaveSessionMenu(const int difficulty, const int battleIndex)
+{
+    vector<SessionSlotPreview> sessionSlots;
+    for (const string& slotId : ListSaveSlots())
+    {
+        SessionSlotPreview preview;
+        string err;
+        LoadSessionPreview(preview, slotId, &err);
+        if (preview.isCurrentSlot)
+        {
+            sessionSlots.push_back(preview);
+        }
+    }
+
+    sort(sessionSlots.begin(), sessionSlots.end(), [](const SessionSlotPreview& a, const SessionSlotPreview& b) {
+        return a.updatedAt > b.updatedAt;
+    });
+
+    ui::drawHeader("Save Session");
+    ui::centeredLine("1) Create New Save Slot");
+    ui::centeredLine("2) Overwrite Existing Slot");
+    ui::drawFooter("Choose save mode");
+    const int modeChoice = ui::readIntInRange(ui::centeredText("Choice [1-2]: "), 1, 2);
+
+    if (modeChoice == 1)
+    {
+        ui::drawHeader("Create New Save Slot");
+        ui::centeredLine("Enter slot label (blank = auto label)");
+        ui::drawFooter("Slot label");
+        string slotLabel;
+        getline(cin, slotLabel);
+        const string slotId = GenerateUniqueSlotId();
+        const string createdAt = GetIsoTimestampNow();
+        return SaveSessionSlot(slotId, slotLabel, createdAt, difficulty, battleIndex);
+    }
+
+    if (sessionSlots.empty())
+    {
+        ui::drawHeader("Save Session");
+        ui::centeredLine("No existing v3 slots found, creating new slot instead.");
+        ui::drawFooter("Press enter to continue");
+        waitForEnterToContinue();
+        const string slotId = GenerateUniqueSlotId();
+        const string createdAt = GetIsoTimestampNow();
+        return SaveSessionSlot(slotId, "", createdAt, difficulty, battleIndex);
+    }
+
+    ui::drawHeader("Overwrite Existing Slot");
+    for (std::size_t i = 0; i < sessionSlots.size(); ++i)
+    {
+        ui::centeredLine("[" + to_string(i + 1) + "] " + sessionSlots[i].slotLabel + "  (updated: " + FormatDisplayTime(sessionSlots[i].updatedAt) + ")");
+    }
+    ui::drawFooter("Select slot to overwrite");
+    const int slotChoice = ui::readIntInRange(ui::centeredText("Slot [1-" + to_string(sessionSlots.size()) + "]: "), 1, static_cast<int>(sessionSlots.size()));
+    const SessionSlotPreview& selected = sessionSlots[static_cast<std::size_t>(slotChoice - 1)];
+    return SaveSessionSlot(selected.slotId, selected.slotLabel, selected.createdAt, difficulty, battleIndex);
 }
 
 int findEnemyLevel()
@@ -1411,8 +1573,7 @@ int main()
                         }
                         else if (input == 3)
                         {
-                            const string slotName = AskForSessionSlotName();
-                            const bool saveSucceeded = SaveSessionSlot(slotName, gCurrentDifficulty, gCurrentBattleIndex);
+                            const bool saveSucceeded = ShowSaveSessionMenu(gCurrentDifficulty, gCurrentBattleIndex);
                             DBG_LOG("Menu transition: battle -> save+quit");
                             if(saveSucceeded)
                             {
