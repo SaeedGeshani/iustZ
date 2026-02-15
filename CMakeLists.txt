@@ -11,23 +11,28 @@ include(FetchContent)
 set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(HEADERS_DIR "${SRC_DIR}/Headers")
 
-file(GLOB_RECURSE CORE_SOURCES CONFIGURE_DEPENDS
+file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS
     "${SRC_DIR}/*.cpp"
 )
-list(REMOVE_ITEM CORE_SOURCES
+list(REMOVE_ITEM ENGINE_SOURCES
     "${SRC_DIR}/The_main.cpp"
 )
 
-add_executable(iustz_game
-    "${SRC_DIR}/The_main.cpp"
-    ${CORE_SOURCES}
+add_library(iustz_engine STATIC
+    ${ENGINE_SOURCES}
 )
 
-target_include_directories(iustz_game PRIVATE
+target_include_directories(iustz_engine PUBLIC
     "${SRC_DIR}"
     "${HEADERS_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/external"
 )
+
+add_executable(iustz_game
+    "${SRC_DIR}/The_main.cpp"
+)
+
+target_link_libraries(iustz_game PRIVATE iustz_engine)
 
 if(IUSTZ_ENABLE_GUI)
 # ---- GUI frontend dependencies (Dear ImGui + GLFW + OpenGL3) ----
@@ -77,15 +82,8 @@ endif()
 
 add_executable(iustz_gui
     src_gui/main_gui.cpp
-    ${CORE_SOURCES}
 )
 
-target_include_directories(iustz_gui PRIVATE
-    "${SRC_DIR}"
-    "${HEADERS_DIR}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/external"
-)
-
-target_link_libraries(iustz_gui PRIVATE imgui_lib glad)
+target_link_libraries(iustz_gui PRIVATE iustz_engine imgui_lib glad)
 
 endif()

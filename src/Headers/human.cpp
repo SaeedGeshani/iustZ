@@ -8,13 +8,11 @@
 #include "human.h"
 #include "ThrowableWeapon.h"
 #include "ConsoleUI.h"
+#include "EnemyStats.h"
 #include <thread>
 #include <chrono>
 #include<cstdlib>
 using namespace std;
-
-int CalculateHPForHuman(int);
-int CalculateSTForHuman(int);
 
 
 //Enemy/////////////////////////////////////////////////////////////////////////////
