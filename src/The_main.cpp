@@ -12,6 +12,7 @@
 #include <thread>
 #include <random>
 #include <algorithm>
+#include <cassert>
 #include <random>
 #include "SaveSystem.h"
 #include "Headers/ConsoleUI.h"
@@ -123,6 +124,16 @@ void prints(const string& s)
     cout << s << endl << endl;
 }
 
+//Global Objects And Variables==============================
+    // static MainCharacter Warior;
+    Shop* Store;
+    int ZZAARRIIBB;
+
+    int numberOfCharacters;
+    static vector<MainCharacter*>Wariors;
+    int gCurrentDifficulty = 1;
+    int gCurrentBattleIndex = 0;
+
 GameState BuildGameStateFromWarrior(MainCharacter* warrior)
 {
     GameState state;
@@ -155,78 +166,39 @@ GameState BuildGameStateFromWarrior(MainCharacter* warrior)
     return state;
 }
 
-bool SaveWarriorToSlot(MainCharacter* warrior, const string& slotName)
+bool ReorderEquippedWeapon(MainCharacter* warrior, const string& equippedWeaponName)
 {
-    string err;
-    const GameState state = BuildGameStateFromWarrior(warrior);
-    if (!SaveGame(state, slotName, &err))
+    if (equippedWeaponName.empty())
     {
-        ui::drawHeader("Save Failed");
-        ui::centeredLine("Could not save game for: " + warrior->getName());
-        ui::centeredLine(err);
-        ui::drawFooter("Press enter to continue");
-        waitForEnterToContinue();
-        return false;
+        return true;
     }
 
-    ui::centeredLine("Game saved to slot: " + slotName);
+    vector<Weapon*>& weapons = warrior->getWeapons();
+    auto equippedIt = find_if(weapons.begin(), weapons.end(),
+                                [&](Weapon* weapon) { return weapon->getName() == equippedWeaponName; });
+
+    if (equippedIt == weapons.end())
+    {
+        std::unique_ptr<Weapon> equippedWeapon = CreateWeaponByName(equippedWeaponName);
+        if (!equippedWeapon)
+        {
+            cout << "Unknown weapon in save: " << equippedWeaponName << endl;
+            return false;
+        }
+
+        weapons.insert(weapons.begin(), equippedWeapon.release());
+        return true;
+    }
+
+    if (equippedIt != weapons.begin())
+    {
+        iter_swap(weapons.begin(), equippedIt);
+    }
     return true;
 }
 
-//Global Objects And Variables==============================
-    // static MainCharacter Warior;
-    Shop* Store;
-    int ZZAARRIIBB;
-
-    int numberOfCharacters;
-    static vector<MainCharacter*>Wariors;
-
-vector<string> ListSaveSlots()
+MainCharacter* CreateWarriorFromGameState(const GameState& loadedState)
 {
-    vector<string> slots;
-    std::error_code ec;
-    const std::filesystem::path saveDir("saves");
-    if (!std::filesystem::exists(saveDir, ec) || ec)
-    {
-        return slots;
-    }
-
-    for (const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(saveDir, ec))
-    {
-        if (ec)
-        {
-            break;
-        }
-
-        if (!entry.is_regular_file())
-        {
-            continue;
-        }
-
-        const std::filesystem::path path = entry.path();
-        if (path.extension() == ".json")
-        {
-            slots.push_back(path.stem().string());
-        }
-    }
-
-    sort(slots.begin(), slots.end());
-    return slots;
-}
-
-bool LoadWarriorFromSlot(const string& slotName)
-{
-    GameState loadedState;
-    string err;
-    if (!LoadGame(loadedState, slotName, &err))
-    {
-        ui::drawHeader("Load Failed");
-        ui::centeredLine(err);
-        ui::drawFooter("Press enter to continue");
-        waitForEnterToContinue();
-        return false;
-    }
-
     MainCharacter* loadedWarrior = new MainCharacter(
         loadedState.playerName,
         loadedState.hp,
@@ -263,37 +235,167 @@ bool LoadWarriorFromSlot(const string& slotName)
         loadedWarrior->addUseableItems(item.release());
     }
 
-    if (!loadedState.equippedWeapon.empty())
-    {
-        vector<Weapon*>& weapons = loadedWarrior->getWeapons();
-        auto equippedIt = find_if(weapons.begin(), weapons.end(),
-                                  [&](Weapon* weapon) { return weapon->getName() == loadedState.equippedWeapon; });
+    ReorderEquippedWeapon(loadedWarrior, loadedState.equippedWeapon);
+    return loadedWarrior;
+}
 
-        if (equippedIt == weapons.end())
+void ClearWarriors()
+{
+    for (MainCharacter* warrior : Wariors)
+    {
+        delete warrior;
+    }
+    Wariors.clear();
+}
+
+string JoinNames(const vector<string>& names)
+{
+    if (names.empty())
+    {
+        return "-";
+    }
+
+    string output;
+    for (size_t i = 0; i < names.size(); ++i)
+    {
+        output += names[i];
+        if (i + 1 < names.size())
         {
-            std::unique_ptr<Weapon> equippedWeapon = CreateWeaponByName(loadedState.equippedWeapon);
-            if (!equippedWeapon)
-            {
-                cout << "Unknown weapon in save: " << loadedState.equippedWeapon << endl;
-            }
-            else
-            {
-                weapons.insert(weapons.begin(), equippedWeapon.release());
-            }
+            output += ", ";
         }
-        else if (equippedIt != weapons.begin())
+    }
+    return output;
+}
+
+string AskForSessionSlotName()
+{
+    ui::drawHeader("Save Session");
+    ui::centeredLine("Enter slot name (blank = auto generated)");
+    ui::drawFooter("Slot name");
+
+    string slotName;
+    getline(cin, slotName);
+    if (!slotName.empty())
+    {
+        return slotName;
+    }
+
+    const time_t now = time(nullptr);
+    tm timeInfo{};
+#ifdef _WIN32
+    localtime_s(&timeInfo, &now);
+#else
+    localtime_r(&now, &timeInfo);
+#endif
+
+    ostringstream generated;
+    generated << "party_" << put_time(&timeInfo, "%Y%m%d_%H%M%S");
+    return generated.str();
+}
+
+SessionState BuildSessionStateFromParty(const int difficulty, const int battleIndex)
+{
+    SessionState state;
+    state.mode = (Wariors.size() > 1) ? "multiplayer" : "singleplayer";
+    state.partySize = static_cast<int>(Wariors.size());
+    state.difficulty = difficulty;
+    state.battleIndex = battleIndex;
+    for (MainCharacter* warrior : Wariors)
+    {
+        state.party.push_back(BuildGameStateFromWarrior(warrior));
+    }
+    return state;
+}
+
+bool SaveSessionSlot(const string& slotName, const int difficulty, const int battleIndex)
+{
+    string err;
+    const SessionState state = BuildSessionStateFromParty(difficulty, battleIndex);
+    if (!SaveSession(state, slotName, &err))
+    {
+        ui::drawHeader("Save Failed");
+        ui::centeredLine(err);
+        ui::drawFooter("Press enter to continue");
+        waitForEnterToContinue();
+        return false;
+    }
+
+    ui::centeredLine("Session saved to slot: " + slotName);
+    return true;
+}
+
+vector<string> ListSaveSlots()
+{
+    vector<string> slots;
+    std::error_code ec;
+    const std::filesystem::path saveDir("saves");
+    if (!std::filesystem::exists(saveDir, ec) || ec)
+    {
+        return slots;
+    }
+
+    for (const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(saveDir, ec))
+    {
+        if (ec)
         {
-            iter_swap(weapons.begin(), equippedIt);
+            break;
+        }
+
+        if (!entry.is_regular_file())
+        {
+            continue;
+        }
+
+        const std::filesystem::path path = entry.path();
+        if (path.extension() == ".json")
+        {
+            slots.push_back(path.stem().string());
         }
     }
 
-    Wariors.push_back(loadedWarrior);
-    numberOfCharacters = 1;
-    ZZAARRIIBB = 1;
+    sort(slots.begin(), slots.end());
+    return slots;
+}
+
+bool LoadSessionFromSlot(const string& slotName)
+{
+    SessionState loadedSession;
+    string err;
+    if (!LoadSession(loadedSession, slotName, &err))
+    {
+        ui::drawHeader("Load Failed");
+        ui::centeredLine(err);
+        ui::drawFooter("Press enter to continue");
+        waitForEnterToContinue();
+        return false;
+    }
+
+    ClearWarriors();
+    for (const GameState& playerState : loadedSession.party)
+    {
+        Wariors.push_back(CreateWarriorFromGameState(playerState));
+    }
+
+    numberOfCharacters = static_cast<int>(Wariors.size());
+    ZZAARRIIBB = numberOfCharacters;
+    gCurrentDifficulty = loadedSession.difficulty;
+    gCurrentBattleIndex = loadedSession.battleIndex;
+
+    assert(!Wariors.empty());
+    if (loadedSession.mode == "multiplayer")
+    {
+        assert(Wariors.size() > 1);
+    }
 
     ui::drawHeader("Load Complete");
-    ui::centeredLine("Loaded slot: " + slotName);
-    ui::centeredLine("Player: " + loadedWarrior->getName());
+    ui::centeredLine("Loaded session slot: " + slotName);
+    vector<string> loadedNames;
+    for (MainCharacter* warrior : Wariors)
+    {
+        loadedNames.push_back(warrior->getName());
+    }
+    ui::centeredLine("Party size: " + to_string(Wariors.size()));
+    ui::centeredLine("Players: " + JoinNames(loadedNames));
     ui::drawFooter("Press enter to continue");
     waitForEnterToContinue();
     return true;
@@ -311,15 +413,54 @@ bool ShowLoadGameMenu()
         return false;
     }
 
-    ui::drawHeader("Load Game");
-    for (std::size_t i = 0; i < slots.size(); ++i)
-    {
-        ui::centeredLine(to_string(i + 1) + ") " + slots[i]);
-    }
-    ui::drawFooter("Select a slot");
+    vector<SessionSlotPreview> sessionSlots;
+    int legacyCount = 0;
 
-    int choice = ui::readIntInRange(ui::centeredText("Slot [1-" + to_string(slots.size()) + "]: "), 1, static_cast<int>(slots.size()));
-    return LoadWarriorFromSlot(slots[static_cast<std::size_t>(choice - 1)]);
+    for (const string& slotName : slots)
+    {
+        SessionSlotPreview preview;
+        string err;
+        if (!LoadSessionPreview(preview, slotName, &err))
+        {
+            continue;
+        }
+
+        if (preview.isSessionV2)
+        {
+            sessionSlots.push_back(preview);
+        }
+        else if (preview.isLegacySinglePlayer)
+        {
+            legacyCount++;
+        }
+    }
+
+    if (sessionSlots.empty())
+    {
+        ui::drawHeader("Load Game");
+        ui::centeredLine("No v2 session saves found");
+        if (legacyCount > 0)
+        {
+            ui::centeredLine(to_string(legacyCount) + " legacy single-player save(s) hidden");
+        }
+        ui::drawFooter("Press enter to continue");
+        waitForEnterToContinue();
+        return false;
+    }
+
+    ui::drawHeader("Load Game");
+    for (std::size_t i = 0; i < sessionSlots.size(); ++i)
+    {
+        ui::centeredLine(to_string(i + 1) + ") " + sessionSlots[i].slotName + " [" + JoinNames(sessionSlots[i].partyNames) + "]");
+    }
+    if (legacyCount > 0)
+    {
+        ui::centeredLine("Legacy single-player saves hidden: " + to_string(legacyCount));
+    }
+    ui::drawFooter("Select a session slot");
+
+    int choice = ui::readIntInRange(ui::centeredText("Slot [1-" + to_string(sessionSlots.size()) + "]: "), 1, static_cast<int>(sessionSlots.size()));
+    return LoadSessionFromSlot(sessionSlots[static_cast<std::size_t>(choice - 1)].slotName);
 }
 
 int findEnemyLevel()
@@ -867,7 +1008,6 @@ void makingSomeNewCharacter()
             newWarior->addUseableItems(ptr2WheyPowder);
             pauseForReadability(900);
             ui::clearScreen();
-            SaveWarriorToSlot(newWarior, newWarior->getName());
             Wariors.push_back(newWarior);
 
            break;
@@ -1037,9 +1177,11 @@ int main()
     int mainMenuChoice = ui::readIntInRange(ui::centeredText("> "), 1, 2);
     ui::clearScreen();
 
+    bool loadedFromSlot = false;
     if (mainMenuChoice == 2)
     {
-        if (!ShowLoadGameMenu())
+        loadedFromSlot = ShowLoadGameMenu();
+        if (!loadedFromSlot)
         {
             ui::drawHeader("Fallback to New Game");
             ui::centeredLine("Starting a new game setup.");
@@ -1053,18 +1195,29 @@ int main()
         makingSomeNewCharacter();
     }
 
-    EnemyFactory Enemyhouse(Wariors[findEnemyLevel()] , ZZAARRIIBB);
-    ui::drawHeader("Difficulty Selection");
-    ui::centeredLine("  1) Casual");
-    ui::centeredLine("  2) Challenger");
-    ui::centeredLine("  3) Nightmare");
-    ui::drawFooter("Choose difficulty [1-3]");
-    int Difficulty = ui::readIntInRange(ui::centeredText("> "), 1, 3);
-    ui::clearScreen();
+    assert(!Wariors.empty());
+    if (Wariors.size() > 1)
+    {
+        assert(static_cast<int>(Wariors.size()) > 1);
+    }
 
+    EnemyFactory Enemyhouse(Wariors[findEnemyLevel()] , ZZAARRIIBB);
+    int Difficulty = gCurrentDifficulty;
+    int enemyCount = gCurrentBattleIndex;
+
+    if (!loadedFromSlot)
+    {
+        ui::drawHeader("Difficulty Selection");
+        ui::centeredLine("  1) Casual");
+        ui::centeredLine("  2) Challenger");
+        ui::centeredLine("  3) Nightmare");
+        ui::drawFooter("Choose difficulty [1-3]");
+        Difficulty = ui::readIntInRange(ui::centeredText("> "), 1, 3);
+        ui::clearScreen();
+    }
+    gCurrentDifficulty = Difficulty;
 
     bool checkStatus;
-    int enemyCount = 0;
 
     bool playerRequestedQuit = false;
 
@@ -1107,6 +1260,7 @@ int main()
         }
         DBG_LOG("Enemy created: " << enemy->getEnemyModel()->getName() << " hp=" << enemy->getEnemyModel()->getHP() << " st=" << enemy->getEnemyModel()->getStamina());
         enemyCount++;
+        gCurrentBattleIndex = enemyCount;
         bool enemyDefeated = false;
 
         DBG_LOG("Entering battle loop for enemy #" << enemyCount);
@@ -1257,7 +1411,8 @@ int main()
                         }
                         else if (input == 3)
                         {
-                            const bool saveSucceeded = SaveWarriorToSlot(Wariors[i], Wariors[i]->getName());
+                            const string slotName = AskForSessionSlotName();
+                            const bool saveSucceeded = SaveSessionSlot(slotName, gCurrentDifficulty, gCurrentBattleIndex);
                             DBG_LOG("Menu transition: battle -> save+quit");
                             if(saveSucceeded)
                             {

@@ -19,5 +19,27 @@ struct GameState
     std::vector<std::string> usableItemsOwnedNames;
 };
 
+struct SessionState
+{
+    int version = 2;
+    std::string mode = "singleplayer";
+    int partySize = 0;
+    std::vector<GameState> party;
+    bool sharedCoins = false;
+    int difficulty = 1;
+    int battleIndex = 0;
+};
+
+struct SessionSlotPreview
+{
+    std::string slotName;
+    bool isSessionV2 = false;
+    bool isLegacySinglePlayer = false;
+    std::vector<std::string> partyNames;
+};
+
 bool SaveGame(const GameState& state, const std::string& slotName, std::string* err);
 bool LoadGame(GameState& outState, const std::string& slotName, std::string* err);
+bool SaveSession(const SessionState& state, const std::string& slotName, std::string* err);
+bool LoadSession(SessionState& outState, const std::string& slotName, std::string* err);
+bool LoadSessionPreview(SessionSlotPreview& outPreview, const std::string& slotName, std::string* err);
