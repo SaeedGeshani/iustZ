@@ -99,11 +99,69 @@ int main()
 
         ImGui::Begin("IUSTZ Frontend");
         ImGui::Text("Dear ImGui GUI Frontend");
-        if (!status.empty())
+
+        const auto navigateTo = [&](Screen destination)
         {
-            ImGui::Separator();
-            ImGui::TextWrapped("%s", status.c_str());
+            if ((destination == Screen::Battle || destination == Screen::Inventory || destination == Screen::Shop) && !hasSession)
+            {
+                status = "No active session. Start or load a game first.";
+                screen = Screen::MainMenu;
+                return;
+            }
+            screen = destination;
+        };
+
+        ImGui::Separator();
+
+        ImGui::BeginDisabled(screen == Screen::MainMenu);
+        if (ImGui::Button("Main Menu"))
+        {
+            navigateTo(Screen::MainMenu);
         }
+        ImGui::EndDisabled();
+
+        ImGui::SameLine();
+        ImGui::BeginDisabled(screen == Screen::Battle);
+        if (ImGui::Button("Battle"))
+        {
+            navigateTo(Screen::Battle);
+        }
+        ImGui::EndDisabled();
+
+        ImGui::SameLine();
+        ImGui::BeginDisabled(screen == Screen::Inventory);
+        if (ImGui::Button("Inventory"))
+        {
+            navigateTo(Screen::Inventory);
+        }
+        ImGui::EndDisabled();
+
+        ImGui::SameLine();
+        ImGui::BeginDisabled(screen == Screen::Shop);
+        if (ImGui::Button("Shop"))
+        {
+            navigateTo(Screen::Shop);
+        }
+        ImGui::EndDisabled();
+
+        ImGui::SameLine();
+        ImGui::BeginDisabled(!hasSession);
+        if (ImGui::Button("Save"))
+        {
+            std::string err;
+            const std::string slot = session.activeSlotId.empty() ? "" : session.activeSlotId;
+            status = SaveSession(session, slot, err, "GUI Save") ? "Session saved." : err;
+        }
+        ImGui::EndDisabled();
+
+        ImGui::SameLine();
+        ImGui::BeginDisabled(screen == Screen::LoadGame);
+        if (ImGui::Button("Load"))
+        {
+            navigateTo(Screen::LoadGame);
+        }
+        ImGui::EndDisabled();
+
         ImGui::Separator();
 
         if (screen == Screen::MainMenu)
@@ -170,10 +228,7 @@ int main()
                     screen = Screen::Battle;
                 }
             }
-            if (ImGui::Button("Back"))
-            {
-                screen = Screen::MainMenu;
-            }
+            ImGui::TextDisabled("Use top navigation to switch screens.");
         }
         else if (screen == Screen::LoadGame)
         {
@@ -204,10 +259,7 @@ int main()
                 ImGui::Separator();
                 ImGui::PopID();
             }
-            if (ImGui::Button("Back"))
-            {
-                screen = Screen::MainMenu;
-            }
+            ImGui::TextDisabled("Use top navigation to switch screens.");
         }
         else if (screen == Screen::Battle)
         {
@@ -381,31 +433,6 @@ int main()
 
                 ImGui::Columns(1);
 
-                ImGui::Separator();
-                if (ImGui::Button("Inventory"))
-                {
-                    screen = Screen::Inventory;
-                }
-                ImGui::SameLine();
-                if (ImGui::Button("Shop"))
-                {
-                    screen = Screen::Shop;
-                }
-                ImGui::SameLine();
-                if (ImGui::Button("Save"))
-                {
-                    std::string err;
-                    const std::string slot = session.activeSlotId.empty() ? "" : session.activeSlotId;
-                    if (SaveSession(session, slot, err, "GUI Save"))
-                    {
-                        status = "Session saved.";
-                    }
-                    else
-                    {
-                        status = err;
-                    }
-                }
-
                 DrawCombatLog(session);
             }
         }
@@ -427,10 +454,7 @@ int main()
                 }
                 ImGui::Separator();
             }
-            if (ImGui::Button("Back to Battle"))
-            {
-                screen = Screen::Battle;
-            }
+            ImGui::TextDisabled("Use top navigation to switch screens.");
         }
         else if (screen == Screen::Shop)
         {
@@ -516,11 +540,13 @@ int main()
 
             ImGui::Columns(1);
 
-            if (ImGui::Button("Back to Battle"))
-            {
-                screen = Screen::Battle;
-            }
+            ImGui::TextDisabled("Use top navigation to switch screens.");
         }
+
+        ImGui::Separator();
+        ImGui::BeginChild("status-bar", ImVec2(0, ImGui::GetFrameHeightWithSpacing() * 1.4f), true);
+        ImGui::TextUnformatted(status.empty() ? "Ready." : status.c_str());
+        ImGui::EndChild();
 
         ImGui::End();
 
