@@ -84,6 +84,9 @@ EnemyTurnResult EnemyTurn(GameSession& session);
 std::vector<PlayerSnapshot> GetPartySnapshot(const GameSession& session);
 EnemySnapshot GetEnemySnapshot(const GameSession& session);
 
+std::vector<std::string> GetAvailableWeapons();
+std::vector<std::string> GetAvailableItems();
+
 bool BuyWeapon(GameSession& session, int playerIndex, const std::string& weaponName, std::string& err);
 bool BuyItem(GameSession& session, int playerIndex, const std::string& itemName, std::string& err);
 
