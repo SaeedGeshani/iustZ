@@ -3,6 +3,7 @@
 #include <cctype>
 #include <istream>
 #include <map>
+#include <limits>
 #include <stdexcept>
 #include <string>
 #include <variant>
@@ -126,21 +127,49 @@ private:
 
     static long long parseInteger(const std::string& s, std::size_t& pos)
     {
-        std::size_t start = pos;
+        bool negative = false;
         if (s[pos] == '-')
         {
+            negative = true;
             ++pos;
         }
+
         require(pos < s.size() && std::isdigit(static_cast<unsigned char>(s[pos])), "Expected integer");
+
+        unsigned long long magnitude = 0;
+        const unsigned long long maxMagnitude =
+            negative
+                ? static_cast<unsigned long long>(std::numeric_limits<long long>::max()) + 1ULL
+                : static_cast<unsigned long long>(std::numeric_limits<long long>::max());
+
         while (pos < s.size() && std::isdigit(static_cast<unsigned char>(s[pos])))
         {
+            const unsigned int digit = static_cast<unsigned int>(s[pos] - '0');
+            if (magnitude > (maxMagnitude - digit) / 10ULL)
+            {
+                throw parse_error("Integer out of range");
+            }
+
+            magnitude = magnitude * 10ULL + digit;
             ++pos;
         }
+
         if (pos < s.size() && (s[pos] == '.' || s[pos] == 'e' || s[pos] == 'E'))
         {
             throw parse_error("Only integer values supported");
         }
-        return std::stoll(s.substr(start, pos - start));
+
+        if (negative)
+        {
+            if (magnitude == static_cast<unsigned long long>(std::numeric_limits<long long>::max()) + 1ULL)
+            {
+                return std::numeric_limits<long long>::min();
+            }
+
+            return -static_cast<long long>(magnitude);
+        }
+
+        return static_cast<long long>(magnitude);
     }
 
     static json parseObject(const std::string& s, std::size_t& pos)
@@ -246,6 +275,12 @@ template <>
 inline int json::get<int>() const
 {
     return static_cast<int>(std::get<long long>(value_));
+}
+
+template <>
+inline long long json::get<long long>() const
+{
+    return std::get<long long>(value_);
 }
 
 template <>
