@@ -7,6 +7,7 @@
 #include<ctime>
 #include "human.h"
 #include "ThrowableWeapon.h"
+#include "ConsoleUI.h"
 #include <thread>
 #include <chrono>
 #include<cstdlib>
@@ -191,22 +192,29 @@ int CalculateSTForHuman(int);
     //Functions=========================
     void HumanEnemyController::WeaponAttack(MainCharacter*player , int number)
     {
-        int totalDamage = (Enemymodel->getEnemyWeapons()[number]->getDamagePerAttack() + player->getLevel()*4) * Enemymodel->getZarib()/2;
-        cout << "===================================================" << endl;
-        cout << "       Enemy is attacking with: " << Enemymodel->getEnemyWeapons()[number]->getName() << endl;
-        cout << "===================================================" << endl;
-        cout << "Damage: " << totalDamage << "   Costed ST from Enemy: " << Enemymodel->getEnemyWeapons()[number]->getNeededStaminaPerAttack() << endl; 
-        cout << "===================================================" << endl;
+        const int hpBefore = player->getHP();
+        const int baseDamage = (Enemymodel->getEnemyWeapons()[number]->getDamagePerAttack() + player->getLevel()*4) * Enemymodel->getZarib()/2;
+        const int defenseValue = 0;
+        const int finalDamage = baseDamage;
 
-        player->setHP(player->getHP() - totalDamage);
+        player->setHP(player->getHP() - finalDamage);
         Enemymodel->setStamina(Enemymodel->getStamina() - Enemymodel->getEnemyWeapons()[number]->getNeededStaminaPerAttack());
+
+        ui::LogAttack(
+            Enemymodel->getName(),
+            player->getName(),
+            Enemymodel->getEnemyWeapons()[number]->getName(),
+            baseDamage,
+            defenseValue,
+            finalDamage,
+            hpBefore,
+            player->getHP());
+
         if(dynamic_cast<ThrowableWeapon*>(Enemymodel->getEnemyWeapons()[number]) != NULL)
         {
             delete Enemymodel->EnemyWeapons[number];
             Enemymodel->EnemyWeapons.erase(Enemymodel->EnemyWeapons.begin() + number);
         }
-        this_thread::sleep_for(chrono::seconds(5));
-        system("cls");
     }
 
     void HumanEnemyController::useItems(int number)
