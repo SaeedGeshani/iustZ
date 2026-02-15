@@ -20,6 +20,7 @@
 #include "Headers/Items.h"
 #include "Headers/Items.h"
 #include "Headers/EnemyFactory.h"
+#include "EnemyStats.h"
 #include "Headers/EnemyFactory.h"
 #include "Headers/Zombie.h"
 #include "Headers/Zombie.h"
@@ -701,12 +702,6 @@ bool checkContinueForOne(int i)
     }
     return false;
 }
-int CalculateHPForHuman(int);
-int CalculateSTForHuman(int);
-int CalculateHPForZombie(int);
-int CalculateSTforZombie(int);
-int CalculateDMPAforZombie(int);
-
 Shop* randomShopGenerator(){
     Shop* randomStore = nullptr;
     Batarang* a = nullptr;
@@ -1683,32 +1678,4 @@ int main()
         ui::drawFooter("Exiting game safely");
         return 1;
     }
-}
-
-int CalculateHPForHuman(int level)
-{
-    return level*8 + 80;
-}
-int CalculateSTForHuman(int level)
-{
-    return level *10 + 70;
-}
-
-int CalculateDMPAforZombie(int level)
-{
-    int DMPA;
-    DMPA = static_cast<int>(pow(level , 10.0 / 7.0) + 10);
-    return DMPA;
-}
-int CalculateSTforZombie(int level)
-{
-    int ST;
-    ST = level * 20 + 50;
-    return ST;
-}
-int CalculateHPForZombie(int level)
-{
-    int HP;
-    HP = static_cast<int>(pow(level , 4.0 / 3.0) * 20 + 50);
-    return HP;
 }

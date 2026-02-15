@@ -18,13 +18,10 @@
 #include "RocketLauncher.h"
 #include "Mjolnir.h"
 #include "Spear.h"
+#include "EnemyStats.h"
 
 
 using namespace std;
-
-int CalculateHPForZombie(int);
-int CalculateSTforZombie(int);
-int CalculateDMPAforZombie(int);
 
 class EnemyFactory{
 private:

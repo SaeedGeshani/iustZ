@@ -5,9 +5,6 @@
 #include "Zombie.h"
 #include "human.h"
 
-int CalculateHPForHuman(int);
-int CalculateSTForHuman(int);
-
 using namespace std;
 //EnemyFactory///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Constructor========================
