@@ -28,11 +28,15 @@ void DrawCombatLog(const GameSession& session)
 {
     ImGui::Begin("Combat Log");
     ImGui::BeginChild("combat-log-child", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
+    const bool shouldAutoScroll = (ImGui::GetScrollY() >= ImGui::GetScrollMaxY() - 5.0f);
     for (const std::string& line : session.combatLog)
     {
         ImGui::TextWrapped("%s", line.c_str());
     }
-    ImGui::SetScrollHereY(1.0f);
+    if (shouldAutoScroll)
+    {
+        ImGui::SetScrollHereY(1.0f);
+    }
     ImGui::EndChild();
     ImGui::End();
 }
@@ -82,6 +86,8 @@ int main()
     std::string singleName = "Player1";
     std::vector<std::string> multiNames = {"Player1", "Player2"};
     int selectedPlayer = 0;
+    std::vector<int> selectedWeaponIndices;
+    std::vector<int> selectedItemIndices;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -215,11 +221,52 @@ int main()
                 const std::vector<PlayerSnapshot> party = GetPartySnapshot(session);
                 const EnemySnapshot enemy = GetEnemySnapshot(session);
 
+                if (party.empty())
+                {
+                    selectedPlayer = 0;
+                }
+                else
+                {
+                    selectedPlayer = std::max(0, std::min(selectedPlayer, static_cast<int>(party.size()) - 1));
+                }
+
+                selectedWeaponIndices.resize(party.size(), 0);
+                selectedItemIndices.resize(party.size(), 0);
+                for (size_t i = 0; i < party.size(); ++i)
+                {
+                    if (party[i].weapons.empty())
+                    {
+                        selectedWeaponIndices[i] = 0;
+                    }
+                    else
+                    {
+                        selectedWeaponIndices[i] = std::max(0, std::min(selectedWeaponIndices[i], static_cast<int>(party[i].weapons.size()) - 1));
+                    }
+
+                    if (party[i].items.empty())
+                    {
+                        selectedItemIndices[i] = 0;
+                    }
+                    else
+                    {
+                        selectedItemIndices[i] = std::max(0, std::min(selectedItemIndices[i], static_cast<int>(party[i].items.size()) - 1));
+                    }
+                }
+
+                const bool validPlayerSelection = !party.empty() && selectedPlayer >= 0 && selectedPlayer < static_cast<int>(party.size());
+                const PlayerSnapshot* selected = validPlayerSelection ? &party[selectedPlayer] : nullptr;
+                const bool playerAlive = selected != nullptr && selected->hp > 0;
+                const bool hasItems = selected != nullptr && !selected->items.empty();
+                const bool hasWeapons = selected != nullptr && !selected->weapons.empty();
+
                 ImGui::Text("Battle #%d", session.battleIndex);
-                ImGui::Text("Enemy: %s (HP: %d)", enemy.name.c_str(), enemy.hp);
+                ImGui::Text("Enemy: %s (HP: %d/%d)", enemy.name.c_str(), enemy.hp, enemy.maxHp);
                 ImGui::Separator();
 
+                ImGui::Columns(3, "battle-panels", true);
+
                 ImGui::Text("Party");
+                ImGui::BeginChild("party-panel", ImVec2(0, 300), true);
                 for (size_t i = 0; i < party.size(); ++i)
                 {
                     const PlayerSnapshot& p = party[i];
@@ -231,10 +278,19 @@ int main()
                     ImGui::ProgressBar(std::max(0.0f, std::min(1.0f, p.maxHp > 0 ? (p.hp / static_cast<float>(p.maxHp)) : 0.0f)), ImVec2(-1, 0), ("HP: " + std::to_string(p.hp)).c_str());
                     ImGui::PopID();
                 }
+                ImGui::EndChild();
 
+                ImGui::NextColumn();
+
+                ImGui::Text("Enemy & Actions");
+                ImGui::BeginChild("actions-panel", ImVec2(0, 300), true);
+                ImGui::Text("%s", enemy.name.c_str());
+                ImGui::ProgressBar(std::max(0.0f, std::min(1.0f, enemy.maxHp > 0 ? (enemy.hp / static_cast<float>(enemy.maxHp)) : 0.0f)), ImVec2(-1, 0), ("HP: " + std::to_string(enemy.hp)).c_str());
                 ImGui::Separator();
                 ImGui::Text("Actions (Player: %d)", selectedPlayer + 1);
-                if (ImGui::Button("Attack"))
+
+                ImGui::BeginDisabled(!(validPlayerSelection && playerAlive));
+                if (ImGui::Button("Attack", ImVec2(-1, 0)))
                 {
                     BattleStepResult action = PlayerAction(session, selectedPlayer, ActionType::Attack, 0);
                     status = action.message;
@@ -247,25 +303,85 @@ int main()
                         }
                     }
                 }
-                ImGui::SameLine();
-                if (ImGui::Button("Use Item"))
+                ImGui::EndDisabled();
+
+                ImGui::BeginDisabled(!(validPlayerSelection && playerAlive && hasItems));
+                if (ImGui::Button("Use Item", ImVec2(-1, 0)))
                 {
-                    BattleStepResult action = PlayerAction(session, selectedPlayer, ActionType::UseItem, 0);
+                    BattleStepResult action = PlayerAction(session, selectedPlayer, ActionType::UseItem, selectedItemIndices[selectedPlayer]);
                     status = action.message;
                 }
-                ImGui::SameLine();
-                if (ImGui::Button("Switch Weapon"))
+                ImGui::EndDisabled();
+
+                ImGui::BeginDisabled(!(validPlayerSelection && playerAlive && hasWeapons));
+                if (ImGui::Button("Switch Weapon", ImVec2(-1, 0)))
                 {
-                    BattleStepResult action = PlayerAction(session, selectedPlayer, ActionType::SwitchWeapon, 1);
+                    BattleStepResult action = PlayerAction(session, selectedPlayer, ActionType::SwitchWeapon, selectedWeaponIndices[selectedPlayer]);
                     status = action.message;
                 }
-                ImGui::SameLine();
-                if (ImGui::Button("Run"))
+                ImGui::EndDisabled();
+
+                ImGui::BeginDisabled(!(validPlayerSelection && playerAlive));
+                if (ImGui::Button("Run", ImVec2(-1, 0)))
                 {
                     BattleStepResult action = PlayerAction(session, selectedPlayer, ActionType::Run, 0);
                     status = action.message;
                 }
+                ImGui::EndDisabled();
+                ImGui::EndChild();
 
+                ImGui::NextColumn();
+
+                ImGui::Text("Selected Player");
+                ImGui::BeginChild("player-detail-panel", ImVec2(0, 300), true);
+                if (selected != nullptr)
+                {
+                    ImGui::Text("Name: %s", selected->name.c_str());
+                    ImGui::Text("HP: %d / %d", selected->hp, selected->maxHp);
+                    ImGui::Text("Stamina: %d", selected->stamina);
+                    ImGui::Text("Coins: %d", selected->coins);
+                    ImGui::Text("Level: %d", selected->level);
+                    ImGui::Separator();
+
+                    if (selected->weapons.empty())
+                    {
+                        ImGui::TextDisabled("No weapons available.");
+                    }
+                    else
+                    {
+                        std::vector<const char*> weaponNames;
+                        weaponNames.reserve(selected->weapons.size());
+                        for (const std::string& weapon : selected->weapons)
+                        {
+                            weaponNames.push_back(weapon.c_str());
+                        }
+                        ImGui::Combo("Weapon", &selectedWeaponIndices[selectedPlayer], weaponNames.data(), static_cast<int>(weaponNames.size()));
+                    }
+
+                    if (selected->items.empty())
+                    {
+                        ImGui::TextDisabled("No usable items available.");
+                    }
+                    else
+                    {
+                        std::vector<const char*> itemNames;
+                        itemNames.reserve(selected->items.size());
+                        for (const std::string& item : selected->items)
+                        {
+                            itemNames.push_back(item.c_str());
+                        }
+                        ImGui::ListBox("Usable Items", &selectedItemIndices[selectedPlayer], itemNames.data(), static_cast<int>(itemNames.size()), 4);
+                    }
+                }
+                else
+                {
+                    ImGui::TextDisabled("No player selected.");
+                }
+                ImGui::EndChild();
+
+                ImGui::Columns(1);
+
+                ImGui::Separator();
                 if (ImGui::Button("Inventory"))
                 {
                     screen = Screen::Inventory;
