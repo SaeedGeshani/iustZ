@@ -51,7 +51,7 @@ The game now stores saves in **JSON slot files** instead of the old `src/data/<n
 ### Save location
 
 - Directory: `saves/`
-- One file per slot: `saves/<slotName>.json`
+- One file per slot: `saves/<slotId>.json`
 
 The save directory is created automatically when saving for the first time.
 
@@ -59,24 +59,26 @@ The save directory is created automatically when saving for the first time.
 
 Each save contains:
 
-- `version` (currently `1`)
-- `player` object: `name`, `gender`, `hp`, `xp`, `lvl`, `coins`, `dm`, `stamina`, `kills`
-- `inventory` object:
-  - `weapons`: array of weapon names
-  - `items`: array of usable-item names
-- `equippedWeapon`: equipped weapon name
+- `version` (currently `3`)
+- `slotId` (unique file key)
+- `slotLabel` (user-facing name)
+- `createdAt`, `updatedAt` (ISO local timestamps)
+- `mode` (`singleplayer` or `multiplayer`)
+- `partyPreview` (array of player names used by the load menu)
+- `party` and `session` runtime payload (stats, inventory, battle progress)
 
 ### Load behavior
 
-- The load menu lists all `*.json` files in `saves/`.
+- The load menu lists all `*.json` files in `saves/`, sorted by `updatedAt` descending.
+- Entries are shown as `slotLabel + updated time + party preview`.
+- Legacy saves (`version < 3` or missing `slotId`) are shown in a separate legacy section and can be migrated.
 - Files are validated before loading.
-- Corrupt files, unsupported versions, or missing required fields are rejected with an error message.
+- Corrupt files are skipped from load actions and shown as `(corrupt save)`.
 - Unknown inventory entries are skipped when reconstructing runtime objects.
 
 ### Important compatibility note
 
-- Old text save files in `src/data/` are **not** used by the new slot-based JSON loader.
-- Existing JSON save files must match `version: 1`.
+- Legacy JSON save files are supported through one-time migration to schema `version: 3`.
 
 ## Development notes
 
