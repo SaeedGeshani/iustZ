@@ -482,6 +482,16 @@ EnemySnapshot GetEnemySnapshot(const GameSession& session)
     return out;
 }
 
+std::vector<std::string> GetAvailableWeapons()
+{
+    return {"Katana", "Blaster"};
+}
+
+std::vector<std::string> GetAvailableItems()
+{
+    return {"Egg", "Energy Drink"};
+}
+
 bool BuyWeapon(GameSession& session, int playerIndex, const std::string& weaponName, std::string& err)
 {
     if (playerIndex < 0 || playerIndex >= static_cast<int>(session.party.size()))

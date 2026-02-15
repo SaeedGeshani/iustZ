@@ -435,31 +435,86 @@ int main()
         else if (screen == Screen::Shop)
         {
             static int buyer = 0;
+            static int selectedWeapon = 0;
+            static int selectedItem = 0;
+
+            const std::vector<std::string> availableWeapons = GetAvailableWeapons();
+            const std::vector<std::string> availableItems = GetAvailableItems();
+
             ImGui::InputInt("Buyer index", &buyer);
             buyer = std::max(0, std::min(buyer, static_cast<int>(session.party.size()) - 1));
 
-            if (ImGui::Button("Buy Katana"))
+            if (availableWeapons.empty())
             {
-                std::string err;
-                status = BuyWeapon(session, buyer, "Katana", err) ? "Purchased Katana" : err;
+                selectedWeapon = 0;
             }
-            ImGui::SameLine();
-            if (ImGui::Button("Buy Blaster"))
+            else
             {
-                std::string err;
-                status = BuyWeapon(session, buyer, "Blaster", err) ? "Purchased Blaster" : err;
+                selectedWeapon = std::max(0, std::min(selectedWeapon, static_cast<int>(availableWeapons.size()) - 1));
             }
-            if (ImGui::Button("Buy Egg"))
+
+            if (availableItems.empty())
             {
-                std::string err;
-                status = BuyItem(session, buyer, "Egg", err) ? "Purchased Egg" : err;
+                selectedItem = 0;
             }
-            ImGui::SameLine();
-            if (ImGui::Button("Buy Energy Drink"))
+            else
             {
-                std::string err;
-                status = BuyItem(session, buyer, "Energy Drink", err) ? "Purchased Energy Drink" : err;
+                selectedItem = std::max(0, std::min(selectedItem, static_cast<int>(availableItems.size()) - 1));
             }
+
+            ImGui::Columns(2, "shop-columns", true);
+
+            ImGui::Text("Weapons");
+            if (ImGui::BeginTable("shop-weapons", 1, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
+            {
+                for (size_t i = 0; i < availableWeapons.size(); ++i)
+                {
+                    ImGui::TableNextRow();
+                    ImGui::TableSetColumnIndex(0);
+                    if (ImGui::Selectable(availableWeapons[i].c_str(), selectedWeapon == static_cast<int>(i), ImGuiSelectableFlags_SpanAllColumns))
+                    {
+                        selectedWeapon = static_cast<int>(i);
+                    }
+                }
+                ImGui::EndTable();
+            }
+
+            ImGui::BeginDisabled(availableWeapons.empty());
+            if (ImGui::Button("Buy Selected Weapon", ImVec2(-1, 0)) && !availableWeapons.empty())
+            {
+                const std::string& weaponName = availableWeapons[selectedWeapon];
+                std::string err;
+                status = BuyWeapon(session, buyer, weaponName, err) ? ("Purchased " + weaponName) : err;
+            }
+            ImGui::EndDisabled();
+
+            ImGui::NextColumn();
+
+            ImGui::Text("Items");
+            if (ImGui::BeginTable("shop-items", 1, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
+            {
+                for (size_t i = 0; i < availableItems.size(); ++i)
+                {
+                    ImGui::TableNextRow();
+                    ImGui::TableSetColumnIndex(0);
+                    if (ImGui::Selectable(availableItems[i].c_str(), selectedItem == static_cast<int>(i), ImGuiSelectableFlags_SpanAllColumns))
+                    {
+                        selectedItem = static_cast<int>(i);
+                    }
+                }
+                ImGui::EndTable();
+            }
+
+            ImGui::BeginDisabled(availableItems.empty());
+            if (ImGui::Button("Buy Selected Item", ImVec2(-1, 0)) && !availableItems.empty())
+            {
+                const std::string& itemName = availableItems[selectedItem];
+                std::string err;
+                status = BuyItem(session, buyer, itemName, err) ? ("Purchased " + itemName) : err;
+            }
+            ImGui::EndDisabled();
+
+            ImGui::Columns(1);
 
             if (ImGui::Button("Back to Battle"))
             {
