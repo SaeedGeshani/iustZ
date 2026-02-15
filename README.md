@@ -8,9 +8,11 @@ IUSTZ Ranking Core is a C++ text-based RPG focused on turn-based combat, invento
 .
 ├── src/                  # Active playable codebase
 │   ├── Headers/          # Gameplay classes and UI helpers
+│   ├── GameEngine.*      # Engine wrapper API used by GUI frontend
 │   ├── SaveSystem.*      # JSON save/load implementation
 │   ├── data/             # Legacy text data still used by older flows
-│   └── The_main.cpp      # Game entrypoint
+│   └── The_main.cpp      # Console entrypoint
+├── src_gui/              # Dear ImGui (GLFW + OpenGL3) frontend
 ├── external/             # Third-party headers (nlohmann/json)
 ├── archive/              # Legacy/experimental snapshots
 ├── docs/                 # Reports and project docs
@@ -24,20 +26,32 @@ IUSTZ Ranking Core is a C++ text-based RPG focused on turn-based combat, invento
 - Turn-based combat with stamina, damage, XP, and level progression.
 - Shop and inventory systems (weapons + usable items).
 - Slot-based save/load using validated JSON save files.
+- New Dear ImGui GUI executable (`iustz_gui`) that calls the engine API and keeps gameplay rules in core code.
 
 ## Build and run
 
-> The game depends on `windows.h`, so native builds are intended for Windows environments (Visual Studio or MinGW).
+> The console game still depends on `windows.h`, so native builds are intended for Windows environments (Visual Studio or MinGW).
 
 ### CMake (recommended)
 
 ```bash
 cmake -S . -B build
-cmake --build build
-./build/iustz_game
+cmake --build build --config Release
 ```
 
-### g++ (single command, MinGW)
+Run either executable:
+
+```bash
+# Multi-config generators (MSVC)
+build/Release/iustz_game.exe
+build/Release/iustz_gui.exe
+
+# Single-config generators (Ninja/Unix Makefiles)
+build/iustz_game
+build/iustz_gui
+```
+
+### g++ (console only, single command, MinGW)
 
 ```bash
 g++ -std=c++17 -O2 -Iexternal -Isrc -Isrc/Headers src/*.cpp -o iustz_game.exe
