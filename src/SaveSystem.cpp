@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <limits>
 #include <sstream>
 #include <string>
 
@@ -62,7 +63,14 @@ bool ReadRequiredInt(const nlohmann::json& object, const char* key, int& out)
         return false;
     }
 
-    out = it->second.get<int>();
+    const long long raw = it->second.get<long long>();
+    if (raw < static_cast<long long>(std::numeric_limits<int>::min())
+        || raw > static_cast<long long>(std::numeric_limits<int>::max()))
+    {
+        return false;
+    }
+
+    out = static_cast<int>(raw);
     return true;
 }
 
