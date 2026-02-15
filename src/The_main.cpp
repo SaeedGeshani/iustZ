@@ -967,25 +967,42 @@ bool randomShuffle ( int Difficulty , int Level ) {
 
 bool isAlive()
 {
-    // for(int i = 0 ; i < Wariors.size() ; i++)
-    // {
-    //     if(Wariors[i]->getHP() > 0)
-    //     {
-    //         return true;
-    //     }
-    // }
-    // return false;
-
-    if(Wariors.size() > 0)
+    for(MainCharacter* warrior : Wariors)
     {
-        return true;
+        if(warrior != nullptr && warrior->getHP() > 0)
+        {
+            return true;
+        }
     }
     return false;
+}
+
+int findRandomAliveWarriorIndex()
+{
+    vector<int> aliveIndices;
+    aliveIndices.reserve(Wariors.size());
+
+    for(int i = 0; i < static_cast<int>(Wariors.size()); ++i)
+    {
+        if(Wariors[i] != nullptr && Wariors[i]->getHP() > 0)
+        {
+            aliveIndices.push_back(i);
+        }
+    }
+
+    if(aliveIndices.empty())
+    {
+        return -1;
+    }
+
+    return aliveIndices[static_cast<std::size_t>(rand() % aliveIndices.size())];
 }
 
 
 int main()
 {
+    try
+    {
 
     // string tttt;
     // userList >> tttt;
@@ -1238,85 +1255,27 @@ int main()
                 break;
             }
 
-            int attackNumber = rand()%Wariors.size();
              if(enemy->getEnemyModel()->getHP() > 0)
             {
-                while(true)
+                for(int attacksThisTurn = 0; attacksThisTurn < 2 && isAlive() && enemy->getEnemyModel()->getHP() > 0; ++attacksThisTurn)
                 {
-                    attackNumber = rand()%Wariors.size();
-                    if(Wariors[attackNumber]->getHP() > 0)
+                    const int attackNumber = findRandomAliveWarriorIndex();
+                    if(attackNumber < 0)
                     {
-                        ui::centeredLine("Enemy #" + to_string(enemyCount) + " attacks " + Wariors[attackNumber]->getName() + "!");
-                        enemy->getEnemyController()->Attack(Wariors[attackNumber]);
-                        if(Wariors[attackNumber]->getHP() < 0)
-                        {
-                            prints("==================================");
-                            cout << "       " << Wariors[attackNumber]->getName() << " is dead" << endl;
-                            prints("==================================");
-                            // string username;
-                            // ofstream userRewrite("data/users.txt");
-                            // ofstream user("data/users.txt" , ios::app);
-                            // userRewrite << "";
-                            // while (userList >> username)
-                            // {
-                            //     if (username == Wariors[attackNumber]->getName())
-                            //     {
-                            //         continue;
-                            //     }
-                            //     else
-                            //     {
-                            //         user << username << endl;
-                            //     }
-                            // }
-
-                            // for (int l = 0; l < Wariors.size(); l++)
-                            // {
-                            //     userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
-                            // }
-                            delete Wariors[attackNumber];
-                            Wariors.erase(Wariors.begin() + attackNumber);
-                            Wariors.shrink_to_fit();
-                        }
                         break;
                     }
-                }
 
-                while(true)
-                {
-                    attackNumber = rand()%Wariors.size();
-                    if(Wariors[attackNumber]->getHP() > 0)
+                    ui::centeredLine("Enemy #" + to_string(enemyCount) + " attacks " + Wariors[attackNumber]->getName() + "!");
+                    enemy->getEnemyController()->Attack(Wariors[attackNumber]);
+
+                    if(Wariors[attackNumber]->getHP() <= 0)
                     {
-                        ui::centeredLine("Enemy #" + to_string(enemyCount) + " attacks " + Wariors[attackNumber]->getName() + "!");
-                        enemy->getEnemyController()->Attack(Wariors[attackNumber]);
-                        if(Wariors[attackNumber]->getHP() < 0)
-                        {
-                            prints("==================================");
-                            cout << "       " << Wariors[attackNumber]->getName() << " is dead" << endl;
-                            prints("==================================");
-                            // string username;
-                            // ofstream userRewrite("data/users.txt");
-                            // ofstream user("data/users.txt" , ios::app);
-                            // userRewrite << "";
-                            // while (userList >> username)
-                            // {
-                            //     if (username == Wariors[attackNumber]->getName())
-                            //     {
-                            //         continue;
-                            //     }
-                            //     else
-                            //     {
-                            //         user << username << endl;
-                            //     }
-                            // }
-                            // for (int l = 0; l < Wariors.size(); l++)
-                            // {
-                            //     userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
-                            // }
-                            delete Wariors[attackNumber];
-                            Wariors.erase(Wariors.begin() + attackNumber);
-                            Wariors.shrink_to_fit();
-                        }
-                        break;
+                        Wariors[attackNumber]->setHP(0);
+                        prints("==================================");
+                        cout << "       " << Wariors[attackNumber]->getName() << " is dead" << endl;
+                        prints("==================================");
+                        delete Wariors[attackNumber];
+                        Wariors.erase(Wariors.begin() + attackNumber);
                     }
                 }
             }
@@ -1337,6 +1296,14 @@ int main()
     // {
     //     userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
     // }
+    }
+    catch(const std::exception& ex)
+    {
+        ui::drawHeader("Input Error");
+        ui::centeredLine(ex.what());
+        ui::drawFooter("Exiting game safely");
+        return 1;
+    }
 }
 
 int CalculateHPForHuman(int level)
