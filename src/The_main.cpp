@@ -1066,7 +1066,9 @@ int main()
     bool checkStatus;
     int enemyCount = 0;
 
-    while(isAlive() && checkContinue())
+    bool playerRequestedQuit = false;
+
+    while(!playerRequestedQuit && isAlive() && checkContinue())
     {
        checkStatus = randomShuffle(Difficulty , Wariors[findEnemyLevel()]->getLevel());
 
@@ -1137,7 +1139,7 @@ int main()
                         ui::centeredLine("Facing Enemy #" + to_string(enemyCount));
                         ui::centeredLine("1) Fight");
                         ui::centeredLine("2) Use inventory");
-                        ui::centeredLine("3) Save game");
+                        ui::centeredLine("3) Save and quit");
                         uiBattleStatus(Wariors[i], enemy);
                         ui::drawFooter("Choose action");
 
@@ -1255,8 +1257,14 @@ int main()
                         }
                         else if (input == 3)
                         {
-                            SaveWarriorToSlot(Wariors[i], Wariors[i]->getName());
-                            DBG_LOG("Menu transition: battle -> save");
+                            const bool saveSucceeded = SaveWarriorToSlot(Wariors[i], Wariors[i]->getName());
+                            DBG_LOG("Menu transition: battle -> save+quit");
+                            if(saveSucceeded)
+                            {
+                                playerRequestedQuit = true;
+                                break;
+                            }
+
                             continue;
                         }
 
@@ -1275,12 +1283,12 @@ int main()
                 }
             }
 
-            if(enemyDefeated)
+            if(playerRequestedQuit || enemyDefeated)
             {
                 break;
             }
 
-             if(enemy->getEnemyModel()->getHP() > 0)
+             if(!playerRequestedQuit && enemy->getEnemyModel()->getHP() > 0)
             {
                 for(int attacksThisTurn = 0; attacksThisTurn < 2 && isAlive() && enemy->getEnemyModel()->getHP() > 0; ++attacksThisTurn)
                 {
@@ -1317,9 +1325,18 @@ int main()
        }
     }
 
-    prints("=============================================");
-    ui::centeredLine("All warriors have fallen.");
-    prints("=============================================");
+    if(playerRequestedQuit)
+    {
+        prints("=============================================");
+        ui::centeredLine("Game saved. Exiting safely.");
+        prints("=============================================");
+    }
+    else
+    {
+        prints("=============================================");
+        ui::centeredLine("All warriors have fallen.");
+        prints("=============================================");
+    }
     // for (int l = 0; l < Wariors.size(); l++)
     // {
     //     userSave (Wariors[l]->getName(), Wariors[l]->getGender(), Wariors[l]->getHP(), Wariors[l]->getXP(), Wariors[l]->getGold(), Wariors[l]->getStamina(), Wariors[l]->getLevel(), Wariors[l]->getKills(), Wariors[l]->getWeapons().size(), Wariors[l]->getUseableItems().size() , Wariors[l]->getWeapons(), Wariors[l]->getUseableItems());
