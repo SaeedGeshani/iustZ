@@ -2,6 +2,7 @@
 #include<iostream>
 #include<vector>
 #include<iomanip>
+#include<sstream>
 #include<cmath>
 #include<ctime>
 #include<fstream>
@@ -284,16 +285,15 @@ string GetIsoTimestampNow()
 
 string BuildSlotIdFromNow()
 {
-    const time_t now = time(nullptr);
-    tm timeInfo{};
+    std::time_t t = std::time(nullptr);
+    std::tm tm{};
 #ifdef _WIN32
-    localtime_s(&timeInfo, &now);
+    localtime_s(&tm, &t);
 #else
-    localtime_r(&now, &timeInfo);
+    localtime_r(&t, &tm);
 #endif
-
-    ostringstream out;
-    out << "save_" << put_time(&timeInfo, "%Y%m%d_%H%M%S");
+    std::ostringstream out;
+    out << "save_" << std::put_time(&tm, "%Y%m%d_%H%M%S");
     return out.str();
 }
 
